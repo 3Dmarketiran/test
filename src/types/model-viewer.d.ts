@@ -22,6 +22,7 @@ declare global {
           loading?: "auto" | "lazy" | "eager";
           reveal?: "auto" | "interaction" | "manual";
           "environment-image"?: string;
+          "disable-pan"?: boolean;
         },
         HTMLElement
       >;

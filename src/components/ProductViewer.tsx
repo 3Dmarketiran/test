@@ -26,10 +26,20 @@ export default function ProductViewer({ product }: Props) {
   const [status, setStatus] = useState<"loading" | "ready" | "error">(glb ? "loading" : "ready");
   const [arSupported, setArSupported] = useState<boolean | null>(null);
   const viewerRef = useRef<HTMLElement | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
+
+  useEffect(() => {
+    setActiveImage(poster);
+    setStatus(glb ? "loading" : "ready");
+    setArSupported(null);
+    setFullscreen(false);
+  }, [product.id, poster, glb?.url]);
 
   useEffect(() => {
     const el = viewerRef.current;
     if (!el) return;
+    const onFullscreenChange = () => setFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", onFullscreenChange);
 
     const onLoad = () => setStatus("ready");
     const onError = () => setStatus("error");
@@ -60,6 +70,7 @@ export default function ProductViewer({ product }: Props) {
       el.removeEventListener("load", onLoad);
       el.removeEventListener("error", onError);
       el.removeEventListener("ar-status", onArStatus);
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
       clearTimeout(t);
     };
   }, [glb?.url]);
@@ -72,6 +83,22 @@ export default function ProductViewer({ product }: Props) {
 
   const dims = product.dimensions;
   const arScaleAttr = dims && dims.widthM && dims.heightM && dims.depthM ? "fixed" : "auto";
+
+  const toggleFullscreen = async () => {
+    const target = viewerRef.current?.parentElement;
+    if (!target) return;
+    try {
+      if (!document.fullscreenElement) {
+        await target.requestFullscreen();
+        setFullscreen(true);
+      } else {
+        await document.exitFullscreen();
+        setFullscreen(false);
+      }
+    } catch {
+      setFullscreen(Boolean(document.fullscreenElement));
+    }
+  };
 
   return (
     <div className="viewer-shell">
@@ -100,10 +127,15 @@ export default function ProductViewer({ product }: Props) {
             ar-scale={arScaleAttr}
             style={{ display: status === "error" ? "none" : "block", background: "var(--color-background)" }}
           >
-            {status === "loading" && (
-              <div slot="poster" className="skeleton" style={{ width: "100%", height: "100%" }} />
-            )}
+            <button slot="ar-button" className="viewer-ar-button" type="button">مشاهده در AR</button>
           </model-viewer>
+          <div className="viewer-actions" aria-label="کنترل‌های نمایشگر">
+            <button className="viewer-action" type="button" onClick={toggleFullscreen}>
+              {fullscreen ? "خروج از تمام‌صفحه" : "تمام‌صفحه"}
+            </button>
+          </div>
+          {status === "loading" && <div className="viewer-loading" aria-live="polite">در حال بارگذاری مدل سه‌بعدی…</div>}
+          {/* model-viewer closes above; this placeholder keeps the controls outside the web component. */}
         </>
       ) : activeImage ? (
         <img src={activeImage} alt={product.name} style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover" }} />

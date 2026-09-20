@@ -9,8 +9,13 @@ on:
     branches: [main]
     paths:
       - "public-data/**"
+      - "public/**"
       - "src/**"
+      - "scripts/**"
+      - "index.html"
       - "package.json"
+      - "package-lock.json"
+      - "vite.config.ts"
       - ".github/workflows/deploy.yml"
   workflow_dispatch: {}
 
@@ -37,7 +42,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Validate public data
         run: node scripts/validate-public-data.mjs
@@ -47,7 +52,7 @@ jobs:
         env:
           # Vite reads this at build time to bake the correct base path for
           # a GitHub Pages *project* site (username.github.io/repo/).
-          PUBLIC_BASE_PATH: /test/
+          PUBLIC_BASE_PATH: ${{ vars.PUBLIC_BASE_PATH || '/test/' }}
           # Used only to build sitemap.xml with absolute URLs (spec section 33).
           PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || '' }}
           # Optional: only set this repo variable if you want the static site
@@ -57,7 +62,7 @@ jobs:
           VITE_API_URL: ${{ vars.API_URL || '' }}
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist
 
