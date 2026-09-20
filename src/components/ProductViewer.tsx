@@ -112,7 +112,7 @@ export default function ProductViewer({ product }: Props) {
           )}
           <model-viewer
             ref={viewerRef as React.RefObject<HTMLElement>}
-            src={glb.url}
+            src="https://github.com/3Dmarketiran/test/releases/download/3d-assets-product-cmua3nahv000nkhvtyo85k74t/glb-cc7da9130b1d7e633a3387d6f72dda4d.glb"
             ios-src={usdz?.url}
             alt={product.name}
             poster={poster}
