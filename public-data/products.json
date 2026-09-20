@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "id": "cmu9n8pih0027lvy5a71k2kvl",
+    "slug": "test-zfsti0",
+    "name": "test",
+    "shortDescription": "test",
+    "fullDescription": "test",
+    "tags": [],
+    "category": null,
+    "seller": {
+      "slug": "فروشگاه-تست-zaxilo",
+      "storeName": "فروشگاه تست"
+    },
+    "images": [
+      {
+        "url": "https://3Dmarketiran.github.io/test/public-assets/products/cmu9n8pih0027lvy5a71k2kvl/images/76Kkm_V011rsH5L8.jpeg",
+        "isPrimary": true
+      }
+    ],
+    "models": [
+      {
+        "kind": "GLB",
+        "url": "https://3Dmarketiran.github.io/test/public-assets/products/cmu9n8pih0027lvy5a71k2kvl/models/vxfGt70xEyQ4xcj1.glb"
+      },
+      {
+        "kind": "USDZ",
+        "url": "https://3Dmarketiran.github.io/test/public-assets/products/cmu9n8pih0027lvy5a71k2kvl/models/-RzPdyLOnOR2bWBo.usdz"
+      }
+    ],
+    "dimensions": {
+      "widthM": 0.1,
+      "heightM": 0.1,
+      "depthM": 0.1,
+      "realWorldScale": true
+    },
+    "publishedAt": null
+  }
+]
