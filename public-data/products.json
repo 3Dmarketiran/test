@@ -20,11 +20,11 @@
     "models": [
       {
         "kind": "GLB",
-        "url": "https://3Dmarketiran.github.io/test/public-assets/products/cmu9n8pih0027lvy5a71k2kvl/models/vxfGt70xEyQ4xcj1.glb"
+        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-test-1/vxfGt70xEyQ4xcj1.glb"
       },
       {
         "kind": "USDZ",
-        "url": "https://3Dmarketiran.github.io/test/public-assets/products/cmu9n8pih0027lvy5a71k2kvl/models/-RzPdyLOnOR2bWBo.usdz"
+        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-test-1/-RzPdyLOnOR2bWBo.usdz"
       }
     ],
     "dimensions": {
