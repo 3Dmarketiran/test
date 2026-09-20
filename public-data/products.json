@@ -1,30 +1,34 @@
 [
   {
-    "id": "cmu9n8pih0027lvy5a71k2kvl",
-    "slug": "test-zfsti0",
+    "id": "cmua3nahv000nkhvtyo85k74t",
+    "slug": "test-efwysj",
     "name": "test",
     "shortDescription": "test",
     "fullDescription": "test",
     "tags": [],
     "category": null,
     "seller": {
-      "slug": "فروشگاه-تست-zaxilo",
-      "storeName": "فروشگاه تست"
+      "slug": "test-focszq",
+      "storeName": "test"
     },
     "images": [
       {
-        "url": "https://3Dmarketiran.github.io/test/public-assets/products/cmu9n8pih0027lvy5a71k2kvl/images/76Kkm_V011rsH5L8.jpeg",
+        "url": "http://localhost:10000/files/products/cmua3nahv000nkhvtyo85k74t/images/aT7zK4SlyPyR3xTA.jpg",
         "isPrimary": true
+      },
+      {
+        "url": "http://localhost:10000/files/products/cmua3nahv000nkhvtyo85k74t/images/XjJWqQhsoM0mLnbF.jpeg",
+        "isPrimary": false
       }
     ],
     "models": [
       {
         "kind": "GLB",
-        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-test-1/vxfGt70xEyQ4xcj1.glb"
+        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-product-cmua3nahv000nkhvtyo85k74t/glb-cc7da9130b1d7e633a3387d6f72dda4d.glb"
       },
       {
         "kind": "USDZ",
-        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-test-1/-RzPdyLOnOR2bWBo.usdz"
+        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-product-cmua3nahv000nkhvtyo85k74t/usdz-0d11fac041c1818e90304be49280afef.usdz"
       }
     ],
     "dimensions": {
