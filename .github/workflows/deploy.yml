@@ -1,0 +1,73 @@
+name: Deploy public site to GitHub Pages
+
+# Triggers whenever the backend's publish pipeline commits updated
+# public-data/*.json (spec section 3: "GitHub Actions/build process runs
+# if required" -> "GitHub Pages deploys the new version"), and also
+# manually via workflow_dispatch for troubleshooting.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public-data/**"
+      - "src/**"
+      - "package.json"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate public data
+        run: node scripts/validate-public-data.mjs
+
+      - name: Build static site
+        run: npm run build
+        env:
+          # Vite reads this at build time to bake the correct base path for
+          # a GitHub Pages *project* site (username.github.io/repo/).
+          PUBLIC_BASE_PATH: /test/
+          # Used only to build sitemap.xml with absolute URLs (spec section 33).
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || '' }}
+          # Optional: only set this repo variable if you want the static site
+          # to beacon anonymous analytics events back to your backend (spec
+          # section 23). Leave unset and the site simply skips analytics —
+          # it never requires the backend to render pages (spec section 37).
+          VITE_API_URL: ${{ vars.API_URL || '' }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

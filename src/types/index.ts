@@ -1,0 +1,66 @@
+// Mirrors the exact shape written by backend/src/services/publishService.ts
+// (getPublicProducts / getPublicSellers) — keep in sync with that file.
+
+export interface PublicImage {
+  url: string;
+  isPrimary: boolean;
+}
+
+export interface PublicModel {
+  kind: "GLB" | "GLTF" | "USDZ";
+  url: string;
+}
+
+export interface PublicDimensions {
+  widthM: number | null;
+  heightM: number | null;
+  depthM: number | null;
+  realWorldScale: true;
+}
+
+export interface PublicProduct {
+  id: string;
+  slug: string;
+  name: string;
+  shortDescription: string | null;
+  fullDescription: string | null;
+  tags: string[];
+  category: { slug: string; name: string } | null;
+  seller: { slug: string; storeName: string };
+  images: PublicImage[];
+  models: PublicModel[];
+  dimensions: PublicDimensions | null;
+  publishedAt: string | null;
+}
+
+export interface PublicSeller {
+  slug: string;
+  storeName: string;
+  description: string | null;
+  logoUrl: string | null;
+  contactEmail: string | null;
+  contactPhone: string | null;
+  socialLinks: Record<string, string> | null;
+}
+
+export interface PublicCategory {
+  id: string;
+  slug: string;
+  name: string;
+  parentId: string | null;
+}
+
+export interface PlatformSettings {
+  platformName: string;
+  logoUrl?: string | null;
+  faviconUrl?: string | null;
+  colorPrimary: string;
+  colorSecondary: string;
+  colorAccent: string;
+  colorBackground: string;
+  colorText: string;
+  fontFamily: string;
+  socialLinks?: Record<string, string> | null;
+  contactEmail?: string | null;
+  contactPhone?: string | null;
+}
