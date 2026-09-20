@@ -1,9 +1,19 @@
 {
+  "id": "singleton",
   "platformName": "پلتفرم نمایشگاه محصول",
+  "logoUrl": null,
+  "faviconUrl": null,
   "colorPrimary": "#3730A3",
   "colorSecondary": "#7C3AED",
   "colorAccent": "#06B6D4",
   "colorBackground": "#F8FAFC",
   "colorText": "#1E293B",
-  "fontFamily": "Vazirmatn"
+  "fontFamily": "Vazirmatn",
+  "socialLinks": null,
+  "contactEmail": null,
+  "contactPhone": null,
+  "githubOwner": null,
+  "githubRepository": null,
+  "githubBranch": "main",
+  "updatedAt": "2026-09-19T21:24:56.253Z"
 }
