@@ -25,6 +25,10 @@
       {
         "kind": "USDZ",
         "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-product-cmuayu5fg000nznuyxalg8q9h/usdz-0d11fac041c1818e90304be49280afef.usdz"
+      },
+      {
+        "kind": "GLB",
+        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-product-cmuayu5fg000nznuyxalg8q9h/glb-cc7da9130b1d7e633a3387d6f72dda4d.glb"
       }
     ],
     "dimensions": {
@@ -33,6 +37,6 @@
       "depthM": 0.1,
       "realWorldScale": true
     },
-    "publishedAt": null
+    "publishedAt": "2026-09-21T08:14:03.926Z"
   }
 ]
