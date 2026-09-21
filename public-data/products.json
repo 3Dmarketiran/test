@@ -3,7 +3,7 @@
     "id": "cmuayu5fg000nznuyxalg8q9h",
     "slug": "test-7olbw_",
     "name": "test",
-    "shortDescription": null,
+    "shortDescription": "test",
     "fullDescription": null,
     "tags": [],
     "category": null,
@@ -20,15 +20,15 @@
     "models": [
       {
         "kind": "GLB",
-        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-product-cmuayu5fg000nznuyxalg8q9h/glb-cc7da9130b1d7e633a3387d6f72dda4d.glb"
+        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/models/ATIrq0-9Zjw7fuDg.glb"
       },
       {
         "kind": "USDZ",
-        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-product-cmuayu5fg000nznuyxalg8q9h/usdz-0d11fac041c1818e90304be49280afef.usdz"
+        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/models/ItQH_WaP3kl5t85w.usdz"
       },
       {
         "kind": "GLB",
-        "url": "https://github.com/3Dmarketiran/test/releases/download/3d-assets-product-cmuayu5fg000nznuyxalg8q9h/glb-cc7da9130b1d7e633a3387d6f72dda4d.glb"
+        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/models/aOSDO1QcD24Zbi5s.glb"
       }
     ],
     "dimensions": {
@@ -37,6 +37,6 @@
       "depthM": 0.1,
       "realWorldScale": true
     },
-    "publishedAt": "2026-09-21T08:14:03.926Z"
+    "publishedAt": "2026-09-21T08:29:37.782Z"
   }
 ]
