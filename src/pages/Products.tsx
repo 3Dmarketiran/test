@@ -114,7 +114,13 @@ function ArrowIcon() {
 }
 
 export default function Products() {
-  const { sellers, loading } = useData();
+  const {
+    products,
+    sellers,
+    categories,
+    loading,
+  } = useData();
+
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState(params.get("q") ?? "");
 
@@ -124,11 +130,24 @@ export default function Products() {
       "فروشگاه‌های فعال را پیدا کنید و برای مشاهده محصولات وارد فروشگاه موردنظر شوید.",
   });
 
+  /*
+   * Keep the local search input synchronized with
+   * browser navigation / external query changes.
+   */
+  useEffect(() => {
+    setQuery(params.get("q") ?? "");
+  }, [params]);
+
+  /*
+   * Store search is intentionally limited to store
+   * name and slug. Product names are not searched
+   * here because this is a store-first marketplace.
+   */
   useEffect(() => {
     const timer = setTimeout(() => {
       const currentQuery = params.get("q") ?? "";
 
-      if (query === currentQuery) return;
+      if (query.trim() === currentQuery) return;
 
       const next = new URLSearchParams(params);
 
@@ -153,23 +172,133 @@ export default function Products() {
     return () => clearTimeout(timer);
   }, [query, params, setParams]);
 
-  const filteredSellers = useMemo(() => {
-    const q = (params.get("q") ?? "").trim().toLocaleLowerCase("fa");
+  /*
+   * Category filtering:
+   *
+   * The public site remains store-first. When a category
+   * is selected, we find products belonging to that
+   * category and collect their seller IDs/slugs.
+   *
+   * A seller is displayed only once even if it has
+   * multiple products in the selected category.
+   */
+  const selectedCategorySlug =
+    params.get("category")?.trim() ?? "";
 
-    if (!q) {
-      return sellers;
-    }
+  const selectedCategory = useMemo(() => {
+    if (!selectedCategorySlug) return null;
+
+    const normalizedSlug =
+      selectedCategorySlug.toLocaleLowerCase("fa");
+
+    return (
+      categories.find(
+        (category) =>
+          category.slug?.toLocaleLowerCase("fa") ===
+          normalizedSlug
+      ) ?? null
+    );
+  }, [categories, selectedCategorySlug]);
+
+  const categorySellerIds = useMemo(() => {
+    if (!selectedCategory) return null;
+
+    const matchingProducts = products.filter((product) => {
+      const productCategory = product.category;
+
+      if (!productCategory) return false;
+
+      const categoryId =
+        "id" in productCategory
+          ? productCategory.id
+          : undefined;
+
+      const categorySlug =
+        "slug" in productCategory
+          ? productCategory.slug
+          : undefined;
+
+      return (
+        categoryId === selectedCategory.id ||
+        categorySlug === selectedCategory.slug
+      );
+    });
+
+    const sellerIds = new Set<string>();
+
+    matchingProducts.forEach((product) => {
+      const sellerId =
+        typeof product.seller === "string"
+          ? product.seller
+          : product.seller?.id;
+
+      const sellerSlug =
+        typeof product.seller === "object"
+          ? product.seller?.slug
+          : undefined;
+
+      if (sellerId) {
+        sellerIds.add(sellerId);
+      }
+
+      if (sellerSlug) {
+        sellerIds.add(`slug:${sellerSlug}`);
+      }
+    });
+
+    return sellerIds;
+  }, [products, selectedCategory]);
+
+  const filteredSellers = useMemo(() => {
+    const q = (params.get("q") ?? "")
+      .trim()
+      .toLocaleLowerCase("fa");
 
     return sellers.filter((seller) => {
-      const storeName = seller.storeName?.toLocaleLowerCase("fa") ?? "";
-      const slug = seller.slug?.toLocaleLowerCase("fa") ?? "";
+      /*
+       * Category filter.
+       *
+       * We support both seller ID and seller slug because
+       * public-data schemas can differ between published
+       * versions.
+       */
+      if (categorySellerIds) {
+        const matchesById =
+          seller.id &&
+          categorySellerIds.has(seller.id);
+
+        const matchesBySlug =
+          seller.slug &&
+          categorySellerIds.has(`slug:${seller.slug}`);
+
+        if (!matchesById && !matchesBySlug) {
+          return false;
+        }
+      }
+
+      /*
+       * Store search.
+       */
+      if (!q) {
+        return true;
+      }
+
+      const storeName =
+        seller.storeName?.toLocaleLowerCase("fa") ?? "";
+
+      const slug =
+        seller.slug?.toLocaleLowerCase("fa") ?? "";
 
       return (
         storeName.includes(q) ||
         slug.includes(q)
       );
     });
-  }, [sellers, params]);
+  }, [
+    sellers,
+    params,
+    categorySellerIds,
+  ]);
 
   function clearSearch() {
     setQuery("");
@@ -180,7 +309,18 @@ export default function Products() {
     setParams(next, { replace: true });
   }
 
+  function clearCategory() {
+    const next = new URLSearchParams(params);
+    next.delete("category");
+
+    setParams(next, { replace: true });
+  }
+
   const hasSearch = Boolean(query.trim());
+  const hasCategory = Boolean(selectedCategory);
+
+  const categoryTitle =
+    selectedCategory?.name?.trim() || "";
 
   return (
     <section className="section products-page">
@@ -211,8 +351,10 @@ export default function Products() {
                   marginBottom: 10,
                   padding: "7px 11px",
                   borderRadius: 999,
-                  background: "var(--surface-2, #f5f5f5)",
-                  color: "var(--text-muted, #666)",
+                  background:
+                    "var(--surface-2, #f5f5f5)",
+                  color:
+                    "var(--text-muted, #666)",
                   fontSize: 13,
                   fontWeight: 750,
                 }}
@@ -231,26 +373,31 @@ export default function Products() {
               <h1
                 style={{
                   margin: 0,
-                  fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
+                  fontSize:
+                    "clamp(1.8rem, 5vw, 2.5rem)",
                   lineHeight: 1.2,
                   fontWeight: 900,
                   letterSpacing: "-0.025em",
                 }}
               >
-                فروشگاه‌ها
+                {hasCategory
+                  ? `فروشگاه‌های ${categoryTitle}`
+                  : "فروشگاه‌ها"}
               </h1>
 
               <p
                 style={{
                   margin: "9px 0 0",
                   maxWidth: 620,
-                  color: "var(--text-muted, #777)",
+                  color:
+                    "var(--text-muted, #777)",
                   fontSize: 14,
                   lineHeight: 1.9,
                 }}
               >
-                فروشگاه موردنظر خود را پیدا کنید و برای مشاهده محصولات،
-                اطلاعات و مدل‌های سه‌بعدی وارد فروشگاه شوید.
+                {hasCategory
+                  ? `فروشگاه‌هایی که در دسته «${categoryTitle}» محصول دارند را مشاهده کنید.`
+                  : "فروشگاه موردنظر خود را پیدا کنید و برای مشاهده محصولات، اطلاعات و مدل‌های سه‌بعدی وارد فروشگاه شوید."}
               </p>
             </div>
 
@@ -268,7 +415,9 @@ export default function Products() {
                 type="search"
                 placeholder="جستجوی نام فروشگاه..."
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) =>
+                  setQuery(e.target.value)
+                }
                 aria-label="جستجوی فروشگاه"
                 style={{
                   paddingLeft: query ? 42 : 16,
@@ -285,7 +434,8 @@ export default function Products() {
                     position: "absolute",
                     left: 12,
                     top: "50%",
-                    transform: "translateY(-50%)",
+                    transform:
+                      "translateY(-50%)",
                     width: 30,
                     height: 30,
                     border: 0,
@@ -294,8 +444,10 @@ export default function Products() {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
-                    background: "var(--surface-2, #f3f3f3)",
-                    color: "var(--text-muted, #666)",
+                    background:
+                      "var(--surface-2, #f3f3f3)",
+                    color:
+                      "var(--text-muted, #666)",
                   }}
                 >
                   <CloseIcon />
@@ -303,6 +455,61 @@ export default function Products() {
               )}
             </div>
           </div>
+
+          {(hasCategory || hasSearch) && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                flexWrap: "wrap",
+              }}
+            >
+              {hasCategory && (
+                <button
+                  type="button"
+                  onClick={clearCategory}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    minHeight: 38,
+                    padding: "0 13px",
+                    borderRadius: 999,
+                    border:
+                      "1px solid var(--border, #e5e5e5)",
+                    background:
+                      "var(--surface, #fff)",
+                    color:
+                      "var(--text, #222)",
+                    cursor: "pointer",
+                    fontSize: 13,
+                    fontWeight: 750,
+                  }}
+                >
+                  <span>
+                    دسته: {categoryTitle}
+                  </span>
+
+                  <CloseIcon />
+                </button>
+              )}
+
+              {hasSearch && (
+                <button
+                  type="button"
+                  onClick={clearSearch}
+                  className="btn btn-outline btn-sm"
+                  style={{
+                    minHeight: 38,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  حذف جستجو
+                </button>
+              )}
+            </div>
+          )}
 
           <div
             style={{
@@ -313,8 +520,10 @@ export default function Products() {
               flexWrap: "wrap",
               padding: "14px 16px",
               borderRadius: 14,
-              border: "1px solid var(--border, #e8e8e8)",
-              background: "var(--surface, #fff)",
+              border:
+                "1px solid var(--border, #e8e8e8)",
+              background:
+                "var(--surface, #fff)",
             }}
           >
             <div
@@ -322,7 +531,8 @@ export default function Products() {
                 display: "flex",
                 alignItems: "center",
                 gap: 9,
-                color: "var(--text-muted, #777)",
+                color:
+                  "var(--text-muted, #777)",
                 fontSize: 13,
                 fontWeight: 700,
               }}
@@ -332,24 +542,53 @@ export default function Products() {
               <span>
                 {loading
                   ? "در حال بارگذاری فروشگاه‌ها..."
-                  : hasSearch
-                    ? `${filteredSellers.length} فروشگاه پیدا شد`
-                    : `${filteredSellers.length} فروشگاه فعال`}
+                  : hasCategory
+                    ? hasSearch
+                      ? `${filteredSellers.length} فروشگاه در این دسته پیدا شد`
+                      : `${filteredSellers.length} فروشگاه در این دسته`
+                    : hasSearch
+                      ? `${filteredSellers.length} فروشگاه پیدا شد`
+                      : `${filteredSellers.length} فروشگاه فعال`}
               </span>
             </div>
 
-            {hasSearch && (
-              <button
-                type="button"
-                onClick={clearSearch}
-                className="btn btn-outline btn-sm"
+            {(hasSearch || hasCategory) && (
+              <div
                 style={{
-                  minHeight: 36,
-                  whiteSpace: "nowrap",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  flexWrap: "wrap",
                 }}
               >
-                حذف جستجو
-              </button>
+                {hasSearch && (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className="btn btn-outline btn-sm"
+                    style={{
+                      minHeight: 36,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    حذف جستجو
+                  </button>
+                )}
+
+                {hasCategory && (
+                  <button
+                    type="button"
+                    onClick={clearCategory}
+                    className="btn btn-outline btn-sm"
+                    style={{
+                      minHeight: 36,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    نمایش همه دسته‌ها
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -363,16 +602,18 @@ export default function Products() {
               gap: 18,
             }}
           >
-            {Array.from({ length: 8 }).map((_, index) => (
-              <div
-                key={index}
-                className="skeleton"
-                style={{
-                  minHeight: 270,
-                  borderRadius: 20,
-                }}
-              />
-            ))}
+            {Array.from({ length: 8 }).map(
+              (_, index) => (
+                <div
+                  key={index}
+                  className="skeleton"
+                  style={{
+                    minHeight: 270,
+                    borderRadius: 20,
+                  }}
+                />
+              )
+            )}
           </div>
         ) : filteredSellers.length === 0 ? (
           <div
@@ -398,8 +639,10 @@ export default function Products() {
                 justifyContent: "center",
                 borderRadius: 18,
                 marginBottom: 16,
-                background: "var(--surface-2, #f4f4f4)",
-                color: "var(--text-muted, #777)",
+                background:
+                  "var(--surface-2, #f4f4f4)",
+                color:
+                  "var(--text-muted, #777)",
               }}
             >
               <SearchIcon />
@@ -412,30 +655,55 @@ export default function Products() {
                 fontWeight: 850,
               }}
             >
-              فروشگاهی پیدا نشد
+              {hasCategory
+                ? "فروشگاهی در این دسته پیدا نشد"
+                : "فروشگاهی پیدا نشد"}
             </h2>
 
             <p
               style={{
                 margin: "0 0 20px",
-                maxWidth: 430,
-                color: "var(--text-muted, #777)",
+                maxWidth: 480,
+                color:
+                  "var(--text-muted, #777)",
                 fontSize: 14,
                 lineHeight: 1.9,
               }}
             >
-              نام فروشگاه را بررسی کنید یا عبارت جستجو را تغییر دهید.
+              {hasCategory
+                ? `در حال حاضر فروشگاه فعالی با محصولی در دسته «${categoryTitle}» پیدا نشد.`
+                : "نام فروشگاه را بررسی کنید یا عبارت جستجو را تغییر دهید."}
             </p>
 
-            {hasSearch && (
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={clearSearch}
-              >
-                نمایش همه فروشگاه‌ها
-              </button>
-            )}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+                flexWrap: "wrap",
+              }}
+            >
+              {hasSearch && (
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  onClick={clearSearch}
+                >
+                  حذف جستجو
+                </button>
+              )}
+
+              {hasCategory && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={clearCategory}
+                >
+                  نمایش همه فروشگاه‌ها
+                </button>
+              )}
+            </div>
           </div>
         ) : (
           <div
@@ -448,12 +716,14 @@ export default function Products() {
           >
             {filteredSellers.map((seller) => {
               const logoUrl =
-                "logoUrl" in seller && seller.logoUrl
+                "logoUrl" in seller &&
+                seller.logoUrl
                   ? seller.logoUrl
                   : "";
 
               const storeName =
-                seller.storeName || "فروشگاه بدون نام";
+                seller.storeName ||
+                "فروشگاه بدون نام";
 
               return (
                 <Link
@@ -520,10 +790,13 @@ export default function Products() {
 
                           const fallback =
                             event.currentTarget
-                              .nextElementSibling as HTMLElement | null;
+                              .nextElementSibling as
+                              | HTMLElement
+                              | null;
 
                           if (fallback) {
-                            fallback.style.display = "flex";
+                            fallback.style.display =
+                              "flex";
                           }
                         }}
                       />
@@ -534,7 +807,9 @@ export default function Products() {
                       style={{
                         width: 108,
                         height: 108,
-                        display: logoUrl ? "none" : "flex",
+                        display: logoUrl
+                          ? "none"
+                          : "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         borderRadius: 22,
@@ -556,7 +831,8 @@ export default function Products() {
                       flexDirection: "column",
                       flex: 1,
                       gap: 12,
-                      padding: "17px 18px 18px",
+                      padding:
+                        "17px 18px 18px",
                     }}
                   >
                     <div
@@ -568,8 +844,10 @@ export default function Products() {
                         style={{
                           margin: 0,
                           overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
+                          textOverflow:
+                            "ellipsis",
+                          whiteSpace:
+                            "nowrap",
                           fontSize: "1.05rem",
                           fontWeight: 850,
                         }}
@@ -586,8 +864,10 @@ export default function Products() {
                           direction: "ltr",
                           textAlign: "right",
                           overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
+                          textOverflow:
+                            "ellipsis",
+                          whiteSpace:
+                            "nowrap",
                         }}
                       >
                         /{seller.slug}
@@ -599,14 +879,18 @@ export default function Products() {
                         marginTop: "auto",
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "space-between",
+                        justifyContent:
+                          "space-between",
                         gap: 10,
-                        color: "var(--text-muted, #777)",
+                        color:
+                          "var(--text-muted, #777)",
                         fontSize: 13,
                         fontWeight: 750,
                       }}
                     >
-                      <span>مشاهده فروشگاه</span>
+                      <span>
+                        مشاهده فروشگاه
+                      </span>
 
                       <span
                         style={{
@@ -614,7 +898,8 @@ export default function Products() {
                           height: 34,
                           display: "inline-flex",
                           alignItems: "center",
-                          justifyContent: "center",
+                          justifyContent:
+                            "center",
                           borderRadius: 10,
                           background:
                             "var(--surface-2, #f3f3f3)",
