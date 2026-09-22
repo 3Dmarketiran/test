@@ -71,7 +71,7 @@ function StoreIcon() {
         strokeLinejoin="round"
       />
       <path
-        d="M3 10c.5 1.3 1.5 2 3 2s2.5-.7 3-2c.5 1.3 1.5 2 3 2s2.5-.7 3-2c.5 1.3 1.5 2 3 2s2.5-.7 3-2"
+        d="M3 10c.5 1.3 1.5 2 3 2s2.5-.7 3-2c.5 1.3 1.5 2 3 2s2.5-.7 3-2c.5 1.3-1.5 2-3 2s2.5-.7 3-2c.5 1.3 1.5 2 3 2s2.5-.7 3-2"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
@@ -130,19 +130,10 @@ export default function Products() {
       "فروشگاه‌های فعال را پیدا کنید و برای مشاهده محصولات وارد فروشگاه موردنظر شوید.",
   });
 
-  /*
-   * Keep the local search input synchronized with
-   * browser navigation / external query changes.
-   */
   useEffect(() => {
     setQuery(params.get("q") ?? "");
   }, [params]);
 
-  /*
-   * Store search is intentionally limited to store
-   * name and slug. Product names are not searched
-   * here because this is a store-first marketplace.
-   */
   useEffect(() => {
     const timer = setTimeout(() => {
       const currentQuery = params.get("q") ?? "";
@@ -172,21 +163,13 @@ export default function Products() {
     return () => clearTimeout(timer);
   }, [query, params, setParams]);
 
-  /*
-   * Category filtering:
-   *
-   * The public site remains store-first. When a category
-   * is selected, we find products belonging to that
-   * category and collect their seller IDs/slugs.
-   *
-   * A seller is displayed only once even if it has
-   * multiple products in the selected category.
-   */
   const selectedCategorySlug =
     params.get("category")?.trim() ?? "";
 
   const selectedCategory = useMemo(() => {
-    if (!selectedCategorySlug) return null;
+    if (!selectedCategorySlug) {
+      return null;
+    }
 
     const normalizedSlug =
       selectedCategorySlug.toLocaleLowerCase("fa");
@@ -194,59 +177,46 @@ export default function Products() {
     return (
       categories.find(
         (category) =>
-          category.slug?.toLocaleLowerCase("fa") ===
+          category.slug.toLocaleLowerCase("fa") ===
           normalizedSlug
       ) ?? null
     );
   }, [categories, selectedCategorySlug]);
 
-  const categorySellerIds = useMemo(() => {
-    if (!selectedCategory) return null;
+  /*
+   * Find the seller slugs of all published products
+   * belonging to the selected category.
+   *
+   * PublicProduct already gives us the exact published
+   * category and seller shape, so no ID guessing or
+   * schema assumptions are necessary.
+   */
+  const categorySellerSlugs = useMemo(() => {
+    if (!selectedCategory) {
+      return null;
+    }
 
-    const matchingProducts = products.filter((product) => {
-      const productCategory = product.category;
+    const sellerSlugs = new Set<string>();
 
-      if (!productCategory) return false;
-
-      const categoryId =
-        "id" in productCategory
-          ? productCategory.id
-          : undefined;
-
-      const categorySlug =
-        "slug" in productCategory
-          ? productCategory.slug
-          : undefined;
-
-      return (
-        categoryId === selectedCategory.id ||
-        categorySlug === selectedCategory.slug
-      );
-    });
-
-    const sellerIds = new Set<string>();
-
-    matchingProducts.forEach((product) => {
-      const sellerId =
-        typeof product.seller === "string"
-          ? product.seller
-          : product.seller?.id;
-
-      const sellerSlug =
-        typeof product.seller === "object"
-          ? product.seller?.slug
-          : undefined;
-
-      if (sellerId) {
-        sellerIds.add(sellerId);
+    products.forEach((product) => {
+      if (!product.category) {
+        return;
       }
 
-      if (sellerSlug) {
-        sellerIds.add(`slug:${sellerSlug}`);
+      const sameCategory =
+        product.category.slug ===
+        selectedCategory.slug;
+
+      if (!sameCategory) {
+        return;
+      }
+
+      if (product.seller?.slug) {
+        sellerSlugs.add(product.seller.slug);
       }
     });
 
-    return sellerIds;
+    return sellerSlugs;
   }, [products, selectedCategory]);
 
   const filteredSellers = useMemo(() => {
@@ -255,30 +225,12 @@ export default function Products() {
       .toLocaleLowerCase("fa");
 
     return sellers.filter((seller) => {
-      /*
-       * Category filter.
-       *
-       * We support both seller ID and seller slug because
-       * public-data schemas can differ between published
-       * versions.
-       */
-      if (categorySellerIds) {
-        const matchesById =
-          seller.id &&
-          categorySellerIds.has(seller.id);
-
-        const matchesBySlug =
-          seller.slug &&
-          categorySellerIds.has(`slug:${seller.slug}`);
-
-        if (!matchesById && !matchesBySlug) {
+      if (categorySellerSlugs) {
+        if (!categorySellerSlugs.has(seller.slug)) {
           return false;
         }
       }
 
-      /*
-       * Store search.
-       */
       if (!q) {
         return true;
       }
@@ -297,7 +249,7 @@ export default function Products() {
   }, [
     sellers,
     params,
-    categorySellerIds,
+    categorySellerSlugs,
   ]);
 
   function clearSearch() {
@@ -715,19 +667,14 @@ export default function Products() {
             }}
           >
             {filteredSellers.map((seller) => {
-              const logoUrl =
-                "logoUrl" in seller &&
-                seller.logoUrl
-                  ? seller.logoUrl
-                  : "";
-
+              const logoUrl = seller.logoUrl || "";
               const storeName =
                 seller.storeName ||
                 "فروشگاه بدون نام";
 
               return (
                 <Link
-                  key={seller.id ?? seller.slug}
+                  key={seller.slug}
                   to={`/sellers/${seller.slug}`}
                   style={{
                     display: "flex",
