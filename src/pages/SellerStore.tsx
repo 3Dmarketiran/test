@@ -87,6 +87,33 @@ function MailIcon() {
   );
 }
 
+function PinIcon() {
+  return (
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 21s-7-6.1-7-11.5A7 7 0 0 1 19 9.5C19 14.9 12 21 12 21Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle
+        cx="12"
+        cy="9.5"
+        r="2.3"
+        stroke="currentColor"
+        strokeWidth="1.7"
+      />
+    </svg>
+  );
+}
+
 function ExternalIcon() {
   return (
     <svg
@@ -265,7 +292,7 @@ export default function SellerStore() {
   return (
     <div className="container section">
       <div
-        className="seller-box"
+        className="seller-box fade-in-up"
         style={{
           marginBottom: "var(--space-5)",
           padding: 20,
@@ -385,6 +412,16 @@ export default function SellerStore() {
               </a>
             )}
 
+            {seller.address && (
+              <span
+                className="btn btn-outline btn-sm"
+                style={{ cursor: "default" }}
+              >
+                <PinIcon />
+                {seller.address}
+              </span>
+            )}
+
             {Object.entries(seller.socialLinks ?? {}).map(
               ([key, value]) => {
                 if (!value) return null;
@@ -493,11 +530,16 @@ export default function SellerStore() {
         </div>
       ) : (
         <div className="grid grid-4">
-          {sellerProducts.map((product) => (
-            <ProductCard
+          {sellerProducts.map((product, index) => (
+            <div
               key={product.id}
-              product={product}
-            />
+              className="fade-in-up"
+              style={{
+                animationDelay: `${Math.min(index, 8) * 0.05}s`,
+              }}
+            >
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       )}

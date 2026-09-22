@@ -49,6 +49,7 @@ export interface PublicSeller {
   logoUrl: string | null;
   contactEmail: string | null;
   contactPhone: string | null;
+  address: string | null;
   socialLinks: Record<string, string> | null;
 }
 
