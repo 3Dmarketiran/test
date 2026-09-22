@@ -1,9 +1,7 @@
 name: Deploy public site to GitHub Pages
 
 # Triggers whenever the backend's publish pipeline commits updated
-# public-data/*.json (spec section 3: "GitHub Actions/build process runs
-# if required" -> "GitHub Pages deploys the new version"), and also
-# manually via workflow_dispatch for troubleshooting.
+# public-data/*.json, and also manually via workflow_dispatch.
 on:
   push:
     branches: [main]
@@ -31,6 +29,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,29 +49,36 @@ jobs:
       - name: Build static site
         run: npm run build
         env:
-          # Vite reads this at build time to bake the correct base path for
-          # a GitHub Pages *project* site (username.github.io/repo/).
+          # Vite reads this at build time to bake the correct base path
+          # for a GitHub Pages project site.
           PUBLIC_BASE_PATH: ${{ vars.PUBLIC_BASE_PATH || '/test/' }}
-          # Used only to build sitemap.xml with absolute URLs (spec section 33).
+
+          # Used only to build sitemap.xml with absolute URLs.
           PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || '' }}
-          # Optional: only set this repo variable if you want the static site
-          # to beacon anonymous analytics events back to your backend (spec
-          # section 23). Leave unset and the site simply skips analytics —
-          # it never requires the backend to render pages (spec section 37).
+
+          # Optional anonymous analytics endpoint.
+          # The public site does not require the backend to render.
           VITE_API_URL: ${{ vars.API_URL || '' }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
+          # Use a unique artifact name so it cannot collide with another
+          # GitHub Pages artifact named "github-pages".
+          name: public-site-pages
           path: ./dist
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: public-site-pages
