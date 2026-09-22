@@ -7,7 +7,7 @@ const ADMIN_URL =
 
 const NAV = [
   { to: "/", label: "خانه", end: true },
-  { to: "/products", label: "محصولات" },
+  { to: "/products", label: "فروشگاه‌ها" },
   { to: "/categories", label: "دسته‌بندی‌ها" },
   { to: "/plans", label: "اشتراک فروشندگان" },
   { to: "/about", label: "درباره ما" },
@@ -380,7 +380,7 @@ function Footer() {
             <h4>دسترسی سریع</h4>
 
             <Link to="/products">
-              همه محصولات
+              فروشگاه‌ها
             </Link>
 
             <Link to="/categories">
@@ -392,7 +392,7 @@ function Footer() {
             </Link>
 
             <Link to="/search">
-              جستجو
+              جستجوی فروشگاه
             </Link>
           </div>
 
