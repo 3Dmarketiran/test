@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useData } from "../lib/data";
-import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
 
 const ADMIN_URL =
@@ -87,7 +86,6 @@ function ModelIcon() {
 
 export default function Home() {
   const {
-    products,
     sellers,
     categories,
     settings,
@@ -100,11 +98,10 @@ export default function Home() {
   useSeo({
     title: platformName,
     description:
-      "مرور محصولات با نمایش سه‌بعدی و واقعیت افزوده، و تماس مستقیم با فروشنده.",
+      "فروشگاه‌های مختلف را مشاهده کنید، وارد فروشگاه شوید و محصولات سه‌بعدی و واقعیت افزوده آن را ببینید.",
   });
 
-  const featured = products.slice(0, 8);
-  const featuredSellers = sellers.slice(0, 6);
+  const featuredSellers = sellers.slice(0, 8);
 
   return (
     <>
@@ -135,21 +132,22 @@ export default function Home() {
                 fontWeight: 750,
               }}
             >
-              <ModelIcon />
-              تجربه محصول با 3D و AR
+              <StoreIcon />
+              فروشگاه‌های 3D و AR
             </div>
 
             <h1>
-              محصولات را پیش از خرید،
+              فروشگاه موردنظر خود را پیدا کنید،
               <br />
-              در فضای واقعی خودتان ببینید
+              محصولات را سه‌بعدی ببینید
             </h1>
 
             <p>
-              {platformName} محصولات فروشندگان مختلف را
-              با نمایش سه‌بعدی تعاملی و واقعیت افزوده
-              (AR) در اختیار شما قرار می‌دهد؛ با مقیاس
-              واقعی و مستقیم از داخل مرورگر.
+              {platformName} بستری برای معرفی فروشگاه‌ها
+              و محصولات آن‌ها با نمایش سه‌بعدی تعاملی و
+              واقعیت افزوده است. وارد فروشگاه شوید،
+              محصولات آن را بررسی کنید و در صورت تمایل
+              مستقیماً با فروشنده تماس بگیرید.
             </p>
 
             <div className="hero__cta">
@@ -157,14 +155,14 @@ export default function Home() {
                 to="/products"
                 className="btn btn-primary"
               >
-                مشاهده محصولات
+                مشاهده فروشگاه‌ها
               </Link>
 
               <Link
-                to="/plans"
+                to="/categories"
                 className="btn btn-outline"
               >
-                اشتراک فروشندگان
+                دسته‌بندی‌ها
               </Link>
 
               <a
@@ -189,11 +187,17 @@ export default function Home() {
               }}
             >
               <span>
+                ✓ فروشگاه‌های اختصاصی
+              </span>
+
+              <span>
                 ✓ نمایش مدل سه‌بعدی
               </span>
+
               <span>
                 ✓ پشتیبانی از AR
               </span>
+
               <span>
                 ✓ تماس مستقیم با فروشنده
               </span>
@@ -248,7 +252,7 @@ export default function Home() {
                       "1px solid rgba(255,255,255,.12)",
                   }}
                 >
-                  <ModelIcon />
+                  <StoreIcon />
                 </div>
 
                 <strong
@@ -258,7 +262,7 @@ export default function Home() {
                     marginBottom: 9,
                   }}
                 >
-                  سه‌بعدی + AR
+                  فروشگاه + 3D + AR
                 </strong>
 
                 <span
@@ -269,9 +273,9 @@ export default function Home() {
                     fontSize: 14,
                   }}
                 >
-                  محصول را بچرخانید،
-                  بزرگ‌نمایی کنید و در فضای
-                  واقعی خودتان ببینید.
+                  وارد فروشگاه شوید و محصولات آن را
+                  با نمایش سه‌بعدی و واقعیت افزوده
+                  بررسی کنید.
                 </span>
               </div>
             </div>
@@ -279,7 +283,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FEATURED PRODUCTS */}
+      {/* STORES */}
       <section className="section">
         <div className="container">
           <div
@@ -289,9 +293,11 @@ export default function Home() {
             }}
           >
             <div>
-              <h2>محصولات ویژه</h2>
+              <h2>فروشگاه‌ها</h2>
+
               <p>
-                جدیدترین محصولات منتشرشده روی پلتفرم
+                فروشگاه‌های فعال را ببینید و وارد فضای
+                اختصاصی هر فروشنده شوید.
               </p>
             </div>
 
@@ -299,7 +305,7 @@ export default function Home() {
               to="/products"
               className="btn btn-outline btn-sm"
             >
-              مشاهده همه
+              مشاهده همه فروشگاه‌ها
               <ArrowIcon />
             </Link>
           </div>
@@ -312,14 +318,14 @@ export default function Home() {
                     key={index}
                     className="skeleton"
                     style={{
-                      aspectRatio: "3 / 4",
+                      aspectRatio: "1 / .82",
                       borderRadius: 18,
                     }}
                   />
                 )
               )}
             </div>
-          ) : featured.length === 0 ? (
+          ) : featuredSellers.length === 0 ? (
             <div
               className="empty-state"
               style={{
@@ -337,7 +343,7 @@ export default function Home() {
                   marginBottom: 12,
                 }}
               >
-                📦
+                🏪
               </div>
 
               <p
@@ -345,16 +351,141 @@ export default function Home() {
                   margin: 0,
                 }}
               >
-                هنوز محصولی منتشر نشده است.
+                هنوز فروشگاه فعالی ثبت نشده است.
               </p>
             </div>
           ) : (
             <div className="grid grid-4">
-              {featured.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                />
+              {featuredSellers.map((seller) => (
+                <Link
+                  key={seller.slug}
+                  to={`/sellers/${seller.slug}`}
+                  className="card"
+                  style={{
+                    padding: 18,
+                    display: "flex",
+                    flexDirection: "column",
+                    minWidth: 0,
+                    textDecoration: "none",
+                    height: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      aspectRatio: "1.55 / 1",
+                      borderRadius: 16,
+                      overflow: "hidden",
+                      display: "grid",
+                      placeItems: "center",
+                      background:
+                        "var(--surface-2, #f4f4f4)",
+                      marginBottom: 14,
+                    }}
+                  >
+                    {seller.logoUrl ? (
+                      <img
+                        src={seller.logoUrl}
+                        alt={seller.storeName}
+                        loading="lazy"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          padding: 18,
+                        }}
+                        onError={(event) => {
+                          event.currentTarget.style.display =
+                            "none";
+                        }}
+                      />
+                    ) : (
+                      <StoreIcon />
+                    )}
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      minWidth: 0,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 38,
+                        height: 38,
+                        borderRadius: 11,
+                        display: "grid",
+                        placeItems: "center",
+                        background:
+                          "var(--surface-2, #f5f5f5)",
+                        color:
+                          "var(--color-text-muted)",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <StoreIcon />
+                    </div>
+
+                    <div
+                      style={{
+                        minWidth: 0,
+                        flex: 1,
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontWeight: 800,
+                          lineHeight: 1.5,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {seller.storeName}
+                      </div>
+
+                      {seller.description && (
+                        <div
+                          style={{
+                            marginTop: 3,
+                            fontSize: ".82rem",
+                            lineHeight: 1.7,
+                            color:
+                              "var(--color-text-muted)",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                          }}
+                        >
+                          {seller.description}
+                        </div>
+                      )}
+                    </div>
+
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        width: 32,
+                        height: 32,
+                        display: "grid",
+                        placeItems: "center",
+                        borderRadius: 10,
+                        background:
+                          "var(--surface-2, #f5f5f5)",
+                        color:
+                          "var(--color-text-muted)",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <ArrowIcon />
+                    </span>
+                  </div>
+                </Link>
               ))}
             </div>
           )}
@@ -368,8 +499,10 @@ export default function Home() {
             <div className="section-head">
               <div>
                 <h2>دسته‌بندی‌ها</h2>
+
                 <p>
-                  محصولات را بر اساس دسته موردنظر پیدا کنید.
+                  دسته‌بندی موردنظر را انتخاب کنید و
+                  فروشگاه‌های مرتبط را پیدا کنید.
                 </p>
               </div>
 
@@ -404,129 +537,90 @@ export default function Home() {
         </section>
       )}
 
-      {/* SELLERS */}
-      {featuredSellers.length > 0 && (
-        <section className="section">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <h2>فروشندگان</h2>
-                <p>
-                  فروشگاه‌ها و محصولات فروشندگان را
-                  مشاهده کنید.
-                </p>
+      {/* SELLER CTA */}
+      <section className="section">
+        <div className="container">
+          <div
+            className="card"
+            style={{
+              padding: 28,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 24,
+              flexWrap: "wrap",
+            }}
+          >
+            <div
+              style={{
+                minWidth: 0,
+                flex: "1 1 420px",
+              }}
+            >
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 10,
+                  fontSize: 13,
+                  fontWeight: 750,
+                  color:
+                    "var(--color-primary)",
+                }}
+              >
+                <StoreIcon />
+                فروشنده هستید؟
               </div>
+
+              <h2
+                style={{
+                  margin: "0 0 8px",
+                }}
+              >
+                فروشگاه خودتان را در {platformName} بسازید
+              </h2>
+
+              <p
+                style={{
+                  margin: 0,
+                  color:
+                    "var(--color-text-muted)",
+                  lineHeight: 1.9,
+                }}
+              >
+                محصولاتتان را با تصاویر، مدل سه‌بعدی
+                و واقعیت افزوده معرفی کنید و مشتریان را
+                مستقیماً به فروشگاه خودتان هدایت کنید.
+              </p>
             </div>
 
-            <div className="grid grid-3">
-              {featuredSellers.map((seller) => (
-                <Link
-                  key={seller.slug}
-                  to={`/sellers/${seller.slug}`}
-                  className="card"
-                  style={{
-                    padding: 16,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 14,
-                    minWidth: 0,
-                    textDecoration: "none",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 58,
-                      height: 58,
-                      borderRadius: 16,
-                      overflow: "hidden",
-                      display: "grid",
-                      placeItems: "center",
-                      background:
-                        "var(--surface-2, #f4f4f4)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {seller.logoUrl ? (
-                      <img
-                        src={seller.logoUrl}
-                        alt={seller.storeName}
-                        loading="lazy"
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                        onError={(event) => {
-                          event.currentTarget.style.display =
-                            "none";
-                        }}
-                      />
-                    ) : (
-                      <StoreIcon />
-                    )}
-                  </div>
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+              }}
+            >
+              <Link
+                to="/plans"
+                className="btn btn-primary"
+              >
+                مشاهده پلن‌ها
+              </Link>
 
-                  <div
-                    style={{
-                      minWidth: 0,
-                      flex: 1,
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontWeight: 800,
-                        lineHeight: 1.5,
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {seller.storeName}
-                    </div>
-
-                    {seller.description && (
-                      <div
-                        style={{
-                          marginTop: 4,
-                          fontSize: ".84rem",
-                          lineHeight: 1.7,
-                          color:
-                            "var(--color-text-muted)",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                        }}
-                      >
-                        {seller.description}
-                      </div>
-                    )}
-                  </div>
-
-                  <span
-                    aria-hidden="true"
-                    style={{
-                      width: 32,
-                      height: 32,
-                      display: "grid",
-                      placeItems: "center",
-                      borderRadius: 10,
-                      background:
-                        "var(--surface-2, #f5f5f5)",
-                      color:
-                        "var(--color-text-muted)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    <ArrowIcon />
-                  </span>
-                </Link>
-              ))}
+              <a
+                href={ADMIN_URL}
+                className="btn btn-outline"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                ورود فروشندگان
+              </a>
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* HOW IT WORKS */}
       <section className="section section-alt">
@@ -534,13 +628,12 @@ export default function Home() {
           <div className="section-head">
             <div>
               <h2>
-                نمایش سه‌بعدی و واقعیت افزوده
-                چگونه کار می‌کند؟
+                تجربه فروشگاه و محصول چگونه کار می‌کند؟
               </h2>
 
               <p>
-                تجربه‌ای ساده برای بررسی محصول پیش از
-                تماس با فروشنده.
+                مسیر ساده‌ای برای پیدا کردن فروشگاه،
+                بررسی محصولات و تماس با فروشنده.
               </p>
             </div>
           </div>
@@ -548,37 +641,46 @@ export default function Home() {
           <div className="steps">
             <div className="step">
               <div className="num">۱</div>
-              <strong>مرور محصول</strong>
+
+              <strong>پیدا کردن فروشگاه</strong>
+
               <p className="muted">
-                محصول موردنظر را در فهرست یا جستجو پیدا
-                کنید.
+                فروشگاه موردنظر خود را از طریق جستجو،
+                دسته‌بندی‌ها یا فهرست فروشگاه‌ها پیدا کنید.
               </p>
             </div>
 
             <div className="step">
               <div className="num">۲</div>
-              <strong>مشاهده سه‌بعدی</strong>
+
+              <strong>ورود به فروشگاه</strong>
+
               <p className="muted">
-                مدل را بچرخانید، بزرگ‌نمایی کنید و از
-                هر زاویه ببینید.
+                وارد صفحه اختصاصی فروشگاه شوید و
+                محصولات همان فروشنده را ببینید.
               </p>
             </div>
 
             <div className="step">
               <div className="num">۳</div>
-              <strong>واقعیت افزوده</strong>
+
+              <strong>مشاهده سه‌بعدی و AR</strong>
+
               <p className="muted">
-                با دوربین گوشی، محصول را با اندازه واقعی
-                در فضای خودتان قرار دهید.
+                مدل محصول را بچرخانید، بزرگ‌نمایی کنید
+                و در صورت پشتیبانی، آن را در فضای واقعی
+                خودتان مشاهده کنید.
               </p>
             </div>
 
             <div className="step">
               <div className="num">۴</div>
+
               <strong>تماس با فروشنده</strong>
+
               <p className="muted">
-                در صورت تمایل، مستقیماً با فروشنده محصول
-                در تماس باشید.
+                در صورت تمایل، مستقیماً با فروشنده
+                همان فروشگاه در تماس باشید.
               </p>
             </div>
           </div>
