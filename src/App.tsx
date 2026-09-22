@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import {
+  HashRouter,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+
 import Layout from "./components/Layout";
+
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
@@ -11,39 +18,100 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Plans from "./pages/Plans";
 import NotFound from "./pages/NotFound";
+
 import { DataProvider, useData } from "./lib/data";
 import { applyBranding } from "./lib/theme";
+
+function ScrollToTop() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  }, [location.pathname, location.search]);
+
+  return null;
+}
 
 function BrandedApp() {
   const { settings } = useData();
 
   useEffect(() => {
+    if (!settings) return;
+
     applyBranding(settings);
   }, [settings]);
 
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<Home />} />
+    <>
+      <ScrollToTop />
 
-        <Route path="products" element={<Products />} />
-        <Route path="products/:slug" element={<ProductDetail />} />
+      <Routes>
+        <Route element={<Layout />}>
+          {/* Home */}
+          <Route
+            index
+            element={<Home />}
+          />
 
-        <Route path="sellers/:slug" element={<SellerStore />} />
+          {/* Products */}
+          <Route
+            path="products"
+            element={<Products />}
+          />
 
-        <Route path="categories" element={<Categories />} />
+          <Route
+            path="products/:slug"
+            element={<ProductDetail />}
+          />
 
-        <Route path="search" element={<Search />} />
+          {/* Sellers */}
+          <Route
+            path="sellers/:slug"
+            element={<SellerStore />}
+          />
 
-        <Route path="plans" element={<Plans />} />
+          {/* Categories */}
+          <Route
+            path="categories"
+            element={<Categories />}
+          />
 
-        <Route path="about" element={<About />} />
+          {/* Search */}
+          <Route
+            path="search"
+            element={<Search />}
+          />
 
-        <Route path="contact" element={<Contact />} />
+          {/* Seller Plans */}
+          <Route
+            path="plans"
+            element={<Plans />}
+          />
 
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+          {/* About */}
+          <Route
+            path="about"
+            element={<About />}
+          />
+
+          {/* Contact */}
+          <Route
+            path="contact"
+            element={<Contact />}
+          />
+
+          {/* 404 */}
+          <Route
+            path="*"
+            element={<NotFound />}
+          />
+        </Route>
+      </Routes>
+    </>
   );
 }
 
