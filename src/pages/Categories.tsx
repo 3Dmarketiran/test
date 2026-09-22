@@ -110,18 +110,29 @@ export default function Categories() {
   useSeo({
     title: "دسته‌بندی‌ها",
     description:
-      "دسته‌بندی‌های محصولات را ببینید و فروشگاه‌های مرتبط را پیدا کنید.",
+      "دسته‌بندی‌ها را ببینید و فروشگاه‌های مرتبط با هر دسته را پیدا کنید.",
   });
 
-  const counts = new Map<string, number>();
+  const storeCounts = new Map<string, Set<string>>();
 
   for (const product of products) {
-    if (product.category) {
-      counts.set(
-        product.category.slug,
-        (counts.get(product.category.slug) ?? 0) + 1
+    if (!product.category?.slug || !product.seller?.slug) {
+      continue;
+    }
+
+    const categorySlug = product.category.slug;
+    const sellerSlug = product.seller.slug;
+
+    if (!storeCounts.has(categorySlug)) {
+      storeCounts.set(
+        categorySlug,
+        new Set<string>()
       );
     }
+
+    storeCounts
+      .get(categorySlug)!
+      .add(sellerSlug);
   }
 
   return (
@@ -146,20 +157,23 @@ export default function Categories() {
                 marginBottom: 10,
                 padding: "7px 11px",
                 borderRadius: 999,
-                background: "var(--surface-2, #f5f5f5)",
-                color: "var(--text-muted, #666)",
+                background:
+                  "var(--surface-2, #f5f5f5)",
+                color:
+                  "var(--text-muted, #666)",
                 fontSize: 13,
                 fontWeight: 750,
               }}
             >
               <CategoryIcon />
-              دسته‌بندی محصولات
+              دسته‌بندی فروشگاه‌ها
             </div>
 
             <h1
               style={{
                 margin: 0,
-                fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
+                fontSize:
+                  "clamp(1.8rem, 5vw, 2.5rem)",
                 lineHeight: 1.2,
                 fontWeight: 900,
                 letterSpacing: "-0.025em",
@@ -172,30 +186,35 @@ export default function Categories() {
               style={{
                 margin: "9px 0 0",
                 maxWidth: 620,
-                color: "var(--text-muted, #777)",
+                color:
+                  "var(--text-muted, #777)",
                 fontSize: 14,
                 lineHeight: 1.9,
               }}
             >
-              دسته‌بندی موردنظر خود را انتخاب کنید و فروشگاه‌های
-              مرتبط با آن را پیدا کنید.
+              دسته‌بندی موردنظر خود را انتخاب کنید
+              و فروشگاه‌های مرتبط با آن را پیدا
+              کنید.
             </p>
           </div>
 
-          {!loading && categories.length > 0 && (
-            <div
-              style={{
-                padding: "9px 13px",
-                borderRadius: 11,
-                background: "var(--surface-2, #f5f5f5)",
-                color: "var(--text-muted, #666)",
-                fontSize: 13,
-                fontWeight: 750,
-              }}
-            >
-              {categories.length} دسته‌بندی فعال
-            </div>
-          )}
+          {!loading &&
+            categories.length > 0 && (
+              <div
+                style={{
+                  padding: "9px 13px",
+                  borderRadius: 11,
+                  background:
+                    "var(--surface-2, #f5f5f5)",
+                  color:
+                    "var(--text-muted, #666)",
+                  fontSize: 13,
+                  fontWeight: 750,
+                }}
+              >
+                {categories.length} دسته‌بندی فعال
+              </div>
+            )}
         </div>
 
         {loading ? (
@@ -205,16 +224,18 @@ export default function Categories() {
               gap: 16,
             }}
           >
-            {Array.from({ length: 8 }).map((_, index) => (
-              <div
-                key={index}
-                className="skeleton"
-                style={{
-                  height: 180,
-                  borderRadius: 18,
-                }}
-              />
-            ))}
+            {Array.from({ length: 8 }).map(
+              (_, index) => (
+                <div
+                  key={index}
+                  className="skeleton"
+                  style={{
+                    height: 180,
+                    borderRadius: 18,
+                  }}
+                />
+              )
+            )}
           </div>
         ) : categories.length === 0 ? (
           <div
@@ -256,13 +277,14 @@ export default function Categories() {
             <p
               style={{
                 margin: 0,
-                color: "var(--text-muted, #777)",
+                color:
+                  "var(--text-muted, #777)",
                 fontSize: 14,
                 lineHeight: 1.8,
               }}
             >
-              دسته‌بندی‌های فعال پس از ایجاد در این بخش نمایش داده
-              می‌شوند.
+              دسته‌بندی‌های فعال پس از ایجاد
+              در این بخش نمایش داده می‌شوند.
             </p>
           </div>
         ) : (
@@ -273,8 +295,9 @@ export default function Categories() {
             }}
           >
             {categories.map((category) => {
-              const productCount =
-                counts.get(category.slug) ?? 0;
+              const storeCount =
+                storeCounts.get(category.slug)
+                  ?.size ?? 0;
 
               return (
                 <Link
@@ -289,7 +312,8 @@ export default function Categories() {
                     padding: 20,
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "space-between",
+                    justifyContent:
+                      "space-between",
                     gap: 18,
                     textDecoration: "none",
                     overflow: "hidden",
@@ -301,7 +325,8 @@ export default function Categories() {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
+                      justifyContent:
+                        "space-between",
                       gap: 12,
                     }}
                   >
@@ -345,7 +370,8 @@ export default function Categories() {
                     style={{
                       display: "flex",
                       alignItems: "flex-end",
-                      justifyContent: "space-between",
+                      justifyContent:
+                        "space-between",
                       gap: 12,
                     }}
                   >
@@ -368,7 +394,7 @@ export default function Categories() {
                           fontSize: 13,
                         }}
                       >
-                        {productCount} محصول در این دسته
+                        {storeCount} فروشگاه مرتبط
                       </div>
                     </div>
 
@@ -396,23 +422,27 @@ export default function Categories() {
           </div>
         )}
 
-        {!loading && categories.length > 0 && (
-          <div
-            style={{
-              marginTop: 24,
-              padding: "15px 17px",
-              borderRadius: 14,
-              background: "var(--surface-2, #f7f7f7)",
-              color: "var(--text-muted, #777)",
-              fontSize: 13,
-              lineHeight: 1.9,
-              textAlign: "center",
-            }}
-          >
-            با انتخاب هر دسته، فروشگاه‌های مرتبط با آن را بررسی
-            کنید و سپس برای مشاهده محصولات وارد فروشگاه شوید.
-          </div>
-        )}
+        {!loading &&
+          categories.length > 0 && (
+            <div
+              style={{
+                marginTop: 24,
+                padding: "15px 17px",
+                borderRadius: 14,
+                background:
+                  "var(--surface-2, #f7f7f7)",
+                color:
+                  "var(--text-muted, #777)",
+                fontSize: 13,
+                lineHeight: 1.9,
+                textAlign: "center",
+              }}
+            >
+              با انتخاب هر دسته، فروشگاه‌های مرتبط
+              با آن را بررسی کنید و سپس برای مشاهده
+              محصولات وارد فروشگاه شوید.
+            </div>
+          )}
       </div>
     </section>
   );
