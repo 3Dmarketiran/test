@@ -119,71 +119,79 @@ function ExternalIcon() {
   );
 }
 
+function StoreSkeleton() {
+  return (
+    <div className="container section">
+      <div
+        className="skeleton"
+        style={{
+          height: 230,
+          borderRadius: 20,
+          marginBottom: 24,
+        }}
+      />
+
+      <div
+        className="skeleton"
+        style={{
+          height: 34,
+          width: 220,
+          borderRadius: 10,
+          marginBottom: 18,
+        }}
+      />
+
+      <div className="grid grid-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className="skeleton"
+            style={{
+              height: 330,
+              borderRadius: 18,
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function SellerStore() {
   const { slug } = useParams();
   const { sellers, products, loading } = useData();
 
-  const seller = sellers.find((s) => s.slug === slug);
+  const seller = sellers.find((item) => item.slug === slug);
 
-  const sellerProducts = products.filter(
-    (p) => p.seller.slug === slug
-  );
+  const sellerProducts = seller
+    ? products.filter(
+        (product) => product.seller.slug === seller.slug
+      )
+    : [];
 
   useSeo({
     title: seller
-      ? `${seller.storeName} | فروشگاه فروشنده`
-      : "فروشگاه فروشنده",
-    description: seller?.description ?? undefined,
+      ? `${seller.storeName} | فروشگاه`
+      : "فروشگاه پیدا نشد",
+    description:
+      seller?.description ??
+      "مشاهده فروشگاه و محصولات منتشرشده فروشنده",
     canonicalPath: `/sellers/${slug}`,
   });
 
   useEffect(() => {
-    if (seller) {
-      track("SELLER_PAGE_VIEW", {
-        sellerId: undefined,
-        metadata: {
-          sellerSlug: seller.slug,
-        },
-      });
-    }
+    if (!seller) return;
+
+    track("SELLER_PAGE_VIEW", {
+      sellerId: undefined,
+      metadata: {
+        sellerSlug: seller.slug,
+      },
+    });
   }, [seller]);
 
   if (loading) {
-    return (
-      <div className="container section">
-        <div
-          className="skeleton"
-          style={{
-            height: 230,
-            borderRadius: 20,
-            marginBottom: 24,
-          }}
-        />
-
-        <div
-          className="skeleton"
-          style={{
-            height: 34,
-            width: 220,
-            borderRadius: 10,
-            marginBottom: 18,
-          }}
-        />
-
-        <div className="grid grid-4">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div
-              key={index}
-              className="skeleton"
-              style={{
-                height: 330,
-                borderRadius: 18,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    );
+    return <StoreSkeleton />;
   }
 
   if (!seller) {
@@ -236,7 +244,6 @@ export default function SellerStore() {
             }}
           >
             این فروشگاه یافت نشد یا در حال حاضر در دسترس نیست.
-            ممکن است اشتراک فروشنده منقضی شده باشد.
           </p>
 
           <Link
@@ -246,7 +253,7 @@ export default function SellerStore() {
               marginTop: 20,
             }}
           >
-            مشاهده محصولات دیگر
+            مشاهده فروشگاه‌ها
           </Link>
         </div>
       </div>
@@ -279,7 +286,8 @@ export default function SellerStore() {
             overflow: "hidden",
             borderRadius: 20,
             background: "var(--surface-2, #f4f4f4)",
-            border: "1px solid var(--border, rgba(0,0,0,.08))",
+            border:
+              "1px solid var(--border, rgba(0,0,0,.08))",
           }}
         >
           {logo ? (
@@ -319,7 +327,7 @@ export default function SellerStore() {
             }}
           >
             <StoreIcon />
-            فروشگاه فروشنده
+            فروشگاه
           </div>
 
           <h1
@@ -328,6 +336,7 @@ export default function SellerStore() {
               fontSize: "clamp(1.45rem, 4vw, 1.9rem)",
               lineHeight: 1.35,
               fontWeight: 850,
+              wordBreak: "break-word",
             }}
           >
             {seller.storeName}
@@ -417,7 +426,7 @@ export default function SellerStore() {
               fontWeight: 850,
             }}
           >
-            محصولات این فروشنده
+            محصولات این فروشگاه
           </h2>
 
           <p
@@ -430,15 +439,6 @@ export default function SellerStore() {
             {sellerProducts.length} محصول منتشرشده
           </p>
         </div>
-
-        {sellerProducts.length > 0 && (
-          <Link
-            to="/products"
-            className="btn btn-outline btn-sm"
-          >
-            مشاهده همه محصولات
-          </Link>
-        )}
       </div>
 
       {sellerProducts.length === 0 ? (
@@ -484,9 +484,10 @@ export default function SellerStore() {
               margin: 0,
               color: "var(--color-text-muted, #777)",
               fontSize: 14,
+              lineHeight: 1.8,
             }}
           >
-            محصولات این فروشنده پس از انتشار در این بخش
+            محصولات این فروشگاه پس از انتشار در این بخش
             نمایش داده می‌شوند.
           </p>
         </div>
