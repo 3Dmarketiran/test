@@ -7,7 +7,7 @@ import { useSeo } from "../lib/seo";
 
 export default function ProductDetail() {
   const { slug } = useParams();
-  const { products, loading } = useData();
+  const { products, sellers, loading } = useData();
 
   const product = products.find(
     (p) => p.slug === slug
@@ -15,10 +15,12 @@ export default function ProductDetail() {
 
   useSeo({
     title: product
-      ? `${product.name} | خرید سه‌بعدی و AR`
+      ? `${product.name} | ${product.seller.storeName}`
       : "محصول",
     description:
-      product?.shortDescription ?? undefined,
+      product?.shortDescription ??
+      product?.fullDescription ??
+      undefined,
     image: product?.images[0]?.url,
     canonicalPath: `/products/${slug}`,
   });
@@ -119,19 +121,22 @@ export default function ProductDetail() {
             className="btn btn-primary"
             style={{ marginTop: 12 }}
           >
-            بازگشت به محصولات
+            بازگشت به فروشگاه‌ها
           </Link>
         </div>
       </main>
     );
   }
 
+  const seller = sellers.find(
+    (item) => item.slug === product.seller.slug
+  );
+
   const related = products
     .filter(
       (p) =>
         p.id !== product.id &&
-        p.category?.slug ===
-          product.category?.slug
+        p.seller.slug === product.seller.slug
     )
     .slice(0, 4);
 
@@ -153,21 +158,21 @@ export default function ProductDetail() {
 
         <span aria-hidden="true">‹</span>
 
-        <Link to="/products">
-          محصولات
+        <Link
+          to={`/sellers/${encodeURIComponent(
+            product.seller.slug
+          )}`}
+        >
+          {product.seller.storeName}
         </Link>
 
         {product.category && (
           <>
             <span aria-hidden="true">‹</span>
 
-            <Link
-              to={`/products?category=${encodeURIComponent(
-                product.category.slug
-              )}`}
-            >
+            <span>
               {product.category.name}
-            </Link>
+            </span>
           </>
         )}
 
@@ -193,11 +198,12 @@ export default function ProductDetail() {
           <h1>{product.name}</h1>
 
           <Link
-            to={`/sellers/${product.seller.slug}`}
+            to={`/sellers/${encodeURIComponent(
+              product.seller.slug
+            )}`}
             className="seller-link"
           >
-            فروشنده:{" "}
-            {product.seller.storeName}
+            فروشگاه: {product.seller.storeName}
           </Link>
 
           {product.shortDescription && (
@@ -274,6 +280,7 @@ export default function ProductDetail() {
           )}
 
           <SellerCard
+            seller={seller}
             sellerSlug={product.seller.slug}
           />
         </article>
@@ -287,24 +294,23 @@ export default function ProductDetail() {
           <div className="section-head">
             <div>
               <h2 id="related-products-title">
-                محصولات مشابه
+                محصولات دیگر این فروشگاه
               </h2>
 
               <p>
-                محصولات دیگری از همین دسته
+                محصولات دیگری که این فروشگاه
+                منتشر کرده است
               </p>
             </div>
 
-            {product.category && (
-              <Link
-                to={`/products?category=${encodeURIComponent(
-                  product.category.slug
-                )}`}
-                className="btn btn-outline btn-sm"
-              >
-                مشاهده همه
-              </Link>
-            )}
+            <Link
+              to={`/sellers/${encodeURIComponent(
+                product.seller.slug
+              )}`}
+              className="btn btn-outline btn-sm"
+            >
+              مشاهده فروشگاه
+            </Link>
           </div>
 
           <div className="grid grid-4">
@@ -332,16 +338,25 @@ function formatMeters(meters: number) {
 }
 
 function SellerCard({
+  seller,
   sellerSlug,
 }: {
+  seller:
+    | {
+        slug: string;
+        storeName: string;
+        description: string | null;
+        logoUrl: string | null;
+        contactEmail: string | null;
+        contactPhone: string | null;
+        socialLinks: Record<
+          string,
+          string
+        > | null;
+      }
+    | undefined;
   sellerSlug: string;
 }) {
-  const { sellers } = useData();
-
-  const seller = sellers.find(
-    (s) => s.slug === sellerSlug
-  );
-
   if (!seller) {
     return null;
   }
@@ -353,7 +368,7 @@ function SellerCard({
   return (
     <section
       className="seller-box"
-      aria-label="اطلاعات فروشنده"
+      aria-label="اطلاعات فروشگاه"
     >
       {seller.logoUrl ? (
         <img
@@ -361,6 +376,17 @@ function SellerCard({
           alt=""
           loading="lazy"
           decoding="async"
+          style={{
+            width: 50,
+            height: 50,
+            objectFit: "contain",
+            borderRadius: 15,
+            flex: "0 0 auto",
+          }}
+          onError={(event) => {
+            event.currentTarget.style.display =
+              "none";
+          }}
         />
       ) : (
         <div
@@ -397,36 +423,50 @@ function SellerCard({
           {seller.storeName}
         </div>
 
-        {hasContact && (
-          <div className="contact-row">
-            {seller.contactPhone && (
-              <a
-                href={`tel:${seller.contactPhone}`}
-                className="btn btn-outline btn-sm"
-                aria-label={`تماس با ${seller.storeName}`}
-              >
-                تماس تلفنی
-              </a>
-            )}
-
-            {seller.contactEmail && (
-              <a
-                href={`mailto:${seller.contactEmail}`}
-                className="btn btn-outline btn-sm"
-                aria-label={`ارسال ایمیل به ${seller.storeName}`}
-              >
-                ایمیل
-              </a>
-            )}
-
-            <Link
-              to={`/sellers/${seller.slug}`}
-              className="btn btn-primary btn-sm"
-            >
-              فروشگاه فروشنده
-            </Link>
-          </div>
+        {seller.description && (
+          <p
+            style={{
+              margin: "4px 0 10px",
+              color:
+                "var(--color-text-muted, #777)",
+              fontSize: 13,
+              lineHeight: 1.8,
+            }}
+          >
+            {seller.description}
+          </p>
         )}
+
+        <div className="contact-row">
+          {seller.contactPhone && (
+            <a
+              href={`tel:${seller.contactPhone}`}
+              className="btn btn-outline btn-sm"
+              aria-label={`تماس با ${seller.storeName}`}
+            >
+              تماس تلفنی
+            </a>
+          )}
+
+          {seller.contactEmail && (
+            <a
+              href={`mailto:${seller.contactEmail}`}
+              className="btn btn-outline btn-sm"
+              aria-label={`ارسال ایمیل به ${seller.storeName}`}
+            >
+              ایمیل
+            </a>
+          )}
+
+          <Link
+            to={`/sellers/${encodeURIComponent(
+              sellerSlug
+            )}`}
+            className="btn btn-primary btn-sm"
+          >
+            مشاهده فروشگاه
+          </Link>
+        </div>
       </div>
     </section>
   );
