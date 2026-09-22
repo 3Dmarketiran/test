@@ -8,19 +8,23 @@ export default function ProductCard({
   product: PublicProduct;
 }) {
   const primary =
-    product.images.find((i) => i.isPrimary) ??
+    product.images.find((image) => image.isPrimary) ??
     product.images[0];
 
   const has3d = product.models.some(
-    (m) => m.kind === "GLB" || m.kind === "GLTF"
+    (model) =>
+      model.kind === "GLB" ||
+      model.kind === "GLTF"
   );
 
-  const hasAr =
-    product.models.some((m) => m.kind === "USDZ") ||
-    has3d;
+  const hasAr = product.models.some(
+    (model) => model.kind === "USDZ"
+  );
 
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] =
+    useState(false);
+  const [imageError, setImageError] =
+    useState(false);
 
   const showImage =
     Boolean(primary?.url) && !imageError;
@@ -53,7 +57,9 @@ export default function ProductCard({
               alt={product.name}
               loading="lazy"
               decoding="async"
-              onLoad={() => setImageLoaded(true)}
+              onLoad={() =>
+                setImageLoaded(true)
+              }
               onError={() => {
                 setImageError(true);
                 setImageLoaded(false);
@@ -85,7 +91,9 @@ export default function ProductCard({
           >
             <span
               aria-hidden="true"
-              style={{ fontSize: 32 }}
+              style={{
+                fontSize: 32,
+              }}
             >
               🖼️
             </span>
@@ -101,10 +109,24 @@ export default function ProductCard({
           </div>
         )}
 
-        {has3d && (
-          <span className="badge">
-            <span aria-hidden="true">🧊</span>{" "}
-            سه‌بعدی{hasAr ? " / AR" : ""}
+        {(has3d || hasAr) && (
+          <span
+            className="badge"
+            aria-label={[
+              has3d ? "سه‌بعدی" : "",
+              hasAr ? "واقعیت افزوده" : "",
+            ]
+              .filter(Boolean)
+              .join(" و ")}
+          >
+            <span aria-hidden="true">
+              {hasAr ? "📱" : "🧊"}
+            </span>{" "}
+            {has3d && hasAr
+              ? "سه‌بعدی / AR"
+              : hasAr
+                ? "AR"
+                : "سه‌بعدی"}
           </span>
         )}
       </div>
@@ -121,15 +143,6 @@ export default function ProductCard({
         )}
 
         <div className="product-card__meta">
-          {product.seller?.storeName && (
-            <span
-              className="chip"
-              title={product.seller.storeName}
-            >
-              {product.seller.storeName}
-            </span>
-          )}
-
           {product.category?.name && (
             <span
               className="chip"
