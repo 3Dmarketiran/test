@@ -72,12 +72,45 @@ function ArrowIcon() {
   );
 }
 
+function StoreIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 10v9a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-9"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M3 10l2-6h14l2 6"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3 10c.5 1.3 1.5 2 3 2s2.5-.7 3-2c.5 1.3 1.5 2 3 2s2.5-.7 3-2c.5 1.3 1.5 2 3 2s2.5-.7 3-2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function Categories() {
   const { categories, products, loading } = useData();
 
   useSeo({
     title: "دسته‌بندی‌ها",
-    description: "مرور محصولات بر اساس دسته‌بندی.",
+    description:
+      "دسته‌بندی‌های محصولات را ببینید و فروشگاه‌های مرتبط را پیدا کنید.",
   });
 
   const counts = new Map<string, number>();
@@ -96,11 +129,11 @@ export default function Categories() {
       <div className="container">
         <div
           style={{
-            marginBottom: 26,
+            marginBottom: 28,
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "space-between",
-            gap: 16,
+            gap: 18,
             flexWrap: "wrap",
           }}
         >
@@ -110,13 +143,13 @@ export default function Categories() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 7,
-                marginBottom: 9,
-                padding: "6px 10px",
+                marginBottom: 10,
+                padding: "7px 11px",
                 borderRadius: 999,
                 background: "var(--surface-2, #f5f5f5)",
                 color: "var(--text-muted, #666)",
                 fontSize: 13,
-                fontWeight: 700,
+                fontWeight: 750,
               }}
             >
               <CategoryIcon />
@@ -126,10 +159,10 @@ export default function Categories() {
             <h1
               style={{
                 margin: 0,
-                fontSize: "clamp(1.7rem, 4vw, 2.2rem)",
-                lineHeight: 1.25,
-                fontWeight: 850,
-                letterSpacing: "-0.02em",
+                fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
+                lineHeight: 1.2,
+                fontWeight: 900,
+                letterSpacing: "-0.025em",
               }}
             >
               دسته‌بندی‌ها
@@ -137,27 +170,30 @@ export default function Categories() {
 
             <p
               style={{
-                margin: "8px 0 0",
+                margin: "9px 0 0",
+                maxWidth: 620,
                 color: "var(--text-muted, #777)",
                 fontSize: 14,
+                lineHeight: 1.9,
               }}
             >
-              محصولات را بر اساس دسته‌بندی پیدا کنید.
+              دسته‌بندی موردنظر خود را انتخاب کنید و فروشگاه‌های
+              مرتبط با آن را پیدا کنید.
             </p>
           </div>
 
           {!loading && categories.length > 0 && (
             <div
               style={{
-                padding: "8px 12px",
-                borderRadius: 10,
+                padding: "9px 13px",
+                borderRadius: 11,
                 background: "var(--surface-2, #f5f5f5)",
                 color: "var(--text-muted, #666)",
                 fontSize: 13,
-                fontWeight: 700,
+                fontWeight: 750,
               }}
             >
-              {categories.length} دسته‌بندی
+              {categories.length} دسته‌بندی فعال
             </div>
           )}
         </div>
@@ -174,7 +210,7 @@ export default function Categories() {
                 key={index}
                 className="skeleton"
                 style={{
-                  height: 150,
+                  height: 180,
                   borderRadius: 18,
                 }}
               />
@@ -222,9 +258,10 @@ export default function Categories() {
                 margin: 0,
                 color: "var(--text-muted, #777)",
                 fontSize: 14,
+                lineHeight: 1.8,
               }}
             >
-              بعد از ایجاد دسته‌بندی، محصولات اینجا نمایش داده
+              دسته‌بندی‌های فعال پس از ایجاد در این بخش نمایش داده
               می‌شوند.
             </p>
           </div>
@@ -248,7 +285,7 @@ export default function Categories() {
                   className="card"
                   style={{
                     position: "relative",
-                    minHeight: 150,
+                    minHeight: 180,
                     padding: 20,
                     display: "flex",
                     flexDirection: "column",
@@ -257,22 +294,51 @@ export default function Categories() {
                     textDecoration: "none",
                     overflow: "hidden",
                     transition:
-                      "transform .2s ease, box-shadow .2s ease",
+                      "transform .2s ease, box-shadow .2s ease, border-color .2s ease",
                   }}
                 >
                   <div
                     style={{
-                      width: 48,
-                      height: 48,
-                      display: "grid",
-                      placeItems: "center",
-                      borderRadius: 14,
-                      background:
-                        "var(--surface-2, #f4f4f4)",
-                      color: "var(--color-primary, currentColor)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 12,
                     }}
                   >
-                    <CategoryIcon />
+                    <div
+                      style={{
+                        width: 48,
+                        height: 48,
+                        display: "grid",
+                        placeItems: "center",
+                        borderRadius: 14,
+                        background:
+                          "var(--surface-2, #f4f4f4)",
+                        color:
+                          "var(--color-primary, currentColor)",
+                      }}
+                    >
+                      <CategoryIcon />
+                    </div>
+
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "6px 9px",
+                        borderRadius: 999,
+                        background:
+                          "var(--surface-2, #f5f5f5)",
+                        color:
+                          "var(--text-muted, #777)",
+                        fontSize: 11,
+                        fontWeight: 750,
+                      }}
+                    >
+                      <StoreIcon />
+                      فروشگاه‌ها
+                    </span>
                   </div>
 
                   <div
@@ -286,7 +352,7 @@ export default function Categories() {
                     <div>
                       <div
                         style={{
-                          fontWeight: 800,
+                          fontWeight: 850,
                           fontSize: "1.05rem",
                           lineHeight: 1.5,
                         }}
@@ -296,20 +362,21 @@ export default function Categories() {
 
                       <div
                         style={{
-                          marginTop: 5,
-                          color: "var(--color-text-muted, #777)",
+                          marginTop: 6,
+                          color:
+                            "var(--color-text-muted, #777)",
                           fontSize: 13,
                         }}
                       >
-                        {productCount} محصول
+                        {productCount} محصول در این دسته
                       </div>
                     </div>
 
                     <span
                       aria-hidden="true"
                       style={{
-                        width: 34,
-                        height: 34,
+                        width: 36,
+                        height: 36,
                         flexShrink: 0,
                         display: "grid",
                         placeItems: "center",
@@ -326,6 +393,24 @@ export default function Categories() {
                 </Link>
               );
             })}
+          </div>
+        )}
+
+        {!loading && categories.length > 0 && (
+          <div
+            style={{
+              marginTop: 24,
+              padding: "15px 17px",
+              borderRadius: 14,
+              background: "var(--surface-2, #f7f7f7)",
+              color: "var(--text-muted, #777)",
+              fontSize: 13,
+              lineHeight: 1.9,
+              textAlign: "center",
+            }}
+          >
+            با انتخاب هر دسته، فروشگاه‌های مرتبط با آن را بررسی
+            کنید و سپس برای مشاهده محصولات وارد فروشگاه شوید.
           </div>
         )}
       </div>
