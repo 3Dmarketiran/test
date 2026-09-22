@@ -1,11 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { useData } from "../lib/data";
-import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
 import { track } from "../lib/analytics";
-
-type SortKey = "newest" | "popular" | "alpha";
 
 function SearchIcon() {
   return (
@@ -52,7 +49,45 @@ function CloseIcon() {
   );
 }
 
-function FilterIcon() {
+function StoreIcon() {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4 10v9a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-9"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M3 10l2-6h14l2 6"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3 10c.5 1.3 1.5 2 3 2s2.5-.7 3-2c.5 1.3 1.5 2 3 2s2.5-.7 3-2c.5 1.3 1.5 2 3 2s2.5-.7 3-2"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 20v-5h6v5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
   return (
     <svg
       width="18"
@@ -62,28 +97,32 @@ function FilterIcon() {
       aria-hidden="true"
     >
       <path
-        d="M4 6h16M7 12h10M10 18h4"
+        d="M5 12h13"
         stroke="currentColor"
         strokeWidth="2"
         strokeLinecap="round"
+      />
+      <path
+        d="m13 6 6 6-6 6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
 }
 
 export default function Products() {
-  const { products, categories, sellers, loading } = useData();
+  const { sellers, loading } = useData();
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState(params.get("q") ?? "");
 
   useSeo({
-    title: "همه محصولات",
-    description: "مرور و فیلتر همه محصولات منتشرشده.",
+    title: "فروشگاه‌ها",
+    description:
+      "فروشگاه‌های فعال را پیدا کنید و برای مشاهده محصولات وارد فروشگاه موردنظر شوید.",
   });
-
-  const activeCategory = params.get("category") ?? "";
-  const activeSeller = params.get("seller") ?? "";
-  const sort = (params.get("sort") as SortKey) || "newest";
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -105,6 +144,7 @@ export default function Products() {
         track("SEARCH", {
           metadata: {
             q: query.trim(),
+            scope: "stores",
           },
         });
       }
@@ -113,96 +153,34 @@ export default function Products() {
     return () => clearTimeout(timer);
   }, [query, params, setParams]);
 
-  const filtered = useMemo(() => {
-    let list = [...products];
+  const filteredSellers = useMemo(() => {
+    const q = (params.get("q") ?? "").trim().toLocaleLowerCase("fa");
 
-    const q = (params.get("q") ?? "").trim().toLowerCase();
-
-    if (q) {
-      list = list.filter((p) => {
-        const name = p.name?.toLowerCase() ?? "";
-        const description = p.shortDescription?.toLowerCase() ?? "";
-        const tags = Array.isArray(p.tags)
-          ? p.tags.map((tag) => tag.toLowerCase())
-          : [];
-
-        return (
-          name.includes(q) ||
-          description.includes(q) ||
-          tags.some((tag) => tag.includes(q))
-        );
-      });
+    if (!q) {
+      return sellers;
     }
 
-    if (activeCategory) {
-      list = list.filter(
-        (p) => p.category?.slug === activeCategory
-      );
-    }
+    return sellers.filter((seller) => {
+      const storeName = seller.storeName?.toLocaleLowerCase("fa") ?? "";
+      const slug = seller.slug?.toLocaleLowerCase("fa") ?? "";
 
-    if (activeSeller) {
-      list = list.filter(
-        (p) => p.seller.slug === activeSeller
+      return (
+        storeName.includes(q) ||
+        slug.includes(q)
       );
-    }
+    });
+  }, [sellers, params]);
 
-    if (sort === "alpha") {
-      list.sort((a, b) =>
-        a.name.localeCompare(b.name, "fa")
-      );
-    } else if (sort === "newest") {
-      list.sort((a, b) =>
-        (b.publishedAt ?? "").localeCompare(
-          a.publishedAt ?? ""
-        )
-      );
-    } else {
-      // Analytics view counts are not available in the
-      // static product snapshot, so popular falls back
-      // to newest-first.
-      list.sort((a, b) =>
-        (b.publishedAt ?? "").localeCompare(
-          a.publishedAt ?? ""
-        )
-      );
-    }
+  function clearSearch() {
+    setQuery("");
 
-    return list;
-  }, [
-    products,
-    params,
-    activeCategory,
-    activeSeller,
-    sort,
-  ]);
-
-  function setParam(key: string, value: string) {
     const next = new URLSearchParams(params);
-
-    if (value) {
-      next.set(key, value);
-    } else {
-      next.delete(key);
-    }
+    next.delete("q");
 
     setParams(next, { replace: true });
   }
 
-  function clearFilters() {
-    const next = new URLSearchParams();
-
-    if (query.trim()) {
-      setQuery("");
-    }
-
-    setParams(next, { replace: true });
-  }
-
-  const hasFilters =
-    Boolean(query.trim()) ||
-    Boolean(activeCategory) ||
-    Boolean(activeSeller) ||
-    sort !== "newest";
+  const hasSearch = Boolean(query.trim());
 
   return (
     <section className="section products-page">
@@ -211,8 +189,8 @@ export default function Products() {
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 18,
-            marginBottom: 24,
+            gap: 22,
+            marginBottom: 30,
           }}
         >
           <div
@@ -220,23 +198,23 @@ export default function Products() {
               display: "flex",
               alignItems: "flex-end",
               justifyContent: "space-between",
-              gap: 18,
+              gap: 20,
               flexWrap: "wrap",
             }}
           >
-            <div>
+            <div style={{ minWidth: 0 }}>
               <div
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 7,
-                  marginBottom: 8,
-                  padding: "6px 10px",
+                  marginBottom: 10,
+                  padding: "7px 11px",
                   borderRadius: 999,
                   background: "var(--surface-2, #f5f5f5)",
                   color: "var(--text-muted, #666)",
                   fontSize: 13,
-                  fontWeight: 700,
+                  fontWeight: 750,
                 }}
               >
                 <span
@@ -247,31 +225,32 @@ export default function Products() {
                     background: "currentColor",
                   }}
                 />
-                فروشگاه محصولات
+                بازار فروشگاه‌ها
               </div>
 
               <h1
                 style={{
                   margin: 0,
-                  fontSize: "clamp(1.7rem, 4vw, 2.2rem)",
-                  lineHeight: 1.25,
-                  fontWeight: 850,
-                  letterSpacing: "-0.02em",
+                  fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
+                  lineHeight: 1.2,
+                  fontWeight: 900,
+                  letterSpacing: "-0.025em",
                 }}
               >
-                همه محصولات
+                فروشگاه‌ها
               </h1>
 
               <p
                 style={{
-                  margin: "8px 0 0",
+                  margin: "9px 0 0",
+                  maxWidth: 620,
                   color: "var(--text-muted, #777)",
                   fontSize: 14,
+                  lineHeight: 1.9,
                 }}
               >
-                {loading
-                  ? "در حال بارگذاری محصولات..."
-                  : `${filtered.length} محصول یافت شد`}
+                فروشگاه موردنظر خود را پیدا کنید و برای مشاهده محصولات،
+                اطلاعات و مدل‌های سه‌بعدی وارد فروشگاه شوید.
               </p>
             </div>
 
@@ -279,7 +258,7 @@ export default function Products() {
               className="search-box"
               style={{
                 width: "100%",
-                maxWidth: 380,
+                maxWidth: 400,
                 position: "relative",
               }}
             >
@@ -287,10 +266,10 @@ export default function Products() {
 
               <input
                 type="search"
-                placeholder="جستجوی محصول، دسته یا ویژگی..."
+                placeholder="جستجوی نام فروشگاه..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                aria-label="جستجوی محصول"
+                aria-label="جستجوی فروشگاه"
                 style={{
                   paddingLeft: query ? 42 : 16,
                   paddingRight: 44,
@@ -300,7 +279,7 @@ export default function Products() {
               {query && (
                 <button
                   type="button"
-                  onClick={() => setQuery("")}
+                  onClick={clearSearch}
                   aria-label="پاک کردن جستجو"
                   style={{
                     position: "absolute",
@@ -315,10 +294,8 @@ export default function Products() {
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
-                    background:
-                      "var(--surface-2, #f3f3f3)",
-                    color:
-                      "var(--text-muted, #666)",
+                    background: "var(--surface-2, #f3f3f3)",
+                    color: "var(--text-muted, #666)",
                   }}
                 >
                   <CloseIcon />
@@ -331,144 +308,77 @@ export default function Products() {
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 8,
-              color: "var(--text-muted, #777)",
-              fontSize: 13,
-              fontWeight: 700,
+              justifyContent: "space-between",
+              gap: 12,
+              flexWrap: "wrap",
+              padding: "14px 16px",
+              borderRadius: 14,
+              border: "1px solid var(--border, #e8e8e8)",
+              background: "var(--surface, #fff)",
             }}
           >
-            <FilterIcon />
-            فیلتر و مرتب‌سازی
-          </div>
-
-          <div
-            className="pill-row"
-            style={{
-              margin: 0,
-              paddingBottom: 2,
-              overflowX: "auto",
-              flexWrap: "nowrap",
-              scrollbarWidth: "none",
-            }}
-          >
-            <button
-              type="button"
-              className={`pill${
-                !activeCategory ? " active" : ""
-              }`}
-              onClick={() => setParam("category", "")}
-              style={{ flexShrink: 0 }}
-            >
-              همه دسته‌ها
-            </button>
-
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                type="button"
-                className={`pill${
-                  activeCategory === category.slug
-                    ? " active"
-                    : ""
-                }`}
-                onClick={() =>
-                  setParam("category", category.slug)
-                }
-                style={{ flexShrink: 0 }}
-              >
-                {category.name}
-              </button>
-            ))}
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns:
-                "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: 10,
-            }}
-          >
-            <select
-              value={activeSeller}
-              onChange={(e) =>
-                setParam("seller", e.target.value)
-              }
-              className="btn btn-outline btn-sm"
-              aria-label="فیلتر فروشنده"
+            <div
               style={{
-                width: "100%",
-                minHeight: 42,
-                cursor: "pointer",
-                textAlign: "right",
+                display: "flex",
+                alignItems: "center",
+                gap: 9,
+                color: "var(--text-muted, #777)",
+                fontSize: 13,
+                fontWeight: 700,
               }}
             >
-              <option value="">همه فروشندگان</option>
+              <StoreIcon />
 
-              {sellers.map((seller) => (
-                <option
-                  key={seller.slug}
-                  value={seller.slug}
-                >
-                  {seller.storeName}
-                </option>
-              ))}
-            </select>
+              <span>
+                {loading
+                  ? "در حال بارگذاری فروشگاه‌ها..."
+                  : hasSearch
+                    ? `${filteredSellers.length} فروشگاه پیدا شد`
+                    : `${filteredSellers.length} فروشگاه فعال`}
+              </span>
+            </div>
 
-            <select
-              value={sort}
-              onChange={(e) =>
-                setParam("sort", e.target.value)
-              }
-              className="btn btn-outline btn-sm"
-              aria-label="مرتب‌سازی محصولات"
-              style={{
-                width: "100%",
-                minHeight: 42,
-                cursor: "pointer",
-                textAlign: "right",
-              }}
-            >
-              <option value="newest">جدیدترین</option>
-              <option value="popular">محبوب‌ترین</option>
-              <option value="alpha">الفبایی</option>
-            </select>
-
-            {hasFilters && (
+            {hasSearch && (
               <button
                 type="button"
+                onClick={clearSearch}
                 className="btn btn-outline btn-sm"
-                onClick={clearFilters}
                 style={{
-                  minHeight: 42,
-                  cursor: "pointer",
+                  minHeight: 36,
                   whiteSpace: "nowrap",
                 }}
               >
-                پاک کردن فیلترها
+                حذف جستجو
               </button>
             )}
           </div>
         </div>
 
         {loading ? (
-          <div className="grid grid-4">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(auto-fill, minmax(230px, 1fr))",
+              gap: 18,
+            }}
+          >
             {Array.from({ length: 8 }).map((_, index) => (
               <div
                 key={index}
                 className="skeleton"
                 style={{
-                  aspectRatio: "3 / 4",
-                  borderRadius: 16,
+                  minHeight: 270,
+                  borderRadius: 20,
                 }}
               />
             ))}
           </div>
-        ) : filtered.length === 0 ? (
+        ) : filteredSellers.length === 0 ? (
           <div
             className="empty-state"
             style={{
-              minHeight: 300,
+              minHeight: 320,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -481,15 +391,15 @@ export default function Products() {
               className="icon"
               aria-hidden="true"
               style={{
-                width: 58,
-                height: 58,
+                width: 64,
+                height: 64,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                borderRadius: 16,
-                marginBottom: 14,
-                background:
-                  "var(--surface-2, #f4f4f4)",
+                borderRadius: 18,
+                marginBottom: 16,
+                background: "var(--surface-2, #f4f4f4)",
+                color: "var(--text-muted, #777)",
               }}
             >
               <SearchIcon />
@@ -498,42 +408,225 @@ export default function Products() {
             <h2
               style={{
                 margin: "0 0 8px",
-                fontSize: "1.1rem",
-                fontWeight: 800,
+                fontSize: "1.15rem",
+                fontWeight: 850,
               }}
             >
-              محصولی پیدا نشد
+              فروشگاهی پیدا نشد
             </h2>
 
             <p
               style={{
-                margin: "0 0 18px",
+                margin: "0 0 20px",
+                maxWidth: 430,
                 color: "var(--text-muted, #777)",
                 fontSize: 14,
+                lineHeight: 1.9,
               }}
             >
-              با تغییر عبارت جستجو یا حذف فیلترها دوباره
-              امتحان کنید.
+              نام فروشگاه را بررسی کنید یا عبارت جستجو را تغییر دهید.
             </p>
 
-            {hasFilters && (
+            {hasSearch && (
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={clearFilters}
+                onClick={clearSearch}
               >
-                نمایش همه محصولات
+                نمایش همه فروشگاه‌ها
               </button>
             )}
           </div>
         ) : (
-          <div className="grid grid-4">
-            {filtered.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-              />
-            ))}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(auto-fill, minmax(230px, 1fr))",
+              gap: 18,
+            }}
+          >
+            {filteredSellers.map((seller) => {
+              const logoUrl =
+                "logoUrl" in seller && seller.logoUrl
+                  ? seller.logoUrl
+                  : "";
+
+              const storeName =
+                seller.storeName || "فروشگاه بدون نام";
+
+              return (
+                <Link
+                  key={seller.id ?? seller.slug}
+                  to={`/sellers/${seller.slug}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    minHeight: 270,
+                    overflow: "hidden",
+                    textDecoration: "none",
+                    color: "inherit",
+                    borderRadius: 20,
+                    border:
+                      "1px solid var(--border, #e8e8e8)",
+                    background:
+                      "var(--surface, #fff)",
+                    transition:
+                      "transform .2s ease, box-shadow .2s ease, border-color .2s ease",
+                  }}
+                  onMouseEnter={(event) => {
+                    event.currentTarget.style.transform =
+                      "translateY(-3px)";
+                    event.currentTarget.style.boxShadow =
+                      "0 14px 34px rgba(0,0,0,.08)";
+                  }}
+                  onMouseLeave={(event) => {
+                    event.currentTarget.style.transform =
+                      "translateY(0)";
+                    event.currentTarget.style.boxShadow =
+                      "none";
+                  }}
+                >
+                  <div
+                    style={{
+                      minHeight: 175,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: 28,
+                      background:
+                        "var(--surface-2, #f7f7f7)",
+                    }}
+                  >
+                    {logoUrl ? (
+                      <img
+                        src={logoUrl}
+                        alt={storeName}
+                        loading="lazy"
+                        style={{
+                          width: 108,
+                          height: 108,
+                          objectFit: "contain",
+                          borderRadius: 22,
+                          background:
+                            "var(--surface, #fff)",
+                          border:
+                            "1px solid var(--border, #e8e8e8)",
+                          padding: 12,
+                        }}
+                        onError={(event) => {
+                          event.currentTarget.style.display =
+                            "none";
+
+                          const fallback =
+                            event.currentTarget
+                              .nextElementSibling as HTMLElement | null;
+
+                          if (fallback) {
+                            fallback.style.display = "flex";
+                          }
+                        }}
+                      />
+                    ) : null}
+
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        width: 108,
+                        height: 108,
+                        display: logoUrl ? "none" : "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: 22,
+                        background:
+                          "var(--surface, #fff)",
+                        border:
+                          "1px solid var(--border, #e8e8e8)",
+                        color:
+                          "var(--text-muted, #777)",
+                      }}
+                    >
+                      <StoreIcon />
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      flex: 1,
+                      gap: 12,
+                      padding: "17px 18px 18px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        minWidth: 0,
+                      }}
+                    >
+                      <h2
+                        style={{
+                          margin: 0,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          fontSize: "1.05rem",
+                          fontWeight: 850,
+                        }}
+                      >
+                        {storeName}
+                      </h2>
+
+                      <p
+                        style={{
+                          margin: "6px 0 0",
+                          color:
+                            "var(--text-muted, #777)",
+                          fontSize: 12,
+                          direction: "ltr",
+                          textAlign: "right",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        /{seller.slug}
+                      </p>
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: "auto",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 10,
+                        color: "var(--text-muted, #777)",
+                        fontSize: 13,
+                        fontWeight: 750,
+                      }}
+                    >
+                      <span>مشاهده فروشگاه</span>
+
+                      <span
+                        style={{
+                          width: 34,
+                          height: 34,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          borderRadius: 10,
+                          background:
+                            "var(--surface-2, #f3f3f3)",
+                        }}
+                      >
+                        <ArrowIcon />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
