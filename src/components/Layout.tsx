@@ -72,7 +72,13 @@ export default function Layout() {
               href={ADMIN_URL}
               className="btn btn-primary btn-sm seller-access-btn"
             >
-              ورود / ثبت‌نام فروشندگان
+              <span className="seller-access-full">
+                ورود / ثبت‌نام فروشندگان
+              </span>
+
+              <span className="seller-access-mobile">
+                ورود فروشندگان
+              </span>
             </a>
 
             <button
