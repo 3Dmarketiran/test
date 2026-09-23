@@ -109,26 +109,6 @@ export default function ProductCard({
           </div>
         )}
 
-        {(has3d || hasAr) && (
-          <span
-            className="badge"
-            aria-label={[
-              has3d ? "سه‌بعدی" : "",
-              hasAr ? "واقعیت افزوده" : "",
-            ]
-              .filter(Boolean)
-              .join(" و ")}
-          >
-            <span aria-hidden="true">
-              {hasAr ? "📱" : "🧊"}
-            </span>{" "}
-            {has3d && hasAr
-              ? "سه‌بعدی / AR"
-              : hasAr
-                ? "AR"
-                : "سه‌بعدی"}
-          </span>
-        )}
       </div>
 
       <div className="product-card__body">
@@ -142,18 +122,6 @@ export default function ProductCard({
           </p>
         )}
 
-        <div className="product-card__meta">
-          {has3d && (
-            <span className="chip premium-product-chip">
-              3D
-            </span>
-          )}
-          {hasAr && (
-            <span className="chip premium-product-chip">
-              AR
-            </span>
-          )}
-        </div>
       </div>
     </Link>
   );
