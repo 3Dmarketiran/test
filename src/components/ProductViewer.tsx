@@ -186,6 +186,7 @@ export default function ProductViewer({ product }: Props) {
                 viewerRef as React.RefObject<HTMLElement>
               }
               src={glb.url}
+              crossorigin="anonymous"
               ios-src={usdz?.url}
               alt={product.name}
               poster={poster}
