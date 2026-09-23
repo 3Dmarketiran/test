@@ -77,6 +77,46 @@ async function loadJson<T>(
   }
 }
 
+
+async function hydrateMissingSellerLogos(
+  sellers: PublicSeller[],
+  signal: AbortSignal
+): Promise<PublicSeller[]> {
+  const apiUrl = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/+$/, "");
+  if (!apiUrl) return sellers;
+
+  const missing = sellers.filter((seller) => !seller.logoUrl);
+  if (!missing.length) return sellers;
+
+  const results = await Promise.allSettled(
+    missing.map(async (seller) => {
+      const response = await fetch(
+        `${apiUrl}/api/sellers/by-slug/${encodeURIComponent(seller.slug)}`,
+        { signal, headers: { Accept: "application/json" } }
+      );
+      if (!response.ok) return null;
+      const data = (await response.json()) as { seller?: { logoUrl?: string | null } };
+      return data.seller?.logoUrl
+        ? { slug: seller.slug, logoUrl: data.seller.logoUrl }
+        : null;
+    })
+  );
+
+  const logoBySlug = new Map<string, string>();
+  for (const result of results) {
+    if (result.status === "fulfilled" && result.value) {
+      logoBySlug.set(result.value.slug, result.value.logoUrl);
+    }
+  }
+
+  if (!logoBySlug.size) return sellers;
+  return sellers.map((seller) =>
+    logoBySlug.has(seller.slug)
+      ? { ...seller, logoUrl: logoBySlug.get(seller.slug) ?? seller.logoUrl }
+      : seller
+  );
+}
+
 function validateArray<T>(
   value: unknown,
   name: string
@@ -147,9 +187,12 @@ export function DataProvider({
           );
 
         const sellers =
-          validateArray<PublicSeller>(
-            sellersData,
-            "sellers.json"
+          await hydrateMissingSellerLogos(
+            validateArray<PublicSeller>(
+              sellersData,
+              "sellers.json"
+            ),
+            controller.signal
           );
 
         const categories =
