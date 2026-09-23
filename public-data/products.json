@@ -9,7 +9,8 @@
     "category": null,
     "seller": {
       "slug": "test-2-vn5xio",
-      "storeName": "test 2"
+      "storeName": "test 2",
+      "category": null
     },
     "images": [
       {
@@ -24,46 +25,6 @@
       }
     ],
     "dimensions": null,
-    "publishedAt": "2026-09-21T09:04:32.587Z"
-  },
-  {
-    "id": "cmuayu5fg000nznuyxalg8q9h",
-    "slug": "test-7olbw_",
-    "name": "test",
-    "shortDescription": "test",
-    "fullDescription": null,
-    "tags": [],
-    "category": null,
-    "seller": {
-      "slug": "test-qa20kn",
-      "storeName": "test"
-    },
-    "images": [
-      {
-        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/images/o0vTxFCHz1pWAaZN.jpeg",
-        "isPrimary": false
-      },
-      {
-        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/images/IHU-we7pVtEKdork.jpg",
-        "isPrimary": true
-      }
-    ],
-    "models": [
-      {
-        "kind": "GLB",
-        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/models/ATIrq0-9Zjw7fuDg.glb"
-      },
-      {
-        "kind": "USDZ",
-        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/models/ItQH_WaP3kl5t85w.usdz"
-      }
-    ],
-    "dimensions": {
-      "widthM": 0.1,
-      "heightM": 0.1,
-      "depthM": 0.1,
-      "realWorldScale": true
-    },
-    "publishedAt": "2026-09-22T15:23:56.365Z"
+    "publishedAt": "2026-09-22T20:45:02.064Z"
   }
 ]
