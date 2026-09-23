@@ -1,24 +1,24 @@
 [
   {
+    "slug": "test-qa20kn",
+    "storeName": "test",
+    "description": "avalin forushgah",
+    "logoUrl": "https://threedmarketiran-backend.onrender.com/api/sellers/by-slug/test-qa20kn/logo",
+    "contactEmail": "seller@gmail.com",
+    "contactPhone": "09144142898",
+    "address": "tabriz valiasr",
+    "category": null,
+    "socialLinks": {}
+  },
+  {
     "slug": "test-2-vn5xio",
     "storeName": "test 2",
     "description": null,
-    "logoUrl": null,
+    "logoUrl": "https://threedmarketiran-backend.onrender.com/api/sellers/by-slug/test-2-vn5xio/logo",
     "contactEmail": "seller2@gmail.com",
     "contactPhone": "",
-    "socialLinks": {},
     "address": null,
-    "category": null
-  },
-  {
-    "slug": "test-qa20kn",
-    "storeName": "test",
-    "description": null,
-    "logoUrl": null,
-    "contactEmail": "seller@gmail.com",
-    "contactPhone": "",
-    "socialLinks": {},
-    "address": null,
-    "category": null
+    "category": null,
+    "socialLinks": {}
   }
 ]
