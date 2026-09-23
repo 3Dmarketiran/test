@@ -284,10 +284,6 @@ export default function Layout() {
               <span className="seller-access-full">
                 ورود فروشندگان
               </span>
-
-              <span className="seller-access-mobile">
-                ورود فروشندگان
-              </span>
             </a>
 
             <button
