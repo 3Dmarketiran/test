@@ -360,7 +360,7 @@ export default function Home() {
                 <Link
                   key={seller.slug}
                   to={`/sellers/${seller.slug}`}
-                  className="card"
+                  className="card store-card"
                   style={{
                     padding: 18,
                     display: "flex",
@@ -371,6 +371,7 @@ export default function Home() {
                   }}
                 >
                   <div
+                    className="store-card__cover"
                     style={{
                       width: "100%",
                       aspectRatio: "1.55 / 1",
@@ -405,6 +406,7 @@ export default function Home() {
                   </div>
 
                   <div
+                    className="store-card__body"
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -413,6 +415,7 @@ export default function Home() {
                     }}
                   >
                     <div
+                      className="store-card__avatar"
                       style={{
                         width: 38,
                         height: 38,
