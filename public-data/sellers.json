@@ -1,24 +1,24 @@
 [
   {
+    "slug": "test-qa20kn",
+    "storeName": "test",
+    "description": "avalin forushgah",
+    "logoUrl": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/sellers/cmuays6st0007znuyvxh6ud5u/logo/7eHuiUB6bElmwTmZ.jpeg",
+    "contactEmail": "seller@gmail.com",
+    "contactPhone": "09144142898",
+    "address": "tabriz valiasr",
+    "category": null,
+    "socialLinks": {}
+  },
+  {
     "slug": "test-2-vn5xio",
     "storeName": "test 2",
     "description": null,
     "logoUrl": null,
     "contactEmail": "seller2@gmail.com",
     "contactPhone": "",
-    "socialLinks": {},
     "address": null,
-    "category": null
-  },
-  {
-    "slug": "test-qa20kn",
-    "storeName": "test",
-    "description": null,
-    "logoUrl": null,
-    "contactEmail": "seller@gmail.com",
-    "contactPhone": "",
-    "socialLinks": {},
-    "address": null,
-    "category": null
+    "category": null,
+    "socialLinks": {}
   }
 ]
