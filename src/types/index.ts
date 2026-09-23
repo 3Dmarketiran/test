@@ -35,6 +35,10 @@ export interface PublicProduct {
   seller: {
     slug: string;
     storeName: string;
+    category?: {
+      slug: string;
+      name: string;
+    } | null;
   };
   images: PublicImage[];
   models: PublicModel[];
@@ -50,6 +54,10 @@ export interface PublicSeller {
   contactEmail: string | null;
   contactPhone: string | null;
   address: string | null;
+  category?: {
+    slug: string;
+    name: string;
+  } | null;
   socialLinks: Record<string, string> | null;
 }
 

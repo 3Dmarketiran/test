@@ -166,16 +166,6 @@ export default function ProductDetail() {
           {product.seller.storeName}
         </Link>
 
-        {product.category && (
-          <>
-            <span aria-hidden="true">‹</span>
-
-            <span>
-              {product.category.name}
-            </span>
-          </>
-        )}
-
         <span aria-hidden="true">‹</span>
 
         <span

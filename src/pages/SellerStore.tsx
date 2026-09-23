@@ -168,7 +168,7 @@ function StoreSkeleton() {
         }}
       />
 
-      <div className="grid grid-4">
+      <div className="grid grid-4 seller-product-grid">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
@@ -292,7 +292,7 @@ export default function SellerStore() {
   return (
     <div className="container section">
       <div
-        className="seller-box fade-in-up"
+        className="seller-box seller-profile-card fade-in-up"
         style={{
           marginBottom: "var(--space-5)",
           padding: 20,
@@ -318,19 +318,37 @@ export default function SellerStore() {
           }}
         >
           {logo ? (
-            <img
-              src={logo}
-              alt={seller.storeName}
-              loading="lazy"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-              }}
-            />
+            <>
+              <img
+                src={logo}
+                alt={seller.storeName}
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                }}
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                  const fallback = event.currentTarget.parentElement?.querySelector(
+                    ".seller-logo-fallback"
+                  ) as HTMLElement | null;
+                  if (fallback) fallback.style.display = "grid";
+                }}
+              />
+              <span
+                className="seller-logo-fallback"
+                aria-hidden="true"
+                style={{
+                  display: "none",
+                  width: "100%",
+                  height: "100%",
+                  placeItems: "center",
+                }}
+              >
+                <StoreIcon />
+              </span>
+            </>
           ) : (
             <StoreIcon />
           )}
@@ -368,6 +386,12 @@ export default function SellerStore() {
           >
             {seller.storeName}
           </h1>
+
+          {seller.category && (
+            <span className="seller-category-pill">
+              {seller.category.name}
+            </span>
+          )}
 
           {seller.description && (
             <p

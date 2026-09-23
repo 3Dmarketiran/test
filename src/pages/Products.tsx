@@ -196,28 +196,15 @@ export default function Products() {
       return null;
     }
 
-    const sellerSlugs = new Set<string>();
-
-    products.forEach((product) => {
-      if (!product.category) {
-        return;
-      }
-
-      const sameCategory =
-        product.category.slug ===
-        selectedCategory.slug;
-
-      if (!sameCategory) {
-        return;
-      }
-
-      if (product.seller?.slug) {
-        sellerSlugs.add(product.seller.slug);
-      }
-    });
-
-    return sellerSlugs;
-  }, [products, selectedCategory]);
+    return new Set(
+      sellers
+        .filter(
+          (seller) =>
+            seller.category?.slug === selectedCategory.slug
+        )
+        .map((seller) => seller.slug)
+    );
+  }, [sellers, selectedCategory]);
 
   const filteredSellers = useMemo(() => {
     const q = (params.get("q") ?? "")
@@ -348,7 +335,7 @@ export default function Products() {
                 }}
               >
                 {hasCategory
-                  ? `فروشگاه‌هایی که در دسته «${categoryTitle}» محصول دارند را مشاهده کنید.`
+                  ? `فروشگاه‌هایی که در دسته «${categoryTitle}» قرار دارند را مشاهده کنید.`
                   : "فروشگاه موردنظر خود را پیدا کنید و برای مشاهده محصولات، اطلاعات و مدل‌های سه‌بعدی وارد فروشگاه شوید."}
               </p>
             </div>
@@ -623,7 +610,7 @@ export default function Products() {
               }}
             >
               {hasCategory
-                ? `در حال حاضر فروشگاه فعالی با محصولی در دسته «${categoryTitle}» پیدا نشد.`
+                ? `در حال حاضر فروشگاه فعالی در دسته «${categoryTitle}» پیدا نشد.`
                 : "نام فروشگاه را بررسی کنید یا عبارت جستجو را تغییر دهید."}
             </p>
 

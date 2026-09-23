@@ -32,7 +32,7 @@ export default function ProductCard({
   return (
     <Link
       to={`/products/${product.slug}`}
-      className="card"
+      className="card premium-product-card"
       aria-label={`مشاهده ${product.name}`}
     >
       <div className="product-card__media">
@@ -143,12 +143,14 @@ export default function ProductCard({
         )}
 
         <div className="product-card__meta">
-          {product.category?.name && (
-            <span
-              className="chip"
-              title={product.category.name}
-            >
-              {product.category.name}
+          {has3d && (
+            <span className="chip premium-product-chip">
+              3D
+            </span>
+          )}
+          {hasAr && (
+            <span className="chip premium-product-chip">
+              AR
             </span>
           )}
         </div>

@@ -24,7 +24,7 @@ export function useSeo({ title, description, image, canonicalPath }: SeoOptions)
         link.rel = "canonical";
         document.head.appendChild(link);
       }
-      link.href = canonicalPath;
+      link.href = new URL(canonicalPath, window.location.origin).href;
     }
   }, [title, description, image, canonicalPath]);
 }

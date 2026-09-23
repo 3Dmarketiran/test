@@ -171,7 +171,7 @@ export default function Home() {
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                ورود / ثبت‌نام فروشندگان
+                ورود فروشندگان
               </a>
             </div>
 

@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useData } from "../lib/data";
 
 const ADMIN_URL =
+  import.meta.env.VITE_ADMIN_URL ||
   "https://3dmarketiran.github.io/frontend-admin/#/login";
 
 const NAV = [
@@ -252,7 +253,7 @@ export default function Layout() {
                 className="btn btn-primary"
                 onClick={closeNav}
               >
-                ورود / ثبت‌نام فروشندگان
+                ورود فروشندگان
                 <ArrowIcon />
               </a>
 
@@ -281,7 +282,7 @@ export default function Layout() {
               className="btn btn-primary btn-sm seller-access-btn"
             >
               <span className="seller-access-full">
-                ورود / ثبت‌نام فروشندگان
+                ورود فروشندگان
               </span>
 
               <span className="seller-access-mobile">
@@ -370,7 +371,7 @@ function Footer() {
               href={ADMIN_URL}
               className="footer-seller-link"
             >
-              ورود / ثبت‌نام فروشندگان
+              ورود فروشندگان
               <ArrowIcon />
             </a>
           </div>
