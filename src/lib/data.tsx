@@ -85,20 +85,19 @@ async function hydrateMissingSellerLogos(
   const apiUrl = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/+$/, "");
   if (!apiUrl) return sellers;
 
-  const missing = sellers.filter((seller) => !seller.logoUrl);
-  if (!missing.length) return sellers;
-
   const results = await Promise.allSettled(
-    missing.map(async (seller) => {
+    sellers.map(async (seller) => {
       const response = await fetch(
         `${apiUrl}/api/sellers/by-slug/${encodeURIComponent(seller.slug)}`,
         { signal, headers: { Accept: "application/json" } }
       );
       if (!response.ok) return null;
       const data = (await response.json()) as { seller?: { logoUrl?: string | null } };
-      return data.seller?.logoUrl
-        ? { slug: seller.slug, logoUrl: data.seller.logoUrl }
-        : null;
+      if (!data.seller?.logoUrl && !seller.logoUrl) return null;
+      return {
+        slug: seller.slug,
+        logoUrl: `${apiUrl}/api/sellers/by-slug/${encodeURIComponent(seller.slug)}/logo`,
+      };
     })
   );
 
@@ -109,12 +108,10 @@ async function hydrateMissingSellerLogos(
     }
   }
 
-  if (!logoBySlug.size) return sellers;
-  return sellers.map((seller) =>
-    logoBySlug.has(seller.slug)
-      ? { ...seller, logoUrl: logoBySlug.get(seller.slug) ?? seller.logoUrl }
-      : seller
-  );
+  return sellers.map((seller) => ({
+    ...seller,
+    logoUrl: logoBySlug.get(seller.slug) ?? seller.logoUrl,
+  }));
 }
 
 function validateArray<T>(

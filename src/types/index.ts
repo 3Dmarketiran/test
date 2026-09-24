@@ -25,6 +25,7 @@ export interface PublicProduct {
   id: string;
   slug: string;
   name: string;
+  price: number | null;
   shortDescription: string | null;
   fullDescription: string | null;
   tags: string[];
