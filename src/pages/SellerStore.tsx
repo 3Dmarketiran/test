@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useData } from "../lib/data";
+import { getSellerLogoUrl, useData } from "../lib/data";
 import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
 import { track } from "../lib/analytics";
@@ -287,7 +287,7 @@ export default function SellerStore() {
     );
   }
 
-  const logo = seller.logoUrl;
+  const logo = getSellerLogoUrl(seller.logoUrl, seller.slug);
 
   return (
     <div className="container section seller-store-page">

@@ -210,6 +210,11 @@ export function DataProvider({
 
 
 export function getSellerLogoUrl(logoUrl: string | null | undefined, slug?: string) {
+  // Prefer the backend logo proxy for seller logos. It keeps public GitHub
+  // snapshots independent from private/object-storage URL details.
+  if (slug) {
+    return `https://threedmarketiran-backend.onrender.com/api/sellers/by-slug/${encodeURIComponent(slug)}/logo`;
+  }
   if (!logoUrl) return null;
   if (/^(https?:|data:|blob:)/i.test(logoUrl)) return logoUrl;
   const base = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");

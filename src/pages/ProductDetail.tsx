@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { useData } from "../lib/data";
+import { getSellerLogoUrl, useData } from "../lib/data";
 import ProductViewer from "../components/ProductViewer";
 import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
@@ -360,9 +360,9 @@ function SellerCard({
       className="seller-box"
       aria-label="اطلاعات فروشگاه"
     >
-      {seller.logoUrl ? (
+      {getSellerLogoUrl(seller.logoUrl, seller.slug) ? (
         <img
-          src={seller.logoUrl}
+          src={getSellerLogoUrl(seller.logoUrl, seller.slug) || undefined}
           alt=""
           loading="lazy"
           decoding="async"
