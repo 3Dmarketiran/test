@@ -28,6 +28,7 @@ export interface PublicProduct {
   shortDescription: string | null;
   fullDescription: string | null;
   tags: string[];
+  price: number | null;
   category: {
     slug: string;
     name: string;
@@ -51,6 +52,7 @@ export interface PublicSeller {
   storeName: string;
   description: string | null;
   logoUrl: string | null;
+  themeColor?: string | null;
   contactEmail: string | null;
   contactPhone: string | null;
   address: string | null;

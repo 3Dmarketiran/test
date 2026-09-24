@@ -291,11 +291,11 @@ export default function SellerStore() {
 
   return (
     <div className="container section seller-store-page">
-      <section className="seller-profile-card card fade-in-up">
+      <section className="seller-profile-card card fade-in-up" style={{"--seller-theme": seller.themeColor || "#0b1f3a"} as React.CSSProperties}>
         <div className="seller-profile-cover" aria-hidden="true" />
         <div className="seller-profile-inner">
           <div className="seller-profile-main-row">
-            <div className="seller-profile-avatar">
+            <div className={`seller-profile-avatar${logo ? " has-logo" : ""}`}>
               {logo ? (
                 <img src={logo} alt={seller.storeName} loading="eager" onError={(event) => { event.currentTarget.style.display = "none"; }} />
               ) : <StoreIcon />}

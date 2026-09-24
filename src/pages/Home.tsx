@@ -362,23 +362,6 @@ export default function Home() {
                   >
                     <div
                       style={{
-                        width: 38,
-                        height: 38,
-                        borderRadius: 11,
-                        display: "grid",
-                        placeItems: "center",
-                        background:
-                          "var(--surface-2, #f5f5f5)",
-                        color:
-                          "var(--color-text-muted)",
-                        flexShrink: 0,
-                      }}
-                    >
-                      <StoreIcon />
-                    </div>
-
-                    <div
-                      style={{
                         minWidth: 0,
                         flex: 1,
                       }}

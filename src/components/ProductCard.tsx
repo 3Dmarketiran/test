@@ -34,6 +34,7 @@ export default function ProductCard({ product }: { product: PublicProduct }) {
       <div className="product-card__body">
         <div className="product-card-store">{product.seller.storeName}</div>
         <h3 title={product.name}>{product.name}</h3>
+        {product.price != null && <div className="product-card-price">{new Intl.NumberFormat("fa-IR").format(product.price)} تومان</div>}
         {product.shortDescription && <p className="muted">{product.shortDescription}</p>}
       </div>
     </Link>
