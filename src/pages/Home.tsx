@@ -4,7 +4,7 @@ import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
 
 const ADMIN_URL =
-  "https://admin.3dmarketiran.ir/#/login";
+  "https://3dmarketiran.github.io/frontend-admin/#/login";
 
 function ArrowIcon() {
   return (

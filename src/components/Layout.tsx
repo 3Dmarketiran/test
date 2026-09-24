@@ -4,7 +4,7 @@ import { useData } from "../lib/data";
 
 const ADMIN_URL =
   import.meta.env.VITE_ADMIN_URL ||
-  "https://admin.3dmarketiran.ir/#/login";
+  "https://3dmarketiran.github.io/frontend-admin/#/login";
 
 const NAV = [
   { to: "/", label: "خانه", end: true },
