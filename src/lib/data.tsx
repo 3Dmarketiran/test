@@ -77,46 +77,6 @@ async function loadJson<T>(
   }
 }
 
-
-async function hydrateMissingSellerLogos(
-  sellers: PublicSeller[],
-  signal: AbortSignal
-): Promise<PublicSeller[]> {
-  const apiUrl = ((import.meta.env.VITE_API_URL as string | undefined) || "https://threedmarketiran-backend.onrender.com").replace(/\/+$/, "");
-
-  const results = await Promise.allSettled(
-    sellers.map(async (seller) => {
-      // Published snapshots are the source of truth. Only ask the API for a
-      // logo when the snapshot genuinely has no logo URL; this keeps the
-      // public site fast and portable when moved off GitHub Pages.
-      if (seller.logoUrl) return null;
-      const response = await fetch(
-        `${apiUrl}/api/sellers/by-slug/${encodeURIComponent(seller.slug)}`,
-        { signal, headers: { Accept: "application/json" } }
-      );
-      if (!response.ok) return null;
-      const data = (await response.json()) as { seller?: { logoUrl?: string | null } };
-      if (!data.seller?.logoUrl && !seller.logoUrl) return null;
-      return {
-        slug: seller.slug,
-        logoUrl: `${apiUrl}/api/sellers/by-slug/${encodeURIComponent(seller.slug)}/logo`,
-      };
-    })
-  );
-
-  const logoBySlug = new Map<string, string>();
-  for (const result of results) {
-    if (result.status === "fulfilled" && result.value) {
-      logoBySlug.set(result.value.slug, result.value.logoUrl);
-    }
-  }
-
-  return sellers.map((seller) => ({
-    ...seller,
-    logoUrl: logoBySlug.get(seller.slug) ?? seller.logoUrl,
-  }));
-}
-
 function validateArray<T>(
   value: unknown,
   name: string
@@ -187,12 +147,9 @@ export function DataProvider({
           );
 
         const sellers =
-          await hydrateMissingSellerLogos(
-            validateArray<PublicSeller>(
-              sellersData,
-              "sellers.json"
-            ),
-            controller.signal
+          validateArray<PublicSeller>(
+            sellersData,
+            "sellers.json"
           );
 
         const categories =

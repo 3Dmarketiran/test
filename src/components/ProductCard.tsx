@@ -33,19 +33,8 @@ export default function ProductCard({ product }: { product: PublicProduct }) {
       </div>
       <div className="product-card__body">
         <div className="product-card-store">{product.seller.storeName}</div>
-        <div className="product-card__title-row">
-          <div className="product-card__title-copy">
-            <h3 title={product.name}>{product.name}</h3>
-            {product.shortDescription && <p className="muted">{product.shortDescription}</p>}
-          </div>
-          <div className="product-card__price">
-            {product.price != null ? `${new Intl.NumberFormat("fa-IR").format(product.price)} تومان` : "تماس برای قیمت"}
-          </div>
-        </div>
-        <div className="product-card__action-row">
-          <span className="product-card__action">افزودن به سبد</span>
-          <span className="product-card__detail">مشاهده محصول</span>
-        </div>
+        <h3 title={product.name}>{product.name}</h3>
+        {product.shortDescription && <p className="muted">{product.shortDescription}</p>}
       </div>
     </Link>
   );

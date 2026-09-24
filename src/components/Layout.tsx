@@ -4,7 +4,7 @@ import { useData } from "../lib/data";
 
 const ADMIN_URL =
   import.meta.env.VITE_ADMIN_URL ||
-  "https://3dmarketiran.github.io/frontend-admin/#/login";
+  "https://admin.3dmarketiran.ir/#/login";
 
 const NAV = [
   { to: "/", label: "خانه", end: true },
@@ -213,7 +213,6 @@ export default function Layout() {
 
           {/* DESKTOP / MOBILE NAV */}
           <nav
-            id="main-navigation"
             className={`nav-links${
               navOpen ? " open" : ""
             }`}

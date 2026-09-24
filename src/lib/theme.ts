@@ -58,12 +58,12 @@ export function applyBranding(
 
   root.style.setProperty(
     "--color-background",
-    "#061224"
+    colorBackground
   );
 
   root.style.setProperty(
     "--color-text",
-    "#f7fbff"
+    colorText
   );
 
   root.style.setProperty(
@@ -89,12 +89,12 @@ export function applyBranding(
 
   root.style.setProperty(
     "--brand-background",
-    "#061224"
+    colorBackground
   );
 
   root.style.setProperty(
     "--brand-text",
-    "#f7fbff"
+    colorText
   );
 
   /* --------------------------------

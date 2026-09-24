@@ -13,10 +13,10 @@ type Plan = {
 };
 
 const API_URL =
-  "https://threedmarketiran-backend.onrender.com";
+  "https://api.3dmarketiran.ir";
 
 const ADMIN_URL =
-  "https://3dmarketiran.github.io/frontend-admin/#/login";
+  "https://admin.3dmarketiran.ir/#/login";
 
 const SUPPORT_PHONE = "09144142898";
 

@@ -185,17 +185,7 @@ export default function ProductDetail() {
         <ProductViewer product={product} />
 
         <article className="product-info">
-          <div className="product-detail-title-row">
-            <div>
-              <h1>{product.name}</h1>
-              {product.price != null && (
-                <div className="product-detail-price">
-                  {new Intl.NumberFormat("fa-IR").format(product.price)} تومان
-                </div>
-              )}
-            </div>
-            <span className="product-detail-cart-label">افزودن به سبد</span>
-          </div>
+          <h1>{product.name}</h1>
 
           <Link
             to={`/sellers/${encodeURIComponent(

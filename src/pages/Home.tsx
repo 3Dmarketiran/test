@@ -4,8 +4,7 @@ import { useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
 
 const ADMIN_URL =
-  import.meta.env.VITE_ADMIN_URL ||
-  "https://3dmarketiran.github.io/frontend-admin/#/login";
+  "https://admin.3dmarketiran.ir/#/login";
 
 function ArrowIcon() {
   return (
@@ -372,18 +371,16 @@ export default function Home() {
                   }}
                 >
                   <div
-                    className="home-store-logo-frame"
                     style={{
                       width: "100%",
-                      minHeight: 175,
+                      aspectRatio: "1.55 / 1",
                       borderRadius: 16,
                       overflow: "hidden",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      background: "var(--surface-2, #102a49)",
+                      display: "grid",
+                      placeItems: "center",
+                      background:
+                        "var(--surface-2, #f4f4f4)",
                       marginBottom: 14,
-                      padding: 28,
                     }}
                   >
                     {seller.logoUrl ? (
@@ -391,41 +388,20 @@ export default function Home() {
                         src={seller.logoUrl}
                         alt={seller.storeName}
                         loading="lazy"
-                        decoding="async"
                         style={{
-                          width: 108,
-                          height: 108,
-                          maxWidth: "100%",
+                          width: "100%",
+                          height: "100%",
                           objectFit: "contain",
-                          borderRadius: 22,
-                          background: "var(--surface, #0c2340)",
-                          border: "1px solid var(--border, #2d5278)",
-                          padding: 12,
+                          padding: 18,
                         }}
                         onError={(event) => {
-                          event.currentTarget.style.display = "none";
-                          const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
-                          if (fallback) fallback.style.display = "flex";
+                          event.currentTarget.style.display =
+                            "none";
                         }}
                       />
-                    ) : null}
-                    <div
-                      aria-hidden="true"
-                      className="home-store-logo-fallback"
-                      style={{
-                        width: 108,
-                        height: 108,
-                        display: seller.logoUrl ? "none" : "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderRadius: 22,
-                        background: "var(--surface, #0c2340)",
-                        border: "1px solid var(--border, #2d5278)",
-                        color: "var(--text-muted, #9eb0c5)",
-                      }}
-                    >
+                    ) : (
                       <StoreIcon />
-                    </div>
+                    )}
                   </div>
 
                   <div
@@ -647,7 +623,7 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="section section-alt home-how-it-works">
+      <section className="section section-alt">
         <div className="container">
           <div className="section-head">
             <div>
