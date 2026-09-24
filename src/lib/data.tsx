@@ -208,6 +208,20 @@ export function DataProvider({
   );
 }
 
+
+export function getSellerLogoUrl(logoUrl: string | null | undefined, slug?: string) {
+  if (!logoUrl) return null;
+  if (/^(https?:|data:|blob:)/i.test(logoUrl)) return logoUrl;
+  const base = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
+  return `${base}/${logoUrl.replace(/^\/+/, "")}`;
+}
+
+export function sellerInitials(name: string | null | undefined) {
+  const value = (name || "فروشگاه").trim();
+  const parts = value.split(/\s+/).filter(Boolean);
+  return (parts.length > 1 ? parts.slice(0,2).map(x=>x[0]).join("") : value.slice(0,2)).toUpperCase();
+}
+
 export function useData() {
   return useContext(DataContext);
 }

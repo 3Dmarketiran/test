@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { useData } from "../lib/data";
+import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
 import { track } from "../lib/analytics";
 
@@ -654,7 +654,7 @@ export default function Products() {
             }}
           >
             {filteredSellers.map((seller) => {
-              const logoUrl = seller.logoUrl || "";
+              const logoUrl = getSellerLogoUrl(seller.logoUrl, seller.slug) || "";
               const storeName =
                 seller.storeName ||
                 "فروشگاه بدون نام";
@@ -755,7 +755,7 @@ export default function Products() {
                           "var(--text-muted, #777)",
                       }}
                     >
-                      <StoreIcon />
+                      <span style={{fontWeight:900,fontSize:24}}>{sellerInitials(storeName)}</span>
                     </div>
                   </div>
 
