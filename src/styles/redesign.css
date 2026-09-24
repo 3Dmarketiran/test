@@ -98,3 +98,40 @@ body{color:#f7fbff!important;background:#061224!important}
 /* Final contrast + seller pricing */
 html,body,#root{color-scheme:only light!important}
 .product-card__title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.product-card__title-copy{min-width:0;flex:1}.product-card__price{flex:none;max-width:48%;font-size:.74rem;font-weight:900;color:#d5b46a;text-align:left;direction:rtl;line-height:1.7}.product-card__action-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:13px}.product-card__action{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:7px 11px;border-radius:10px;background:#f7fbff;color:#061224;font-size:.68rem;font-weight:900}.product-card__detail{font-size:.67rem;color:#9eb0c5;font-weight:800}.product-detail-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.product-detail-price{margin-top:8px;font-size:1.3rem;font-weight:950;color:#d5b46a}.product-detail-cart-label{flex:none;padding:11px 16px;border-radius:12px;background:#f7fbff;color:#061224;font-size:.74rem;font-weight:900}.seller-product-price{color:#d5b46a!important}.seller-product-price strong{color:#fff!important}
+
+/* ==========================================================
+   FINAL PUBLIC CONTRAST + NAVY SURFACE PATCH
+   ========================================================== */
+:root{
+  --surface:#0c2340;
+  --surface-2:#102a49;
+  --border:#1c3a5d;
+  --text:#f7fbff;
+  --text-muted:#9eb0c5;
+  --muted:#9eb0c5;
+  --navy-bg:#061224;
+}
+/* Existing inline styles use these variables; defining them prevents white-on-white icon cards. */
+[style*="var(--surface-2"]{background:#102a49!important;color:#f7fbff!important;border-color:#25496e!important}
+[style*="var(--surface,"]{background:#0c2340!important;color:#f7fbff!important;border-color:#25496e!important}
+[style*="var(--border,"]{border-color:#1c3a5d!important}
+[style*="var(--text-muted,"]{color:#9eb0c5!important}
+
+.about-page .card,.contact-page .card,.plans-page .card{color:#f7fbff!important}
+.about-page h1,.about-page h2,.about-page h3,.contact-page h1,.contact-page h2,.contact-page h3,.plans-page h1,.plans-page h2,.plans-page h3{color:#fff!important}
+.about-page p,.contact-page p,.plans-page p{color:#b9c9da!important}
+
+/* Store listing / profile logo containers must remain visible even when a logo fails. */
+.seller-profile-card .seller-profile-avatar,
+.seller-profile-card .seller-profile-avatar img,
+.seller-box img{background:#102a49!important}
+.seller-profile-card .seller-profile-avatar{border-color:#31577f!important}
+
+/* Mobile menu is always above the header and receives pointer events. */
+.mobile-nav-toggle{position:relative!important;z-index:130!important;pointer-events:auto!important}
+.mobile-nav-backdrop{z-index:110!important;pointer-events:auto!important}
+.nav-links{z-index:120!important}
+@media(max-width:820px){
+  .mobile-nav-toggle{display:inline-flex!important;cursor:pointer!important}
+  .nav-links.open{opacity:1!important;visibility:visible!important;pointer-events:auto!important;transform:translateY(0)!important}
+}

@@ -82,8 +82,7 @@ async function hydrateMissingSellerLogos(
   sellers: PublicSeller[],
   signal: AbortSignal
 ): Promise<PublicSeller[]> {
-  const apiUrl = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/+$/, "");
-  if (!apiUrl) return sellers;
+  const apiUrl = ((import.meta.env.VITE_API_URL as string | undefined) || "https://threedmarketiran-backend.onrender.com").replace(/\/+$/, "");
 
   const results = await Promise.allSettled(
     sellers.map(async (seller) => {

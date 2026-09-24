@@ -213,6 +213,7 @@ export default function Layout() {
 
           {/* DESKTOP / MOBILE NAV */}
           <nav
+            id="main-navigation"
             className={`nav-links${
               navOpen ? " open" : ""
             }`}
