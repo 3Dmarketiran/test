@@ -374,6 +374,7 @@ export default function Home() {
                     style={{
                       width: "100%",
                       aspectRatio: "1.55 / 1",
+                      minHeight: 150,
                       borderRadius: 16,
                       overflow: "hidden",
                       display: "grid",
@@ -389,10 +390,12 @@ export default function Home() {
                         alt={seller.storeName}
                         loading="lazy"
                         style={{
-                          width: "100%",
-                          height: "100%",
+                          width: "auto",
+                          maxWidth: "86%",
+                          height: "auto",
+                          maxHeight: "82%",
                           objectFit: "contain",
-                          padding: 18,
+                          display: "block",
                         }}
                         onError={(event) => {
                           event.currentTarget.style.display =
@@ -623,7 +626,7 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="section section-alt">
+      <section className="section section-alt home-how-it-works">
         <div className="container">
           <div className="section-head">
             <div>

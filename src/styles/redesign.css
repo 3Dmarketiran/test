@@ -135,3 +135,18 @@ html,body,#root{color-scheme:only light!important}
   .mobile-nav-toggle{display:inline-flex!important;cursor:pointer!important}
   .nav-links.open{opacity:1!important;visibility:visible!important;pointer-events:auto!important;transform:translateY(0)!important}
 }
+
+
+/* ==========================================================
+   FINAL MICRO FIXES — PUBLIC SITE
+   ========================================================== */
+.home-how-it-works{background:#0c2340!important;border-color:#173a5d!important;color:#f7fbff!important}
+.home-how-it-works .section-head h2{color:#fff!important}.home-how-it-works .section-head p{color:#b9c9da!important}
+.home-how-it-works .step{background:#102a49!important;border:1px solid #2a4f75!important;color:#fff!important;box-shadow:0 14px 36px rgba(0,0,0,.18)!important}
+.home-how-it-works .step strong{color:#fff!important}.home-how-it-works .step p,.home-how-it-works .step .muted{color:#b9c9da!important}.home-how-it-works .step .num{background:#f7fbff!important;color:#061224!important;border-color:#f7fbff!important}
+.search-box{background:#102a49!important;border:1px solid #2d5278!important;box-shadow:0 12px 35px rgba(0,0,0,.14)!important}
+.search-box input{background:#0c2340!important;color:#fff!important;border-color:#315a83!important}.search-box input::placeholder{color:#9eb0c5!important}.search-box input:focus{border-color:#6d91b6!important;box-shadow:0 0 0 4px rgba(109,145,182,.16)!important}.search-box svg{color:#d9e5f2!important}
+.categories-page .empty-state{background:#102a49!important;border-color:#2d5278!important;color:#f7fbff!important}.categories-page .empty-state p,.categories-page .empty-state .muted{color:#b9c9da!important}
+.categories-page .pill,.categories-page .category-card,.categories-page [class*="category"]{color:#fff}
+.featured-store-logo{width:100%;height:100%;display:grid;place-items:center;overflow:hidden}.featured-store-logo img{display:block!important;width:auto!important;height:auto!important;max-width:86%!important;max-height:82%!important;object-fit:contain!important}
+.card[style*="aspect-ratio: 1.55 / 1"] img{display:block!important;width:auto!important;height:auto!important;max-width:86%!important;max-height:82%!important;object-fit:contain!important}
