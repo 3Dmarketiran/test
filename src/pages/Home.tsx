@@ -4,6 +4,7 @@ import { useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
 
 const ADMIN_URL =
+  import.meta.env.VITE_ADMIN_URL ||
   "https://3dmarketiran.github.io/frontend-admin/#/login";
 
 function ArrowIcon() {
@@ -371,17 +372,18 @@ export default function Home() {
                   }}
                 >
                   <div
+                    className="home-store-logo-frame"
                     style={{
                       width: "100%",
-                      aspectRatio: "1.55 / 1",
-                      minHeight: 150,
+                      minHeight: 175,
                       borderRadius: 16,
                       overflow: "hidden",
-                      display: "grid",
-                      placeItems: "center",
-                      background:
-                        "var(--surface-2, #f4f4f4)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: "var(--surface-2, #102a49)",
                       marginBottom: 14,
+                      padding: 28,
                     }}
                   >
                     {seller.logoUrl ? (
@@ -389,22 +391,41 @@ export default function Home() {
                         src={seller.logoUrl}
                         alt={seller.storeName}
                         loading="lazy"
+                        decoding="async"
                         style={{
-                          width: "auto",
-                          maxWidth: "86%",
-                          height: "auto",
-                          maxHeight: "82%",
+                          width: 108,
+                          height: 108,
+                          maxWidth: "100%",
                           objectFit: "contain",
-                          display: "block",
+                          borderRadius: 22,
+                          background: "var(--surface, #0c2340)",
+                          border: "1px solid var(--border, #2d5278)",
+                          padding: 12,
                         }}
                         onError={(event) => {
-                          event.currentTarget.style.display =
-                            "none";
+                          event.currentTarget.style.display = "none";
+                          const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                          if (fallback) fallback.style.display = "flex";
                         }}
                       />
-                    ) : (
+                    ) : null}
+                    <div
+                      aria-hidden="true"
+                      className="home-store-logo-fallback"
+                      style={{
+                        width: 108,
+                        height: 108,
+                        display: seller.logoUrl ? "none" : "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: 22,
+                        background: "var(--surface, #0c2340)",
+                        border: "1px solid var(--border, #2d5278)",
+                        color: "var(--text-muted, #9eb0c5)",
+                      }}
+                    >
                       <StoreIcon />
-                    )}
+                    </div>
                   </div>
 
                   <div

@@ -150,3 +150,37 @@ html,body,#root{color-scheme:only light!important}
 .categories-page .pill,.categories-page .category-card,.categories-page [class*="category"]{color:#fff}
 .featured-store-logo{width:100%;height:100%;display:grid;place-items:center;overflow:hidden}.featured-store-logo img{display:block!important;width:auto!important;height:auto!important;max-width:86%!important;max-height:82%!important;object-fit:contain!important}
 .card[style*="aspect-ratio: 1.55 / 1"] img{display:block!important;width:auto!important;height:auto!important;max-width:86%!important;max-height:82%!important;object-fit:contain!important}
+
+/* ==========================================================
+   FINAL QA / PRODUCTION HARDENING
+   ========================================================== */
+html,body,#root{min-width:0;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box}
+button,input,select,textarea{font:inherit}
+img{max-width:100%}
+
+/* Store cards use the exact same logo geometry on Home and Stores. */
+.home-store-logo-frame{background:#102a49!important;border:1px solid #2d5278!important}
+.home-store-logo-frame img{width:108px!important;height:108px!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;border-radius:22px!important;background:#0c2340!important;border:1px solid #2d5278!important;padding:12px!important}
+.home-store-logo-fallback{background:#0c2340!important;border:1px solid #2d5278!important;color:#b9c9da!important}
+
+/* Never allow inherited/legacy light-theme text to become invisible on navy surfaces. */
+.home-how-it-works,.home-how-it-works *{color:#f7fbff}
+.home-how-it-works p,.home-how-it-works .muted{color:#b9c9da!important}
+.search-box,.search-box *{color:#f7fbff}
+.search-box input{background:#0c2340!important;color:#fff!important}
+.categories-page .empty-state,.categories-page .empty-state *{color:#f7fbff!important}
+.categories-page .empty-state p{color:#b9c9da!important}
+
+/* Public cards: clear hierarchy and predictable focus states. */
+.card:focus-visible,.btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid #8fb7df!important;outline-offset:3px}
+.product-card-view{background:#f7fbff!important;color:#061224!important}
+
+/* Keep public app usable on small screens. */
+@media(max-width:820px){
+  .container{width:calc(100% - 28px)}
+  .home-store-logo-frame{min-height:150px!important;padding:20px!important}
+  .home-store-logo-frame img,.home-store-logo-fallback{width:92px!important;height:92px!important}
+}
+
+.error-boundary{min-height:100vh;display:grid;place-items:center;padding:24px;background:#061224;color:#fff}.error-boundary__card{width:min(520px,100%);padding:32px;border:1px solid #25496e;border-radius:24px;background:#0c2340;text-align:center;box-shadow:0 30px 90px rgba(0,0,0,.28)}.error-boundary__icon{width:48px;height:48px;margin:0 auto 16px;display:grid;place-items:center;border-radius:16px;background:#f7fbff;color:#061224;font-weight:950;font-size:1.4rem}.error-boundary__card h1{margin:0 0 10px;color:#fff}.error-boundary__card p{margin:0 0 18px;color:#b9c9da;line-height:1.9}.error-boundary__card code{display:block;margin:0 0 18px;padding:10px;border-radius:12px;background:#071a30;color:#b9c9da;direction:ltr;text-align:left;overflow:auto}

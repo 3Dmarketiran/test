@@ -86,6 +86,10 @@ async function hydrateMissingSellerLogos(
 
   const results = await Promise.allSettled(
     sellers.map(async (seller) => {
+      // Published snapshots are the source of truth. Only ask the API for a
+      // logo when the snapshot genuinely has no logo URL; this keeps the
+      // public site fast and portable when moved off GitHub Pages.
+      if (seller.logoUrl) return null;
       const response = await fetch(
         `${apiUrl}/api/sellers/by-slug/${encodeURIComponent(seller.slug)}`,
         { signal, headers: { Accept: "application/json" } }
