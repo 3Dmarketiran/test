@@ -116,7 +116,7 @@ export default function Home() {
     <>
       {/* HERO */}
       <section className="hero">
-        <div className="container hero__inner">
+        <div className={`container hero__inner${featuredSellers.length ? " hero__inner--with-shops" : ""}`}>
           <div
             style={{
               minWidth: 0,
@@ -237,8 +237,71 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          {/* FEATURED SHOPS MINI LIST */}
+          {featuredSellers.length > 0 && (
+            <div className="card hero-shops">
+              <div className="hero-shops__head">
+                <strong>فروشگاه‌های ویژه</strong>
+                <Link to="/products">مشاهده همه</Link>
+              </div>
+              <div className="hero-shops__list">
+                {featuredSellers.slice(0, 4).map((seller) => (
+                  <Link key={seller.slug} to={`/sellers/${seller.slug}`} className="hero-shop-item">
+                    <span className="hero-shop-item__icon">
+                      {getSellerLogoUrl(seller.logoUrl, seller.slug) ? (
+                        <img src={getSellerLogoUrl(seller.logoUrl, seller.slug) || undefined} alt="" />
+                      ) : (
+                        sellerInitials(seller.storeName)
+                      )}
+                    </span>
+                    <span className="hero-shop-item__copy">
+                      <strong>{seller.storeName}</strong>
+                      <span>{seller.description || "فروشگاه فعال"}</span>
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
+
+      {/* CATEGORY ICON ROW */}
+      {categories.length > 0 && (
+        <section className="section" style={{ paddingTop: 6, paddingBottom: 18 }}>
+          <div className="container">
+            <div className="category-icon-row">
+              {categories.slice(0, 6).map((category, index) => {
+                const palette = [
+                  { bg: "#dceaff", fg: "#2e6fce" },
+                  { bg: "#ffe8d0", fg: "#c9791a" },
+                  { bg: "#f1dcff", fg: "#8c3fce" },
+                  { bg: "#d8f4ea", fg: "#2a9d76" },
+                  { bg: "#dceaff", fg: "#2e6fce" },
+                  { bg: "#eef1f6", fg: "#5a6b85" },
+                ][index % 6];
+                return (
+                  <Link
+                    key={category.id}
+                    to={`/products?category=${encodeURIComponent(category.slug)}`}
+                    className="category-icon-card"
+                  >
+                    <span
+                      className="category-icon-card__badge"
+                      style={{ background: palette.bg, color: palette.fg }}
+                      aria-hidden="true"
+                    >
+                      <ModelIcon />
+                    </span>
+                    {category.name}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* STORES */}
       <section className="section">
@@ -449,51 +512,6 @@ export default function Home() {
             <div className="grid grid-4">
               {featuredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* CATEGORIES */}
-      {categories.length > 0 && (
-        <section className="section section-alt">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <h2>دسته‌بندی‌ها</h2>
-
-                <p>
-                  دسته‌بندی موردنظر را انتخاب کنید و
-                  فروشگاه‌های مرتبط را پیدا کنید.
-                </p>
-              </div>
-
-              <Link
-                to="/categories"
-                className="btn btn-outline btn-sm"
-              >
-                همه دسته‌بندی‌ها
-                <ArrowIcon />
-              </Link>
-            </div>
-
-            <div
-              className="pill-row"
-              style={{
-                marginBottom: 0,
-              }}
-            >
-              {categories.map((category) => (
-                <Link
-                  key={category.id}
-                  to={`/products?category=${encodeURIComponent(
-                    category.slug
-                  )}`}
-                  className="pill"
-                >
-                  {category.name}
-                </Link>
               ))}
             </div>
           </div>
