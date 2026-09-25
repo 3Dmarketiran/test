@@ -33,8 +33,23 @@ export default function ProductCard({ product }: { product: PublicProduct }) {
       </div>
       <div className="product-card__body">
         <div className="product-card-store">{product.seller.storeName}</div>
-        <h3 title={product.name}>{product.name}</h3>
-        {product.price != null && <div className="product-card-price">{new Intl.NumberFormat("fa-IR").format(product.price)} تومان</div>}
+        <div className="product-card-title-row">
+          <h3 title={product.name}>{product.name}</h3>
+          <div className="product-card-capabilities" aria-label="قابلیت‌های محصول">
+            {product.models.some((model) => model.kind === "GLB" || model.kind === "GLTF") && <span>3D</span>}
+            {product.models.some((model) => model.kind === "USDZ") && <span>AR</span>}
+          </div>
+        </div>
+        {product.price != null ? (
+          <div className="product-card-price" aria-label="قیمت محصول">
+            <span>{new Intl.NumberFormat("fa-IR").format(product.price)} تومان</span>
+          </div>
+        ) : (
+          <div className="product-card-contact-price" aria-label="قیمت محصول اعلام نشده است">
+            <span>برای اطلاع از قیمت</span>
+            <strong>با فروشنده تماس بگیرید</strong>
+          </div>
+        )}
         {product.shortDescription && <p className="muted">{product.shortDescription}</p>}
       </div>
     </Link>

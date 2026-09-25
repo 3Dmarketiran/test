@@ -288,6 +288,14 @@ export default function SellerStore() {
   }
 
   const logo = getSellerLogoUrl(seller.logoUrl, seller.slug);
+  const pinnedProducts = [...sellerProducts]
+    .filter((product) => product.isPinned)
+    .sort((a, b) => (a.pinOrder ?? 99) - (b.pinOrder ?? 99))
+    .slice(0, 3);
+  const popularProducts = [...sellerProducts]
+    .filter((product) => !product.isPinned)
+    .sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0))
+    .slice(0, 4);
 
   return (
     <div className="container section seller-store-page">
@@ -320,6 +328,13 @@ export default function SellerStore() {
             <div className="seller-contact-stat seller-address-stat"><strong>{seller.address || "آدرس ثبت نشده"}</strong><span>آدرس فروشگاه</span></div>
           </div>
 
+          <div className="seller-profile-highlights">
+            <span>فروشگاه تخصصی</span>
+            <span>{sellerProducts.length} محصول فعال</span>
+            {sellerProducts.some((product) => product.models.some((model) => model.kind === "GLB" || model.kind === "GLTF")) && <span>مدل سه‌بعدی</span>}
+            {sellerProducts.some((product) => product.models.some((model) => model.kind === "USDZ")) && <span>واقعیت افزوده</span>}
+          </div>
+
           <div className="seller-profile-contact-row">
             {seller.contactPhone && <a href={`tel:${seller.contactPhone}`}><PhoneIcon />{seller.contactPhone}</a>}
             {seller.contactEmail && <a href={`mailto:${seller.contactEmail}`}><MailIcon />{seller.contactEmail}</a>}
@@ -329,10 +344,38 @@ export default function SellerStore() {
         </div>
       </section>
 
-      <section className="section seller-products-section" aria-labelledby="seller-products-title">
+      <section className="seller-social-nav" aria-label="بخش‌های فروشگاه">
+        <a href="#featured" className="active">منتخب فروشگاه</a>
+        <a href="#popular">محبوب‌ترین‌ها</a>
+        <a href="#all-products">همه محصولات</a>
+      </section>
+
+      {pinnedProducts.length > 0 && (
+        <section id="featured" className="section seller-products-section seller-featured-section" aria-labelledby="seller-featured-title">
+          <div className="section-head">
+            <div><div className="page-eyebrow">منتخب فروشگاه</div><h2 id="seller-featured-title">محصولات پین‌شده</h2><p>محصولاتی که فروشنده برای نمایش در ابتدای فروشگاه انتخاب کرده است.</p></div>
+          </div>
+          <div className="seller-pinned-grid">
+            {pinnedProducts.map((product, index) => <div key={product.id} className={`seller-pinned-item seller-pinned-${index + 1}`}><ProductCard product={product} /></div>)}
+          </div>
+        </section>
+      )}
+
+      {popularProducts.length > 0 && (
+        <section id="popular" className="section seller-products-section" aria-labelledby="seller-popular-title">
+          <div className="section-head">
+            <div><div className="page-eyebrow">محبوب‌ترین‌ها</div><h2 id="seller-popular-title">محصولات محبوب این فروشگاه</h2><p>بر اساس بازدید و تعامل ثبت‌شده در سایت.</p></div>
+          </div>
+          <div className="grid grid-4 seller-product-grid">
+            {popularProducts.map((product, index) => <div key={product.id} className="fade-in-up" style={{ animationDelay: `${Math.min(index, 8) * 0.05}s` }}><ProductCard product={product} /></div>)}
+          </div>
+        </section>
+      )}
+
+      <section id="all-products" className="section seller-products-section" aria-labelledby="seller-products-title">
         <div className="section-head">
-          <div><div className="page-eyebrow">محصولات</div><h2 id="seller-products-title">محصولات این فروشگاه</h2><p>{sellerProducts.length} محصول منتشرشده برای مشاهده و بررسی</p></div>
-          <Link to="/products" className="btn btn-outline btn-sm">مشاهده همه محصولات</Link>
+          <div><div className="page-eyebrow">کاتالوگ</div><h2 id="seller-products-title">همه محصولات</h2><p>{sellerProducts.length} محصول منتشرشده برای مشاهده و بررسی</p></div>
+          <Link to="/products" className="btn btn-outline btn-sm">مشاهده کاتالوگ</Link>
         </div>
 
         {sellerProducts.length === 0 ? (

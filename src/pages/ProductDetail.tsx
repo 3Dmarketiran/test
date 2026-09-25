@@ -196,6 +196,18 @@ export default function ProductDetail() {
             فروشگاه: {product.seller.storeName}
           </Link>
 
+          {product.price != null ? (
+            <div className="product-detail-price" aria-label="قیمت محصول">
+              <span>قیمت</span>
+              <strong>{new Intl.NumberFormat("fa-IR").format(product.price)} تومان</strong>
+            </div>
+          ) : (
+            <div className="product-detail-contact-price" aria-label="قیمت محصول اعلام نشده است">
+              <strong>برای اطلاع از قیمت با فروشنده تماس بگیرید</strong>
+              <Link to={`/sellers/${encodeURIComponent(product.seller.slug)}`} className="btn btn-outline btn-sm">مشاهده فروشگاه و اطلاعات تماس</Link>
+            </div>
+          )}
+
           {product.shortDescription && (
             <p className="desc">
               {product.shortDescription}

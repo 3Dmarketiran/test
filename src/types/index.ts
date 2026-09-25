@@ -29,6 +29,9 @@ export interface PublicProduct {
   fullDescription: string | null;
   tags: string[];
   price: number | null;
+  isPinned?: boolean;
+  pinOrder?: number | null;
+  viewCount?: number;
   category: {
     slug: string;
     name: string;
