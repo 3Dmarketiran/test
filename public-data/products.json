@@ -5,11 +5,16 @@
     "name": "test 2",
     "shortDescription": null,
     "fullDescription": null,
+    "price": null,
+    "isPinned": false,
+    "pinOrder": null,
+    "viewCount": 0,
     "tags": [],
     "category": null,
     "seller": {
       "slug": "test-2-vn5xio",
-      "storeName": "test 2"
+      "storeName": "test 2",
+      "category": null
     },
     "images": [
       {
@@ -24,19 +29,26 @@
       }
     ],
     "dimensions": null,
-    "publishedAt": "2026-09-21T09:04:32.587Z"
+    "publishedAt": "2026-09-22T20:45:02.064Z"
   },
   {
     "id": "cmuayu5fg000nznuyxalg8q9h",
     "slug": "test-7olbw_",
     "name": "test",
     "shortDescription": "test",
-    "fullDescription": null,
-    "tags": [],
+    "fullDescription": "avalin mahsul",
+    "price": 1000000,
+    "isPinned": true,
+    "pinOrder": 1,
+    "viewCount": 0,
+    "tags": [
+      "test"
+    ],
     "category": null,
     "seller": {
       "slug": "test-qa20kn",
-      "storeName": "test"
+      "storeName": "test",
+      "category": null
     },
     "images": [
       {
