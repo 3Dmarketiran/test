@@ -282,44 +282,6 @@ export default function Layout() {
               gap: 8,
             }}
           >
-            <button
-              type="button"
-              className="icon-btn header-bell"
-              aria-label="اعلان‌ها"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M6 9.5a6 6 0 0 1 12 0v3.2l1.6 3.1H4.4L6 12.7V9.5Z"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10 18.5a2 2 0 0 0 4 0"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="header-bell__dot" aria-hidden="true" />
-            </button>
-
-            <Link
-              to="/plans"
-              className="avatar-chip"
-              aria-label="ورود / حساب کاربری"
-            >
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle cx="12" cy="8.5" r="3.4" stroke="currentColor" strokeWidth="1.7" />
-                <path
-                  d="M5 19.2c1.4-3.1 4-4.7 7-4.7s5.6 1.6 7 4.7"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </Link>
-
             <a
               href={ADMIN_URL}
               className="btn btn-primary btn-sm seller-access-btn"

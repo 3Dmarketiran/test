@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
-import ProductCard from "../components/ProductCard";
+import StoreGridTile from "../components/StoreGridTile";
 import { useSeo } from "../lib/seo";
 import { track } from "../lib/analytics";
 
@@ -371,8 +371,8 @@ export default function SellerStore() {
           <div className="section-head">
             <div><div className="page-eyebrow">منتخب فروشگاه</div><h2 id="seller-featured-title">محصولات پین‌شده</h2><p>محصولاتی که فروشنده برای نمایش در ابتدای فروشگاه انتخاب کرده است.</p></div>
           </div>
-          <div className="seller-pinned-grid">
-            {pinnedProducts.map((product, index) => <div key={product.id} className={`seller-pinned-item seller-pinned-${index + 1}`}><ProductCard product={product} /></div>)}
+          <div className="ig-tile-grid">
+            {pinnedProducts.map((product) => <StoreGridTile key={product.id} product={product} />)}
           </div>
         </section>
       )}
@@ -382,8 +382,8 @@ export default function SellerStore() {
           <div className="section-head">
             <div><div className="page-eyebrow">محبوب‌ترین‌ها</div><h2 id="seller-popular-title">محصولات محبوب این فروشگاه</h2><p>بر اساس بازدید و تعامل ثبت‌شده در سایت.</p></div>
           </div>
-          <div className="grid grid-4 seller-product-grid">
-            {popularProducts.map((product, index) => <div key={product.id} className="fade-in-up" style={{ animationDelay: `${Math.min(index, 8) * 0.05}s` }}><ProductCard product={product} /></div>)}
+          <div className="ig-tile-grid">
+            {popularProducts.map((product) => <StoreGridTile key={product.id} product={product} />)}
           </div>
         </section>
       )}
@@ -397,8 +397,8 @@ export default function SellerStore() {
         {sellerProducts.length === 0 ? (
           <div className="empty-state seller-empty-state"><div className="icon"><StoreIcon /></div><h3>هنوز محصولی منتشر نشده است</h3><p>محصولات این فروشگاه پس از انتشار در اینجا نمایش داده می‌شوند.</p></div>
         ) : (
-          <div className="grid grid-4 seller-product-grid">
-            {sellerProducts.map((product, index) => <div key={product.id} className="fade-in-up" style={{ animationDelay: `${Math.min(index, 8) * 0.05}s` }}><ProductCard product={product} /></div>)}
+          <div className="ig-tile-grid">
+            {sellerProducts.map((product) => <StoreGridTile key={product.id} product={product} />)}
           </div>
         )}
       </section>
