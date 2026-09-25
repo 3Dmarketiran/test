@@ -58,34 +58,6 @@ function PhoneIcon() {
   );
 }
 
-function MailIcon() {
-  return (
-    <svg
-      width="17"
-      height="17"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <rect
-        x="3.5"
-        y="5"
-        width="17"
-        height="14"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.7"
-      />
-      <path
-        d="m5 7 7 5 7-5"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function PinIcon() {
   return (
@@ -300,77 +272,77 @@ export default function SellerStore() {
 
   return (
     <div className="container section seller-store-page">
-      <section className="seller-profile-card card fade-in-up" style={{"--seller-theme": seller.themeColor || "#2e6fce"} as React.CSSProperties}>
-        <div className="seller-profile-cover" aria-hidden="true" />
+      <section
+        className="seller-profile-card seller-profile-card--clean card fade-in-up"
+        style={{ "--seller-theme": seller.themeColor || "#2e6fce" } as React.CSSProperties}
+      >
         <div className="seller-profile-inner">
-          <div className="seller-profile-main-row">
-            <div className={`seller-profile-avatar${logo ? " has-logo" : ""}`}>
-              {logo ? (
-                <img
-                  src={logo}
-                  alt={seller.storeName}
-                  loading="eager"
-                  onError={(event) => {
-                    event.currentTarget.style.display = "none";
-                    const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
-                    if (fallback) fallback.style.display = "grid";
-                  }}
-                />
-              ) : null}
-              <span
-                className="seller-profile-avatar__fallback"
-                style={{ display: logo ? "none" : "grid" }}
-                aria-hidden="true"
-              >
-                {sellerInitials(seller.storeName)}
-              </span>
+          <div className="seller-profile-topline">
+            <div className="seller-profile-main-row">
+              <div className={`seller-profile-avatar${logo ? " has-logo" : ""}`}>
+                {logo ? (
+                  <img
+                    src={logo}
+                    alt={seller.storeName}
+                    loading="eager"
+                    onError={(event) => {
+                      event.currentTarget.style.display = "none";
+                      const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                      if (fallback) fallback.style.display = "grid";
+                    }}
+                  />
+                ) : null}
+                <span
+                  className="seller-profile-avatar__fallback"
+                  style={{ display: logo ? "none" : "grid" }}
+                  aria-hidden="true"
+                >
+                  {sellerInitials(seller.storeName)}
+                </span>
+              </div>
+
+              <div className="seller-profile-copy">
+                <div className="seller-profile-handle">@{seller.slug}</div>
+                <h1>{seller.storeName}</h1>
+                {seller.category && <span className="seller-category-pill">{seller.category.name}</span>}
+                {seller.description && <p>{seller.description}</p>}
+              </div>
             </div>
-            <div className="seller-profile-copy">
-              <div className="seller-profile-overline">فروشگاه رسمی</div>
-              <h1>{seller.storeName}</h1>
-              <div className="seller-profile-handle">@{seller.slug}</div>
-              {seller.category && <span className="seller-category-pill">{seller.category.name}</span>}
-              <p>{seller.description || "این فروشگاه هنوز معرفی کوتاهی برای مشتریان ثبت نکرده است."}</p>
-            </div>
-            <div className="seller-profile-actions">
-              {seller.contactPhone && <a href={`tel:${seller.contactPhone}`} className="btn btn-primary"><PhoneIcon />تماس با فروشگاه</a>}
-              {seller.contactEmail && <a href={`mailto:${seller.contactEmail}`} className="btn btn-outline"><MailIcon />ارسال ایمیل</a>}
+
+            <div className="seller-profile-actions seller-profile-actions--compact">
+              {seller.contactPhone && (
+                <a href={`tel:${seller.contactPhone}`} className="seller-profile-action" aria-label="تماس با فروشگاه">
+                  <PhoneIcon />
+                  <span>تماس</span>
+                </a>
+              )}
+              {seller.address && (
+                <button type="button" className="seller-profile-action" onClick={() => setAddressOpen(true)} aria-label="مشاهده آدرس فروشگاه">
+                  <PinIcon />
+                  <span>آدرس</span>
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="seller-profile-stats">
-            <div className="seller-profile-stat">
-              <span className="seller-profile-stat__icon"><StoreIcon /></span>
-              <span className="seller-profile-stat__copy"><span className="seller-profile-stat__label">محصول</span><strong className="seller-profile-stat__value">{sellerProducts.length} محصول</strong></span>
+          <div className="seller-profile-stats seller-profile-stats--social">
+            <div className="seller-profile-stat seller-profile-stat--metric">
+              <strong>{sellerProducts.length}</strong>
+              <span>محصول</span>
             </div>
-            <div className="seller-profile-stat">
-              <span className="seller-profile-stat__icon"><StoreIcon /></span>
-              <span className="seller-profile-stat__copy"><span className="seller-profile-stat__label">دسته‌بندی</span><strong className="seller-profile-stat__value">{seller.category?.name || "ثبت نشده"}</strong></span>
+            <div className="seller-profile-stat seller-profile-stat--metric">
+              <strong>{new Set(sellerProducts.map((product) => product.category?.slug).filter(Boolean)).size}</strong>
+              <span>دسته‌بندی</span>
             </div>
-            <div className="seller-profile-stat">
-              <span className="seller-profile-stat__icon"><PhoneIcon /></span>
-              <span className="seller-profile-stat__copy"><span className="seller-profile-stat__label">شماره تماس</span><strong className="seller-profile-stat__value">{seller.contactPhone || "ثبت نشده"}</strong></span>
-            </div>
-            <div className="seller-profile-stat">
-              <span className="seller-profile-stat__icon"><PinIcon /></span>
-              <span className="seller-profile-stat__copy"><span className="seller-profile-stat__label">آدرس</span>
-                {seller.address ? <button type="button" className="seller-address-button seller-profile-stat__value" onClick={() => setAddressOpen(true)}>مشاهده آدرس</button> : <strong className="seller-profile-stat__value">آدرس ثبت نشده</strong>}
-              </span>
+            <div className="seller-profile-stat seller-profile-stat--metric">
+              <strong>{sellerProducts.filter((product) => product.models.length > 0).length}</strong>
+              <span>مدل سه‌بعدی</span>
             </div>
           </div>
 
-          <div className="seller-profile-highlights">
-            <span>فروشگاه تخصصی</span>
-            <span>{sellerProducts.length} محصول فعال</span>
-            {sellerProducts.some((product) => product.models.some((model) => model.kind === "GLB" || model.kind === "GLTF")) && <span>مدل سه‌بعدی</span>}
-            {sellerProducts.some((product) => product.models.some((model) => model.kind === "USDZ")) && <span>واقعیت افزوده</span>}
-          </div>
-
-          <div className="seller-profile-contact-row">
-            {seller.contactPhone && <a href={`tel:${seller.contactPhone}`}><PhoneIcon />{seller.contactPhone}</a>}
-            {seller.contactEmail && <a href={`mailto:${seller.contactEmail}`}><MailIcon />{seller.contactEmail}</a>}
-            {seller.address ? <button type="button" className="seller-address-button" onClick={() => setAddressOpen(true)}><PinIcon />مشاهده آدرس</button> : <span><PinIcon />آدرس ثبت نشده</span>}
-            {Object.entries(seller.socialLinks ?? {}).map(([key, value]) => value ? <a key={key} href={value} target="_blank" rel="noreferrer noopener"><ExternalIcon />{key}</a> : null)}
+          <div className="seller-profile-specialty">
+            <span className="seller-profile-specialty__label">فروشگاه تخصصی</span>
+            <span className="seller-profile-specialty__value">{seller.category?.name || "فروشگاه محصولات سه‌بعدی"}</span>
           </div>
         </div>
       </section>

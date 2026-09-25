@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { PlatformSettings, PublicCategory, PublicPlan, PublicProduct, PublicSeller } from "../types";
 import bundledCatalog from "../../public-data/catalog.json";
+import { PUBLIC_CATALOG_API } from "./config";
 
 export interface PublicCatalog {
   schemaVersion: number;
@@ -60,40 +61,24 @@ function validateCatalog(value: unknown): PublicCatalog {
 }
 
 async function fetchCatalog(signal: AbortSignal): Promise<PublicCatalog> {
-  // First try the atomic catalog. If a CDN/browser has a stale or transient
-  // response, retry once and then fall back to the individual snapshot files.
-  let lastError: unknown = null;
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    try {
-      return validateCatalog(await fetchJson(catalogUrl(), signal));
-    } catch (error) {
-      lastError = error;
-      if (signal.aborted) throw error;
-      await new Promise((resolve) => setTimeout(resolve, attempt === 0 ? 180 : 420));
-    }
-  }
+  // Live backend is the source of truth. The GitHub snapshot is only the
+  // instant first-paint/offline fallback so the site never opens blank.
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 9000);
+  const abortFromParent = () => controller.abort();
+  signal.addEventListener("abort", abortFromParent, { once: true });
 
-  const base = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
   try {
-    const [products, sellers, categories, settings, plans] = await Promise.all([
-      fetchJson(`${base}/public-data/products.json`, signal),
-      fetchJson(`${base}/public-data/sellers.json`, signal),
-      fetchJson(`${base}/public-data/categories.json`, signal),
-      fetchJson(`${base}/public-data/settings.json`, signal),
-      fetchJson(`${base}/public-data/plans.json`, signal).catch(() => []),
-    ]);
-    return validateCatalog({
-      schemaVersion: 1,
-      generatedAt: new Date().toISOString(),
-      version: "fallback",
-      products,
-      sellers,
-      categories,
-      settings,
-      plans,
+    const response = await fetch(PUBLIC_CATALOG_API, {
+      signal: controller.signal,
+      cache: "no-store",
+      headers: { Accept: "application/json" },
     });
-  } catch {
-    throw lastError instanceof Error ? lastError : new Error("اطلاعات سایت در دسترس نیست.");
+    if (!response.ok) throw new Error(`Live catalog failed (${response.status}).`);
+    return validateCatalog(await response.json());
+  } finally {
+    window.clearTimeout(timeout);
+    signal.removeEventListener("abort", abortFromParent);
   }
 }
 
