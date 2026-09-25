@@ -1,34 +1,56 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-25T21:00:14.127Z",
-  "version": "3487928b",
+  "generatedAt": "2026-09-25T17:07:25.290323Z",
+  "version": "848f03f287a4ee25",
   "products": [
+    {
+      "id": "cmub0obpk0013pqapa6n9vma7",
+      "slug": "test-2-rfpxkd",
+      "name": "test 2",
+      "shortDescription": null,
+      "fullDescription": null,
+      "tags": [],
+      "category": null,
+      "seller": {
+        "slug": "test-2-vn5xio",
+        "storeName": "test 2",
+        "id": "static-0"
+      },
+      "images": [
+        {
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/images/2-qutEi6gb2rJKGj.jpg",
+          "isPrimary": true
+        }
+      ],
+      "models": [
+        {
+          "kind": "GLB",
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/models/DdVyLqhsN6Lr9OFm.glb"
+        }
+      ],
+      "dimensions": null,
+      "publishedAt": "2026-09-21T09:04:32.587Z"
+    },
     {
       "id": "cmuayu5fg000nznuyxalg8q9h",
       "slug": "test-7olbw_",
       "name": "test",
       "shortDescription": "test",
-      "fullDescription": "avalin mahsul",
-      "price": 1200000,
-      "isPinned": true,
-      "pinOrder": 1,
-      "viewCount": 0,
-      "tags": [
-        "test"
-      ],
+      "fullDescription": null,
+      "tags": [],
       "category": null,
       "seller": {
-        "id": "cmuays6st0007znuyvxh6ud5u",
         "slug": "test-qa20kn",
         "storeName": "test",
-        "category": {
-          "slug": "test-abfpqu",
-          "name": "test"
-        }
+        "id": "static-1"
       },
       "images": [
         {
           "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/images/o0vTxFCHz1pWAaZN.jpeg",
+          "isPrimary": false
+        },
+        {
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/images/IHU-we7pVtEKdork.jpg",
           "isPrimary": true
         }
       ],
@@ -48,82 +70,36 @@
         "depthM": 0.1,
         "realWorldScale": true
       },
-      "publishedAt": "2026-09-25T20:59:31.930Z"
-    },
-    {
-      "id": "cmub0obpk0013pqapa6n9vma7",
-      "slug": "test-2-rfpxkd",
-      "name": "test 2",
-      "shortDescription": null,
-      "fullDescription": null,
-      "price": null,
-      "isPinned": false,
-      "pinOrder": null,
-      "viewCount": 0,
-      "tags": [],
-      "category": null,
-      "seller": {
-        "id": "cmub0nf7u000npqapdrhv35iw",
-        "slug": "test-2-vn5xio",
-        "storeName": "test 2",
-        "category": null
-      },
-      "images": [
-        {
-          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/images/2-qutEi6gb2rJKGj.jpg",
-          "isPrimary": true
-        }
-      ],
-      "models": [
-        {
-          "kind": "GLB",
-          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/models/DdVyLqhsN6Lr9OFm.glb"
-        }
-      ],
-      "dimensions": null,
-      "publishedAt": "2026-09-22T20:45:02.064Z"
+      "publishedAt": "2026-09-22T15:23:56.365Z"
     }
   ],
   "sellers": [
     {
-      "id": "cmuays6st0007znuyvxh6ud5u",
-      "slug": "test-qa20kn",
-      "storeName": "test",
-      "description": "avalin forushgah",
-      "logoUrl": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/sellers/cmuays6st0007znuyvxh6ud5u/logo/NAObwTMreNpXps8u.jpeg",
-      "themeColor": null,
-      "contactEmail": "seller@gmail.com",
-      "contactPhone": "09144142898",
-      "address": "tabriz valiasr",
-      "category": {
-        "slug": "test-abfpqu",
-        "name": "test"
-      },
-      "socialLinks": {}
-    },
-    {
-      "id": "cmub0nf7u000npqapdrhv35iw",
       "slug": "test-2-vn5xio",
       "storeName": "test 2",
       "description": null,
-      "logoUrl": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/sellers/cmub0nf7u000npqapdrhv35iw/logo/uFUzgWXoT-4vqQw4.jpeg",
-      "themeColor": null,
+      "logoUrl": null,
       "contactEmail": "seller2@gmail.com",
       "contactPhone": "",
+      "socialLinks": {},
       "address": null,
       "category": null,
-      "socialLinks": {}
-    }
-  ],
-  "categories": [
+      "id": "static-0"
+    },
     {
-      "id": "cmuf9jvre0007ux249zts16g4",
-      "slug": "test-abfpqu",
-      "name": "test",
-      "isActive": true,
-      "parentId": null
+      "slug": "test-qa20kn",
+      "storeName": "test",
+      "description": null,
+      "logoUrl": null,
+      "contactEmail": "seller@gmail.com",
+      "contactPhone": "",
+      "socialLinks": {},
+      "address": null,
+      "category": null,
+      "id": "static-1"
     }
   ],
+  "categories": [],
   "settings": {
     "id": "singleton",
     "platformName": "3Dmarketiran",
@@ -145,73 +121,43 @@
   },
   "plans": [
     {
-      "id": "cmuadju210001todkytojgnjv",
+      "id": "seed-30",
       "name": "یک ماهه",
       "durationDays": 30,
-      "price": 4600000,
-      "discountPct": null,
-      "productLimit": 10,
-      "storageLimitMb": 1000,
+      "price": 500000,
+      "discountPct": 0,
+      "productLimit": 20,
+      "storageLimitMb": 2048,
       "features": {}
     },
     {
-      "id": "cmuadjud80002todkrkhku5sl",
+      "id": "seed-90",
       "name": "سه ماهه",
       "durationDays": 90,
-      "price": 13300000,
+      "price": 1350000,
       "discountPct": 10,
-      "productLimit": 20,
-      "storageLimitMb": 1000,
+      "productLimit": 60,
+      "storageLimitMb": 4096,
       "features": {}
     },
     {
-      "id": "cmuadjuni0003todkcjhd4fj3",
+      "id": "seed-180",
       "name": "شش ماهه",
       "durationDays": 180,
-      "price": 26000000,
+      "price": 2500000,
       "discountPct": 15,
-      "productLimit": 25,
-      "storageLimitMb": 2000,
+      "productLimit": 120,
+      "storageLimitMb": 8192,
       "features": {}
     },
     {
-      "id": "cmuadjuuk0004todkrzt3x1lz",
+      "id": "seed-365",
       "name": "یک ساله",
       "durationDays": 365,
-      "price": 50000000,
+      "price": 4500000,
       "discountPct": 25,
-      "productLimit": 30,
-      "storageLimitMb": 2500,
-      "features": {}
-    },
-    {
-      "id": "cmucli0fw000657v6qm7khmbd",
-      "name": "یک ساله + نامحدود",
-      "durationDays": 365,
-      "price": 149000000,
-      "discountPct": null,
-      "productLimit": null,
-      "storageLimitMb": null,
-      "features": {}
-    },
-    {
-      "id": "cmuclkhhy000757v6e14e614j",
-      "name": "سه ساله + نامحدود",
-      "durationDays": 1095,
-      "price": 411000000,
-      "discountPct": null,
-      "productLimit": null,
-      "storageLimitMb": null,
-      "features": {}
-    },
-    {
-      "id": "cmuc8eh380006103ahw15561o",
-      "name": "سه ساله",
-      "durationDays": 1095,
-      "price": 140000000,
-      "discountPct": 30,
-      "productLimit": 30,
-      "storageLimitMb": 3000,
+      "productLimit": 300,
+      "storageLimitMb": 16384,
       "features": {}
     }
   ]

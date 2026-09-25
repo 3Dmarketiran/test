@@ -311,15 +311,13 @@ export default function SellerStore() {
 
             <div className="seller-profile-actions seller-profile-actions--compact">
               {seller.contactPhone && (
-                <a href={`tel:${seller.contactPhone}`} className="seller-profile-action" aria-label="تماس با فروشگاه">
+                <a href={`tel:${seller.contactPhone}`} className="seller-profile-action" aria-label="تماس با فروشگاه" title="تماس با فروشگاه">
                   <PhoneIcon />
-                  <span>تماس</span>
                 </a>
               )}
               {seller.address && (
-                <button type="button" className="seller-profile-action" onClick={() => setAddressOpen(true)} aria-label="مشاهده آدرس فروشگاه">
+                <button type="button" className="seller-profile-action" onClick={() => setAddressOpen(true)} aria-label="مشاهده آدرس فروشگاه" title="مشاهده آدرس فروشگاه">
                   <PinIcon />
-                  <span>آدرس</span>
                 </button>
               )}
             </div>

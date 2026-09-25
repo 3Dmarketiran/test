@@ -108,6 +108,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 export function getSellerLogoUrl(logoUrl: string | null | undefined) {
   if (!logoUrl) return null;
   if (/^(https?:|data:|blob:)/i.test(logoUrl)) return logoUrl;
+  if (/^\/api\//i.test(logoUrl)) return `${PUBLIC_CATALOG_API.replace(/\/api\/public\/catalog$/, "")}${logoUrl}`;
   const base = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
   return `${base}/${logoUrl.replace(/^\/+/, "")}`;
 }
