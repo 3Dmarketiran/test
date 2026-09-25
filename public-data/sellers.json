@@ -8,7 +8,10 @@
     "contactEmail": "seller@gmail.com",
     "contactPhone": "09144142898",
     "address": "tabriz valiasr",
-    "category": null,
+    "category": {
+      "slug": "test-abfpqu",
+      "name": "test"
+    },
     "socialLinks": {}
   },
   {
