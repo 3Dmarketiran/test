@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
 import { ADMIN_URL } from "../lib/config";
+import ProductCard from "../components/ProductCard";
 
 function ArrowIcon() {
   return (
@@ -57,6 +58,31 @@ function StoreIcon() {
   );
 }
 
+function ModelIcon() {
+  return (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path
+        d="m4 7.5 8 4.5 8-4.5M12 12v9"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function Home() {
   const {
     sellers,
@@ -75,104 +101,359 @@ export default function Home() {
       "فروشگاه‌های مختلف را مشاهده کنید، وارد فروشگاه شوید و محصولات سه‌بعدی و واقعیت افزوده آن را ببینید.",
   });
 
-  // Store-first: every seller is a "post" in the feed, shown with a
-  // small preview of their own products — never products compared
-  // side by side across different stores.
-  const feedSellers = sellers.slice(0, 20);
-  const productsBySeller = (slug: string) =>
-    products.filter((product) => product.seller.slug === slug);
+  const featuredSellers = sellers.slice(0, 8);
+  const featuredProducts = [...products]
+    .filter((product) => product)
+    .sort((a, b) => {
+      const pinA = a.isPinned ? 1 : 0;
+      const pinB = b.isPinned ? 1 : 0;
+      if (pinA !== pinB) return pinB - pinA;
+      return (b.viewCount ?? 0) - (a.viewCount ?? 0);
+    })
+    .slice(0, 8);
 
   return (
     <>
-      {/* STORY ROW — quick jump into a store, Instagram-style */}
-      {sellers.length > 0 && (
-        <section style={{ paddingTop: 18 }}>
-          <div className="container">
-            <div className="story-row">
-              {sellers.map((seller) => {
-                const logo = getSellerLogoUrl(seller.logoUrl, seller.slug);
-                return (
-                  <Link key={seller.slug} to={`/sellers/${seller.slug}`} className="story-item">
-                    <div className="story-item__ring">
-                      <div className="story-item__hole">
-                        {logo ? <img src={logo} alt={seller.storeName} loading="lazy" /> : sellerInitials(seller.storeName)}
-                      </div>
-                    </div>
-                    <span>{seller.storeName}</span>
-                  </Link>
-                );
-              })}
+      {/* HERO */}
+      <section className="hero">
+        <div className="container hero__inner">
+          <div
+            style={{
+              minWidth: 0,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                alignSelf: "flex-start",
+                gap: 7,
+                marginBottom: 16,
+                padding: "7px 12px",
+                borderRadius: 999,
+                background: "rgba(255,255,255,.08)",
+                border: "1px solid rgba(255,255,255,.1)",
+                color: "inherit",
+                fontSize: 13,
+                fontWeight: 750,
+              }}
+            >
+              <StoreIcon />
+              فروشگاه‌های 3D و AR
+            </div>
+
+            <h1>
+              فروشگاه موردنظر خود را پیدا کنید،
+              <br />
+              محصولات را سه‌بعدی ببینید
+            </h1>
+
+            <p>
+              {platformName} بستری برای معرفی فروشگاه‌ها
+              و محصولات آن‌ها با نمایش سه‌بعدی تعاملی و
+              واقعیت افزوده است. وارد فروشگاه شوید،
+              محصولات آن را بررسی کنید و در صورت تمایل
+              مستقیماً با فروشنده تماس بگیرید.
+            </p>
+
+            <div className="hero__cta">
+              <Link
+                to="/products"
+                className="btn btn-primary"
+              >
+                مشاهده فروشگاه‌ها
+              </Link>
+
+              <Link
+                to="/categories"
+                className="btn btn-outline"
+              >
+                دسته‌بندی‌ها
+              </Link>
+
+              <a
+                href={ADMIN_URL}
+                className="btn btn-outline"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                ورود فروشندگان
+              </a>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 18,
+                marginTop: 24,
+                color: "inherit",
+                opacity: 0.8,
+                fontSize: 13,
+              }}
+            >
+              <span>
+                ✓ فروشگاه‌های اختصاصی
+              </span>
+
+              <span>
+                ✓ نمایش مدل سه‌بعدی
+              </span>
+
+              <span>
+                ✓ پشتیبانی از AR
+              </span>
+
+              <span>
+                ✓ تماس مستقیم با فروشنده
+              </span>
             </div>
           </div>
-        </section>
-      )}
 
-      {/* STORE FEED — store first, then its products; find a store, then browse inside it */}
-      <section className="section" style={{ paddingTop: 20 }}>
-        <div className="container">
-          {loading ? (
-            <div className="store-feed">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="skeleton" style={{ height: 320, borderRadius: 22 }} />
-              ))}
+          {/* HERO VISUAL */}
+          <div className="hero__visual hero-showcase" style={{display:"grid",placeItems:"center",overflow:"hidden",minHeight:390}}>
+            <div className="hero-showcase__glow" />
+            <div className="hero-showcase__card">
+              <div className="hero-showcase__top">
+                <span className="hero-showcase__eyebrow">3DMARKETIRAN</span>
+                <span className="hero-showcase__live"><i /> نمایش زنده</span>
+              </div>
+              <div className="hero-showcase__model">
+                <div className="hero-showcase__cube">
+                  <ModelIcon />
+                </div>
+                <div className="hero-showcase__ring hero-showcase__ring--one" />
+                <div className="hero-showcase__ring hero-showcase__ring--two" />
+              </div>
+              <div className="hero-showcase__copy">
+                <strong>Plus AR · Plus 3D</strong>
+                <span>محصول را ببین، بچرخان و در محیط واقعی امتحان کن.</span>
+              </div>
+              <div className="hero-showcase__features">
+                <span>3D تعاملی</span><span>AR</span><span>تماس با فروشنده</span>
+              </div>
             </div>
-          ) : feedSellers.length === 0 ? (
-            <div className="empty-state" style={{ minHeight: 240, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", maxWidth: 600, margin: "0 auto" }}>
-              <div className="icon" style={{ marginBottom: 12 }}>🏪</div>
-              <p style={{ margin: 0 }}>هنوز فروشگاه فعالی ثبت نشده است.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* STORES */}
+      <section className="section">
+        <div className="container">
+          <div
+            className="section-head"
+            style={{
+              alignItems: "flex-end",
+            }}
+          >
+            <div>
+              <h2>فروشگاه‌ها</h2>
+
+              <p>
+                فروشگاه‌های فعال را ببینید و وارد فضای
+                اختصاصی هر فروشنده شوید.
+              </p>
+            </div>
+
+            <Link
+              to="/products"
+              className="btn btn-outline btn-sm"
+            >
+              مشاهده همه فروشگاه‌ها
+              <ArrowIcon />
+            </Link>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-4">
+              {Array.from({ length: 8 }).map(
+                (_, index) => (
+                  <div
+                    key={index}
+                    className="skeleton"
+                    style={{
+                      aspectRatio: "1 / .82",
+                      borderRadius: 18,
+                    }}
+                  />
+                )
+              )}
+            </div>
+          ) : featuredSellers.length === 0 ? (
+            <div
+              className="empty-state"
+              style={{
+                minHeight: 240,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+              }}
+            >
+              <div
+                className="icon"
+                style={{
+                  marginBottom: 12,
+                }}
+              >
+                🏪
+              </div>
+
+              <p
+                style={{
+                  margin: 0,
+                }}
+              >
+                هنوز فروشگاه فعالی ثبت نشده است.
+              </p>
             </div>
           ) : (
-            <div className="store-feed">
-              {feedSellers.map((seller) => {
-                const logo = getSellerLogoUrl(seller.logoUrl, seller.slug);
-                const sellerProducts = productsBySeller(seller.slug).slice(0, 3);
-                return (
-                  <article key={seller.slug} className="card store-post">
-                    <div className="store-post__head">
-                      <div className="store-post__avatar">
-                        {logo ? <img src={logo} alt={seller.storeName} loading="lazy" /> : sellerInitials(seller.storeName)}
+            <div className="grid grid-4">
+              {featuredSellers.map((seller) => (
+                <Link
+                  key={seller.slug}
+                  to={`/sellers/${seller.slug}`}
+                  className="card featured-store-card"
+                  style={{
+                    padding: 18,
+                    display: "flex",
+                    flexDirection: "column",
+                    minWidth: 0,
+                    textDecoration: "none",
+                    height: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      aspectRatio: "1.65 / 1",
+                      borderRadius: 16,
+                      overflow: "hidden",
+                      display: "grid",
+                      placeItems: "center",
+                      background:
+                        "linear-gradient(145deg,#f5f8fb,#fff)",
+                      marginBottom: 14,
+                    }}
+                  >
+                    {getSellerLogoUrl(seller.logoUrl, seller.slug) ? (
+                      <img
+                        src={getSellerLogoUrl(seller.logoUrl, seller.slug) || undefined}
+                        alt={seller.storeName}
+                        loading="lazy"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          padding: 18,
+                        }}
+                        onError={(event) => {
+                          event.currentTarget.style.display = "none";
+                          const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                          if (fallback) fallback.style.display = "grid";
+                        }}
+                      />
+                    ) : null}
+                    <div className="seller-logo-fallback" style={{width:92,height:92,borderRadius:24,display:getSellerLogoUrl(seller.logoUrl,seller.slug)?"none":"grid",placeItems:"center",fontSize:24,fontWeight:900,letterSpacing:".03em"}}>{sellerInitials(seller.storeName)}</div>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      minWidth: 0,
+                    }}
+                  >
+                    <div
+                      style={{
+                        minWidth: 0,
+                        flex: 1,
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontWeight: 800,
+                          lineHeight: 1.5,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {seller.storeName}
                       </div>
-                      <div className="store-post__who">
-                        <div className="store-post__name">{seller.storeName}</div>
-                        <div className="store-post__cat">{seller.category?.name ?? "فروشگاه"} · {productsBySeller(seller.slug).length} محصول</div>
-                      </div>
-                      <Link to={`/sellers/${seller.slug}`} className="btn btn-outline btn-sm">مشاهده فروشگاه</Link>
+
+                      {seller.description && (
+                        <div
+                          style={{
+                            marginTop: 3,
+                            fontSize: ".82rem",
+                            lineHeight: 1.7,
+                            color:
+                              "var(--color-text-muted)",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                          }}
+                        >
+                          {seller.description}
+                        </div>
+                      )}
                     </div>
 
-                    {seller.description && <p className="store-post__bio">{seller.description}</p>}
-
-                    <Link to={`/sellers/${seller.slug}`} className="store-post__media" aria-label={`محصولات ${seller.storeName}`}>
-                      {Array.from({ length: 3 }).map((_, index) => {
-                        const product = sellerProducts[index];
-                        const image = product?.images.find((img) => img.isPrimary) ?? product?.images[0];
-                        const is3d = product?.models.some((m) => m.kind === "GLB" || m.kind === "GLTF");
-                        const isAr = product?.models.some((m) => m.kind === "USDZ");
-                        return (
-                          <div key={index} className="store-post__ph">
-                            {image?.url ? (
-                              <>
-                                {(is3d || isAr) && <span className="store-post__tag">{is3d ? "3D" : "AR"}</span>}
-                                <img src={image.url} alt={product?.name ?? ""} loading="lazy" />
-                              </>
-                            ) : (
-                              <div className="store-post__ph--empty">□</div>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </Link>
-
-                    <div className="store-post__foot">
-                      <div className="store-post__stat"><b>{seller.contactPhone ? "پاسخگو" : "—"}</b> برای مشتریان</div>
-                      <Link to={`/sellers/${seller.slug}`} className="btn btn-primary btn-sm">ورود به فروشگاه</Link>
-                    </div>
-                  </article>
-                );
-              })}
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        width: 32,
+                        height: 32,
+                        display: "grid",
+                        placeItems: "center",
+                        borderRadius: 10,
+                        background:
+                          "var(--surface-2, #f5f5f5)",
+                        color:
+                          "var(--color-text-muted)",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <ArrowIcon />
+                    </span>
+                  </div>
+                </Link>
+              ))}
             </div>
           )}
         </div>
       </section>
+
+      {/* POPULAR PRODUCTS */}
+      {featuredProducts.length > 0 && (
+        <section className="section">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <h2>محبوب‌ترین محصولات</h2>
+                <p>محصولات منتخب فروشگاه‌ها را با قابلیت 3D و AR بررسی کنید.</p>
+              </div>
+              <Link to="/products" className="btn btn-outline btn-sm">
+                مشاهده همه محصولات
+                <ArrowIcon />
+              </Link>
+            </div>
+            <div className="grid grid-4">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CATEGORIES */}
       {categories.length > 0 && (
