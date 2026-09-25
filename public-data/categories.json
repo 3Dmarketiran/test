@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "cmuf9jvre0007ux249zts16g4",
+    "slug": "test-abfpqu",
+    "name": "test",
+    "isActive": true,
+    "parentId": null
+  }
+]
