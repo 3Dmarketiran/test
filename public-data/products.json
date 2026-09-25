@@ -1,42 +1,25 @@
 [
   {
-    "id": "cmub0obpk0013pqapa6n9vma7",
-    "slug": "test-2-rfpxkd",
-    "name": "test 2",
-    "shortDescription": null,
-    "fullDescription": null,
-    "tags": [],
-    "category": null,
-    "seller": {
-      "slug": "test-2-vn5xio",
-      "storeName": "test 2"
-    },
-    "images": [
-      {
-        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/images/2-qutEi6gb2rJKGj.jpg",
-        "isPrimary": true
-      }
-    ],
-    "models": [
-      {
-        "kind": "GLB",
-        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/models/DdVyLqhsN6Lr9OFm.glb"
-      }
-    ],
-    "dimensions": null,
-    "publishedAt": "2026-09-21T09:04:32.587Z"
-  },
-  {
     "id": "cmuayu5fg000nznuyxalg8q9h",
     "slug": "test-7olbw_",
     "name": "test",
     "shortDescription": "test",
-    "fullDescription": null,
-    "tags": [],
+    "fullDescription": "avalin mahsul",
+    "price": 1000000,
+    "isPinned": true,
+    "pinOrder": 1,
+    "viewCount": 0,
+    "tags": [
+      "test"
+    ],
     "category": null,
     "seller": {
       "slug": "test-qa20kn",
-      "storeName": "test"
+      "storeName": "test",
+      "category": {
+        "slug": "test-abfpqu",
+        "name": "test"
+      }
     },
     "images": [
       {
@@ -64,6 +47,38 @@
       "depthM": 0.1,
       "realWorldScale": true
     },
-    "publishedAt": "2026-09-22T15:23:56.365Z"
+    "publishedAt": "2026-09-25T05:32:09.727Z"
+  },
+  {
+    "id": "cmub0obpk0013pqapa6n9vma7",
+    "slug": "test-2-rfpxkd",
+    "name": "test 2",
+    "shortDescription": null,
+    "fullDescription": null,
+    "price": null,
+    "isPinned": false,
+    "pinOrder": null,
+    "viewCount": 0,
+    "tags": [],
+    "category": null,
+    "seller": {
+      "slug": "test-2-vn5xio",
+      "storeName": "test 2",
+      "category": null
+    },
+    "images": [
+      {
+        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/images/2-qutEi6gb2rJKGj.jpg",
+        "isPrimary": true
+      }
+    ],
+    "models": [
+      {
+        "kind": "GLB",
+        "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/models/DdVyLqhsN6Lr9OFm.glb"
+      }
+    ],
+    "dimensions": null,
+    "publishedAt": "2026-09-22T20:45:02.064Z"
   }
 ]
