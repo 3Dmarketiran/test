@@ -299,7 +299,7 @@ export default function SellerStore() {
 
   return (
     <div className="container section seller-store-page">
-      <section className="seller-profile-card card fade-in-up" style={{"--seller-theme": seller.themeColor || "#0b1f3a"} as React.CSSProperties}>
+      <section className="seller-profile-card card fade-in-up" style={{"--seller-theme": seller.themeColor || "#2e6fce"} as React.CSSProperties}>
         <div className="seller-profile-cover" aria-hidden="true" />
         <div className="seller-profile-inner">
           <div className="seller-profile-main-row">

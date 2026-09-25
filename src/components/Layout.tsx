@@ -208,6 +208,14 @@ export default function Layout() {
             </span>
           </Link>
 
+          <div className="header-search" aria-label="جستجوی محصولات">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8"/>
+              <path d="m16 16 4.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+            </svg>
+            <Link to="/search">جستجوی محصولات و فروشگاه‌ها...</Link>
+          </div>
+
           {/* DESKTOP / MOBILE NAV */}
           <nav
             className={`nav-links${

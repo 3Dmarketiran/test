@@ -403,7 +403,7 @@ function SellerCard({
               alignItems: "center",
               justifyContent: "center",
               background: "linear-gradient(135deg, #eaf2f9, #f4f7fa)",
-              color: "#0b1f3a",
+              color: "var(--neo-text-strong)",
               fontSize: 16,
               fontWeight: 900,
             }}
@@ -423,7 +423,7 @@ function SellerCard({
             alignItems: "center",
             justifyContent: "center",
             background: "linear-gradient(135deg, #eaf2f9, #f4f7fa)",
-            color: "#0b1f3a",
+            color: "var(--neo-text-strong)",
             fontSize: 16,
             fontWeight: 900,
           }}

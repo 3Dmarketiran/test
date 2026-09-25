@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
 import { ADMIN_URL } from "../lib/config";
+import ProductCard from "../components/ProductCard";
 
 function ArrowIcon() {
   return (
@@ -85,6 +86,7 @@ function ModelIcon() {
 export default function Home() {
   const {
     sellers,
+    products,
     categories,
     settings,
     loading,
@@ -100,6 +102,15 @@ export default function Home() {
   });
 
   const featuredSellers = sellers.slice(0, 8);
+  const featuredProducts = [...products]
+    .filter((product) => product)
+    .sort((a, b) => {
+      const pinA = a.isPinned ? 1 : 0;
+      const pinB = b.isPinned ? 1 : 0;
+      if (pinA !== pinB) return pinB - pinA;
+      return (b.viewCount ?? 0) - (a.viewCount ?? 0);
+    })
+    .slice(0, 8);
 
   return (
     <>
@@ -420,6 +431,29 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* POPULAR PRODUCTS */}
+      {featuredProducts.length > 0 && (
+        <section className="section">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <h2>محبوب‌ترین محصولات</h2>
+                <p>محصولات منتخب فروشگاه‌ها را با قابلیت 3D و AR بررسی کنید.</p>
+              </div>
+              <Link to="/products" className="btn btn-outline btn-sm">
+                مشاهده همه محصولات
+                <ArrowIcon />
+              </Link>
+            </div>
+            <div className="grid grid-4">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CATEGORIES */}
       {categories.length > 0 && (
