@@ -361,9 +361,31 @@ export default function SellerStore() {
       </section>
 
       <section className="seller-social-nav" aria-label="بخش‌های فروشگاه">
-        <a href="#featured" className="active">منتخب فروشگاه</a>
-        <a href="#popular">محبوب‌ترین‌ها</a>
-        <a href="#all-products">همه محصولات</a>
+        {[
+          { id: "featured", label: "منتخب فروشگاه", show: pinnedProducts.length > 0 },
+          { id: "popular", label: "محبوب‌ترین‌ها", show: popularProducts.length > 0 },
+          { id: "all-products", label: "همه محصولات", show: true },
+        ]
+          .filter((item) => item.show)
+          .map((item, index) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className={index === 0 ? "active" : undefined}
+              onClick={(event) => {
+                // The app uses HashRouter, which treats a plain
+                // "#id" href as a route change (to a nonexistent
+                // "/id" route) instead of an in-page scroll. Scroll
+                // to the section manually and keep the URL as-is.
+                event.preventDefault();
+                document
+                  .getElementById(item.id)
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
+              {item.label}
+            </a>
+          ))}
       </section>
 
       {pinnedProducts.length > 0 && (
