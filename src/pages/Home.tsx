@@ -2,9 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
-
-const ADMIN_URL =
-  "https://3dmarketiran.github.io/frontend-admin/#/login";
+import { ADMIN_URL } from "../lib/config";
 
 function ArrowIcon() {
   return (

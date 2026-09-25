@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
+import { ADMIN_URL, API_URL, SUPPORT_PHONE } from "../lib/config";
 
 type Plan = {
   id: string;
@@ -11,14 +12,6 @@ type Plan = {
   productLimit?: number | null;
   storageLimitMb?: number | null;
 };
-
-const API_URL =
-  "https://threedmarketiran-backend.onrender.com";
-
-const ADMIN_URL =
-  "https://3dmarketiran.github.io/frontend-admin/#/login";
-
-const SUPPORT_PHONE = "09144142898";
 
 function formatPrice(value: number) {
   return (

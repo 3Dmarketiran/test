@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useData } from "../lib/data";
-
-const ADMIN_URL =
-  import.meta.env.VITE_ADMIN_URL ||
-  "https://3dmarketiran.github.io/frontend-admin/#/login";
+import { ADMIN_URL } from "../lib/config";
 
 const NAV = [
   { to: "/", label: "خانه", end: true },

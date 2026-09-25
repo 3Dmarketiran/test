@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getSellerLogoUrl, useData } from "../lib/data";
+import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
 import { track } from "../lib/analytics";
@@ -305,8 +305,24 @@ export default function SellerStore() {
           <div className="seller-profile-main-row">
             <div className={`seller-profile-avatar${logo ? " has-logo" : ""}`}>
               {logo ? (
-                <img src={logo} alt={seller.storeName} loading="eager" onError={(event) => { event.currentTarget.style.display = "none"; }} />
-              ) : <StoreIcon />}
+                <img
+                  src={logo}
+                  alt={seller.storeName}
+                  loading="eager"
+                  onError={(event) => {
+                    event.currentTarget.style.display = "none";
+                    const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                    if (fallback) fallback.style.display = "grid";
+                  }}
+                />
+              ) : null}
+              <span
+                className="seller-profile-avatar__fallback"
+                style={{ display: logo ? "none" : "grid" }}
+                aria-hidden="true"
+              >
+                {sellerInitials(seller.storeName)}
+              </span>
             </div>
             <div className="seller-profile-copy">
               <div className="seller-profile-overline">فروشگاه رسمی</div>

@@ -11,6 +11,7 @@ import type {
   PublicProduct,
   PublicSeller,
 } from "../types";
+import { API_URL } from "./config";
 
 interface DataState {
   products: PublicProduct[];
@@ -213,7 +214,7 @@ export function getSellerLogoUrl(logoUrl: string | null | undefined, slug?: stri
   // Prefer the backend logo proxy for seller logos. It keeps public GitHub
   // snapshots independent from private/object-storage URL details.
   if (slug) {
-    return `https://threedmarketiran-backend.onrender.com/api/sellers/by-slug/${encodeURIComponent(slug)}/logo`;
+    return `${API_URL}/api/sellers/by-slug/${encodeURIComponent(slug)}/logo`;
   }
   if (!logoUrl) return null;
   if (/^(https?:|data:|blob:)/i.test(logoUrl)) return logoUrl;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { getSellerLogoUrl, useData } from "../lib/data";
+import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import ProductViewer from "../components/ProductViewer";
 import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
@@ -373,23 +373,44 @@ function SellerCard({
       aria-label="اطلاعات فروشگاه"
     >
       {getSellerLogoUrl(seller.logoUrl, seller.slug) ? (
-        <img
-          src={getSellerLogoUrl(seller.logoUrl, seller.slug) || undefined}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          style={{
-            width: 50,
-            height: 50,
-            objectFit: "contain",
-            borderRadius: 15,
-            flex: "0 0 auto",
-          }}
-          onError={(event) => {
-            event.currentTarget.style.display =
-              "none";
-          }}
-        />
+        <>
+          <img
+            src={getSellerLogoUrl(seller.logoUrl, seller.slug) || undefined}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            style={{
+              width: 50,
+              height: 50,
+              objectFit: "contain",
+              borderRadius: 15,
+              flex: "0 0 auto",
+            }}
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+              const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+              if (fallback) fallback.style.display = "flex";
+            }}
+          />
+          <div
+            aria-hidden="true"
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 15,
+              flex: "0 0 auto",
+              display: "none",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "linear-gradient(135deg, #eaf2f9, #f4f7fa)",
+              color: "#0b1f3a",
+              fontSize: 16,
+              fontWeight: 900,
+            }}
+          >
+            {sellerInitials(seller.storeName)}
+          </div>
+        </>
       ) : (
         <div
           aria-hidden="true"
@@ -401,12 +422,13 @@ function SellerCard({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background:
-              "linear-gradient(135deg, #f0efff, #eef8fa)",
-            fontSize: 21,
+            background: "linear-gradient(135deg, #eaf2f9, #f4f7fa)",
+            color: "#0b1f3a",
+            fontSize: 16,
+            fontWeight: 900,
           }}
         >
-          🏪
+          {sellerInitials(seller.storeName)}
         </div>
       )}
 
