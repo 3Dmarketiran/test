@@ -16,8 +16,9 @@ const dataDir = path.join(root, "public-data");
 cpSync(dataDir, path.join(dist, "public-data"), { recursive: true });
 
 const siteUrl = process.env.PUBLIC_SITE_URL || "https://example.com";
-const products = JSON.parse(readFileSync(path.join(dataDir, "products.json"), "utf-8"));
-const sellers = JSON.parse(readFileSync(path.join(dataDir, "sellers.json"), "utf-8"));
+const catalog = JSON.parse(readFileSync(path.join(dataDir, "catalog.json"), "utf-8"));
+const products = catalog.products;
+const sellers = catalog.sellers;
 
 const staticUrls = ["/", "/#/products", "/#/categories", "/#/about", "/#/contact"];
 const productUrls = products.map((p) => `/#/products/${p.slug}`);

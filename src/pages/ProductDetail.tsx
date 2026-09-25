@@ -372,10 +372,10 @@ function SellerCard({
       className="seller-box"
       aria-label="اطلاعات فروشگاه"
     >
-      {getSellerLogoUrl(seller.logoUrl, seller.slug) ? (
+      {getSellerLogoUrl(seller.logoUrl) ? (
         <>
           <img
-            src={getSellerLogoUrl(seller.logoUrl, seller.slug) || undefined}
+            src={getSellerLogoUrl(seller.logoUrl) || undefined}
             alt=""
             loading="lazy"
             decoding="async"

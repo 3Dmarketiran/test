@@ -654,7 +654,7 @@ export default function Products() {
             }}
           >
             {filteredSellers.map((seller) => {
-              const logoUrl = getSellerLogoUrl(seller.logoUrl, seller.slug) || "";
+              const logoUrl = getSellerLogoUrl(seller.logoUrl) || "";
               const storeName =
                 seller.storeName ||
                 "فروشگاه بدون نام";

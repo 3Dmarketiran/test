@@ -70,3 +70,20 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 .header-search{width:min(280px,24vw);min-width:190px;flex:none;height:40px;display:flex;align-items:center;gap:8px;padding:0 13px;border-radius:10px;background:var(--neo-surface-2);border:1px solid var(--neo-border);color:var(--neo-muted);font-size:.68rem;transition:.15s}.header-search:hover{border-color:var(--neo-border-strong);color:var(--neo-text)}.header-search a{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.header-search svg{flex:none;color:var(--neo-blue-dark)}
 @media(max-width:800px){.header-search{display:none}}
+
+/* V15 QA: clean focus states and public store cards */
+.search-box:focus-within{border:2px solid var(--neo-blue)!important;outline:none!important;box-shadow:0 0 0 3px rgba(46,111,206,.10)!important}
+.search-box input{outline:none!important;border:0!important;box-shadow:none!important}
+.search-box input:focus{outline:none!important;box-shadow:none!important}
+.featured-store-card .featured-store-logo{width:140px!important;height:140px!important;object-fit:contain!important;padding:12px!important;border-radius:24px!important;background:#fff!important;border:1px solid var(--neo-border)!important}
+.seller-profile-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px!important}
+.seller-profile-stat{display:flex;align-items:center;gap:10px;min-width:0}
+.seller-profile-stat__icon{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:11px;background:#fff;color:var(--neo-blue-dark);border:1px solid var(--neo-border)}
+.seller-profile-stat__copy{min-width:0;display:grid;gap:3px}
+.seller-profile-stat__label{font-size:.67rem;color:var(--neo-muted);font-weight:700;white-space:nowrap}
+.seller-profile-stat__value{font-size:.9rem;color:var(--neo-text-strong);font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:rtl}
+.seller-address-button{border:0;background:transparent;padding:0;text-align:right;cursor:pointer;font:inherit;min-width:0;max-width:100%}
+.address-dialog-backdrop{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:20px;background:rgba(15,23,42,.42);backdrop-filter:blur(5px)}
+.address-dialog{width:min(520px,100%);background:#fff;border:1px solid var(--neo-border);border-radius:22px;box-shadow:0 24px 80px rgba(15,23,42,.22);padding:24px}
+.address-dialog__head{display:flex;align-items:center;justify-content:space-between;gap:16px}.address-dialog__close{width:36px;height:36px;border:1px solid var(--neo-border);background:#fff;border-radius:10px;cursor:pointer}
+@media(max-width:800px){.seller-profile-stats{grid-template-columns:1fr 1fr}.seller-profile-stat__value{font-size:.78rem}.featured-store-card .featured-store-logo{width:120px!important;height:120px!important}}

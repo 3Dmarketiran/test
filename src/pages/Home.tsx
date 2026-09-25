@@ -329,17 +329,12 @@ export default function Home() {
                       marginBottom: 14,
                     }}
                   >
-                    {getSellerLogoUrl(seller.logoUrl, seller.slug) ? (
+                    {getSellerLogoUrl(seller.logoUrl) ? (
                       <img
-                        src={getSellerLogoUrl(seller.logoUrl, seller.slug) || undefined}
+                        src={getSellerLogoUrl(seller.logoUrl) || undefined}
                         alt={seller.storeName}
                         loading="lazy"
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "contain",
-                          padding: 18,
-                        }}
+                        className="featured-store-logo"
                         onError={(event) => {
                           event.currentTarget.style.display = "none";
                           const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
@@ -347,7 +342,7 @@ export default function Home() {
                         }}
                       />
                     ) : null}
-                    <div className="seller-logo-fallback" style={{width:92,height:92,borderRadius:24,display:getSellerLogoUrl(seller.logoUrl,seller.slug)?"none":"grid",placeItems:"center",fontSize:24,fontWeight:900,letterSpacing:".03em"}}>{sellerInitials(seller.storeName)}</div>
+                    <div className="seller-logo-fallback" style={{width:92,height:92,borderRadius:24,display:getSellerLogoUrl(seller.logoUrl)?"none":"grid",placeItems:"center",fontSize:24,fontWeight:900,letterSpacing:".03em"}}>{sellerInitials(seller.storeName)}</div>
                   </div>
 
                   <div

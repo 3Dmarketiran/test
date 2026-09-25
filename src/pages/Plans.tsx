@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
-import { ADMIN_URL, API_URL, SUPPORT_PHONE } from "../lib/config";
+import { ADMIN_URL, SUPPORT_PHONE } from "../lib/config";
 
 type Plan = {
   id: string;
@@ -112,11 +112,11 @@ function ArrowIcon() {
 }
 
 export default function Plans() {
-  const { settings } = useData();
+  const { settings, plans: catalogPlans, loading: catalogLoading, error: catalogError } = useData();
 
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const plans = catalogPlans as Plan[];
+  const loading = catalogLoading;
+  const error = Boolean(catalogError);
 
   const phone =
     settings?.contactPhone || SUPPORT_PHONE;
@@ -130,41 +130,7 @@ export default function Plans() {
       "پلن‌های اشتراک فروشندگان برای ساخت ویترین سه‌بعدی و واقعیت افزوده.",
   });
 
-  useEffect(() => {
-    let cancelled = false;
 
-    fetch(`${API_URL}/api/subscriptions/plans`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("plans");
-        }
-
-        return response.json();
-      })
-      .then((data) => {
-        if (cancelled) return;
-
-        setPlans(
-          Array.isArray(data.plans)
-            ? data.plans
-            : []
-        );
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setError(true);
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   return (
     <main className="container section">

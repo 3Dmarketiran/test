@@ -37,6 +37,7 @@ export interface PublicProduct {
     name: string;
   } | null;
   seller: {
+    id: string;
     slug: string;
     storeName: string;
     category?: {
@@ -51,6 +52,7 @@ export interface PublicProduct {
 }
 
 export interface PublicSeller {
+  id: string;
   slug: string;
   storeName: string;
   description: string | null;
@@ -74,6 +76,17 @@ export interface PublicCategory {
   parentId: string | null;
 }
 
+export interface PublicPlan {
+  id: string;
+  name: string;
+  durationDays: number;
+  price: number;
+  discountPct?: number | null;
+  productLimit?: number | null;
+  storageLimitMb?: number | null;
+  features?: Record<string, unknown> | null;
+}
+
 export interface PlatformSettings {
   platformName: string;
   logoUrl?: string | null;
@@ -87,4 +100,16 @@ export interface PlatformSettings {
   socialLinks?: Record<string, string> | null;
   contactEmail?: string | null;
   contactPhone?: string | null;
+}
+
+
+export interface PublicCatalog {
+  schemaVersion: number;
+  generatedAt: string;
+  version: string;
+  products: PublicProduct[];
+  sellers: PublicSeller[];
+  categories: PublicCategory[];
+  settings: PlatformSettings;
+  plans: PublicPlan[];
 }

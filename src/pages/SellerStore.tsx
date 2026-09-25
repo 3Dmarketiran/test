@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import ProductCard from "../components/ProductCard";
@@ -187,6 +187,7 @@ function StoreSkeleton() {
 export default function SellerStore() {
   const { slug } = useParams();
   const { sellers, products, loading } = useData();
+  const [addressOpen, setAddressOpen] = useState(false);
 
   const seller = sellers.find((item) => item.slug === slug);
 
@@ -210,7 +211,7 @@ export default function SellerStore() {
     if (!seller) return;
 
     track("SELLER_PAGE_VIEW", {
-      sellerId: undefined,
+      sellerId: seller.id,
       metadata: {
         sellerSlug: seller.slug,
       },
@@ -287,7 +288,7 @@ export default function SellerStore() {
     );
   }
 
-  const logo = getSellerLogoUrl(seller.logoUrl, seller.slug);
+  const logo = getSellerLogoUrl(seller.logoUrl);
   const pinnedProducts = [...sellerProducts]
     .filter((product) => product.isPinned)
     .sort((a, b) => (a.pinOrder ?? 99) - (b.pinOrder ?? 99))
@@ -338,10 +339,24 @@ export default function SellerStore() {
           </div>
 
           <div className="seller-profile-stats">
-            <div><strong>{sellerProducts.length}</strong><span>محصول منتشرشده</span></div>
-            <div><strong>{seller.category?.name || "فروشگاه"}</strong><span>دسته‌بندی فروشگاه</span></div>
-            <div className="seller-contact-stat"><strong>{seller.contactPhone || "ثبت نشده"}</strong><span>شماره تماس</span></div>
-            <div className="seller-contact-stat seller-address-stat"><strong>{seller.address || "آدرس ثبت نشده"}</strong><span>آدرس فروشگاه</span></div>
+            <div className="seller-profile-stat">
+              <span className="seller-profile-stat__icon"><StoreIcon /></span>
+              <span className="seller-profile-stat__copy"><span className="seller-profile-stat__label">محصول</span><strong className="seller-profile-stat__value">{sellerProducts.length} محصول</strong></span>
+            </div>
+            <div className="seller-profile-stat">
+              <span className="seller-profile-stat__icon"><StoreIcon /></span>
+              <span className="seller-profile-stat__copy"><span className="seller-profile-stat__label">دسته‌بندی</span><strong className="seller-profile-stat__value">{seller.category?.name || "ثبت نشده"}</strong></span>
+            </div>
+            <div className="seller-profile-stat">
+              <span className="seller-profile-stat__icon"><PhoneIcon /></span>
+              <span className="seller-profile-stat__copy"><span className="seller-profile-stat__label">شماره تماس</span><strong className="seller-profile-stat__value">{seller.contactPhone || "ثبت نشده"}</strong></span>
+            </div>
+            <div className="seller-profile-stat">
+              <span className="seller-profile-stat__icon"><PinIcon /></span>
+              <span className="seller-profile-stat__copy"><span className="seller-profile-stat__label">آدرس</span>
+                {seller.address ? <button type="button" className="seller-address-button seller-profile-stat__value" onClick={() => setAddressOpen(true)}>مشاهده آدرس</button> : <strong className="seller-profile-stat__value">آدرس ثبت نشده</strong>}
+              </span>
+            </div>
           </div>
 
           <div className="seller-profile-highlights">
@@ -354,7 +369,7 @@ export default function SellerStore() {
           <div className="seller-profile-contact-row">
             {seller.contactPhone && <a href={`tel:${seller.contactPhone}`}><PhoneIcon />{seller.contactPhone}</a>}
             {seller.contactEmail && <a href={`mailto:${seller.contactEmail}`}><MailIcon />{seller.contactEmail}</a>}
-            {seller.address && <span><PinIcon />{seller.address}</span>}
+            {seller.address ? <button type="button" className="seller-address-button" onClick={() => setAddressOpen(true)}><PinIcon />مشاهده آدرس</button> : <span><PinIcon />آدرس ثبت نشده</span>}
             {Object.entries(seller.socialLinks ?? {}).map(([key, value]) => value ? <a key={key} href={value} target="_blank" rel="noreferrer noopener"><ExternalIcon />{key}</a> : null)}
           </div>
         </div>
@@ -424,6 +439,20 @@ export default function SellerStore() {
           </div>
         )}
       </section>
+
+      {addressOpen && (
+        <div className="address-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAddressOpen(false); }}>
+          <div className="address-dialog" role="dialog" aria-modal="true" aria-labelledby="seller-address-title">
+            <div className="address-dialog__head">
+              <div><div className="page-eyebrow">موقعیت فروشگاه</div><h2 id="seller-address-title" style={{margin:"4px 0 0",fontSize:"1.15rem"}}>آدرس فروشگاه</h2></div>
+              <button type="button" className="address-dialog__close" onClick={() => setAddressOpen(false)} aria-label="بستن">×</button>
+            </div>
+            <div style={{marginTop:18,padding:16,borderRadius:16,background:"var(--neo-surface-2)",border:"1px solid var(--neo-border)",lineHeight:2}}>
+              <PinIcon /> <span style={{marginInlineStart:8}}>{seller.address || "آدرسی برای این فروشگاه ثبت نشده است."}</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

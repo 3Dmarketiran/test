@@ -8,7 +8,8 @@
     "contactPhone": "",
     "socialLinks": {},
     "address": null,
-    "category": null
+    "category": null,
+    "id": "static-0"
   },
   {
     "slug": "test-qa20kn",
@@ -19,6 +20,7 @@
     "contactPhone": "",
     "socialLinks": {},
     "address": null,
-    "category": null
+    "category": null,
+    "id": "static-1"
   }
 ]

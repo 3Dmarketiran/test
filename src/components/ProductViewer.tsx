@@ -67,6 +67,7 @@ export default function ProductViewer({ product }: Props) {
 
         track("AR_LAUNCH", {
           productId: product.id,
+          sellerId: product.seller.id,
         });
       } else if (detail?.status === "not-presenting") {
         setArSupported((prev) => prev ?? true);
@@ -116,11 +117,12 @@ export default function ProductViewer({ product }: Props) {
     if (glb) {
       track("VIEWER_3D_OPEN", {
         productId: product.id,
-        sellerId: undefined,
+        sellerId: product.seller.id,
       });
     } else {
       track("PRODUCT_DETAIL_VIEW", {
         productId: product.id,
+        sellerId: product.seller.id,
       });
     }
 
@@ -192,8 +194,8 @@ export default function ProductViewer({ product }: Props) {
               poster={poster}
               camera-controls
               auto-rotate
-              reveal="auto"
-              loading="eager"
+              reveal="interaction"
+              loading="lazy"
               shadow-intensity="1"
               exposure="1"
               ar

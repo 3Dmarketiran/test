@@ -1,0 +1,6 @@
+[
+  {"id":"seed-30","name":"یک ماهه","durationDays":30,"price":500000,"discountPct":0,"productLimit":20,"storageLimitMb":2048,"features":{}},
+  {"id":"seed-90","name":"سه ماهه","durationDays":90,"price":1350000,"discountPct":10,"productLimit":60,"storageLimitMb":4096,"features":{}},
+  {"id":"seed-180","name":"شش ماهه","durationDays":180,"price":2500000,"discountPct":15,"productLimit":120,"storageLimitMb":8192,"features":{}},
+  {"id":"seed-365","name":"یک ساله","durationDays":365,"price":4500000,"discountPct":25,"productLimit":300,"storageLimitMb":16384,"features":{}}
+]
