@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { PlatformSettings, PublicCategory, PublicPlan, PublicProduct, PublicSeller } from "../types";
 import bundledCatalog from "../../public-data/catalog.json";
-import { PUBLIC_CATALOG_API } from "./config";
+import { API_URL, PUBLIC_CATALOG_API } from "./config";
 
 export interface PublicCatalog {
   schemaVersion: number;
@@ -57,7 +57,7 @@ function validateCatalog(value: unknown): PublicCatalog {
   if (!Array.isArray(catalog.products) || !Array.isArray(catalog.sellers) || !Array.isArray(catalog.categories) || !catalog.settings) {
     throw new Error("ساختار کاتالوگ عمومی ناقص است.");
   }
-  return { ...catalog, plans: Array.isArray(catalog.plans) ? catalog.plans : [] } as PublicCatalog;
+  return normalizeCatalog({ ...catalog, plans: Array.isArray(catalog.plans) ? catalog.plans : [] } as PublicCatalog);
 }
 
 async function fetchCatalog(signal: AbortSignal): Promise<PublicCatalog> {
@@ -79,6 +79,57 @@ async function fetchCatalog(signal: AbortSignal): Promise<PublicCatalog> {
   } finally {
     window.clearTimeout(timeout);
     signal.removeEventListener("abort", abortFromParent);
+  }
+}
+
+
+
+function normalizeCatalog(catalog: PublicCatalog): PublicCatalog {
+  return {
+    ...catalog,
+    products: catalog.products.map((product) => ({
+      ...product,
+      models: product.models.map((model) => ({
+        ...model,
+        url: normalizePublicAssetUrl(model.url),
+      })),
+    })),
+    sellers: catalog.sellers.map((seller) => ({
+      ...seller,
+      logoUrl: seller.logoUrl ? normalizePublicAssetUrl(seller.logoUrl) : seller.logoUrl,
+    })),
+  };
+}
+
+/**
+ * Keeps old GitHub/static snapshots compatible after a storage or domain
+ * migration. Provider URLs are converted to the Backend public asset proxy;
+ * the live catalog already returns proxy URLs directly.
+ */
+function normalizePublicAssetUrl(value: string): string {
+  if (!value) return value;
+  if (value.startsWith(`${API_URL}/api/public/assets/`)) return value;
+
+  try {
+    const url = new URL(value);
+    const marker = "/storage/v1/object/public/";
+    const markerIndex = url.pathname.indexOf(marker);
+    if (markerIndex < 0) return value;
+
+    const remainder = url.pathname.slice(markerIndex + marker.length);
+    const slash = remainder.indexOf("/");
+    if (slash < 0) return value;
+
+    // First path segment is the storage bucket; the rest is the storage key.
+    const key = remainder.slice(slash + 1);
+    if (!/^(products|sellers)\//.test(key)) return value;
+
+    return `${API_URL}/api/public/assets/${key
+      .split("/")
+      .map((segment) => encodeURIComponent(decodeURIComponent(segment)))
+      .join("/")}`;
+  } catch {
+    return value;
   }
 }
 
