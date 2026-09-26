@@ -51,15 +51,14 @@ jobs:
         env:
           # Vite reads this at build time to bake the correct base path
           # for a GitHub Pages project site.
-          PUBLIC_BASE_PATH: ${{ vars.PUBLIC_BASE_PATH || '/test/' }}
+          PUBLIC_BASE_PATH: ${{ vars.PUBLIC_BASE_PATH || '/' }}
 
           # Used only to build sitemap.xml with absolute URLs.
           PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || '' }}
 
           # Optional anonymous analytics endpoint.
           # The public site does not require the backend to render.
-          VITE_API_URL: ${{ vars.API_URL || '' }}
-
+          VITE_API_URL: ${{ vars.API_URL || 'https://api.3dmarketiran.ir' }}
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
