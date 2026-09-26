@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
+import { ADMIN_URL, SUPPORT_PHONE } from "../lib/config";
 
 type Plan = {
   id: string;
@@ -11,14 +12,6 @@ type Plan = {
   productLimit?: number | null;
   storageLimitMb?: number | null;
 };
-
-const API_URL =
-  "https://threedmarketiran-backend.onrender.com";
-
-const ADMIN_URL =
-  "https://3dmarketiran.github.io/frontend-admin/#/login";
-
-const SUPPORT_PHONE = "09144142898";
 
 function formatPrice(value: number) {
   return (
@@ -119,11 +112,11 @@ function ArrowIcon() {
 }
 
 export default function Plans() {
-  const { settings } = useData();
+  const { settings, plans: catalogPlans, loading: catalogLoading, error: catalogError } = useData();
 
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const plans = catalogPlans as Plan[];
+  const loading = catalogLoading;
+  const error = Boolean(catalogError);
 
   const phone =
     settings?.contactPhone || SUPPORT_PHONE;
@@ -137,41 +130,7 @@ export default function Plans() {
       "پلن‌های اشتراک فروشندگان برای ساخت ویترین سه‌بعدی و واقعیت افزوده.",
   });
 
-  useEffect(() => {
-    let cancelled = false;
 
-    fetch(`${API_URL}/api/subscriptions/plans`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("plans");
-        }
-
-        return response.json();
-      })
-      .then((data) => {
-        if (cancelled) return;
-
-        setPlans(
-          Array.isArray(data.plans)
-            ? data.plans
-            : []
-        );
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setError(true);
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   return (
     <main className="container section">
@@ -491,7 +450,7 @@ export default function Plans() {
         <>
           {/* PLANS */}
           <section
-            className="grid grid-3"
+            className="plans-single-column"
             style={{
               maxWidth: 1100,
               margin: "0 auto",

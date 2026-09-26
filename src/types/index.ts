@@ -28,13 +28,22 @@ export interface PublicProduct {
   shortDescription: string | null;
   fullDescription: string | null;
   tags: string[];
+  price: number | null;
+  isPinned?: boolean;
+  pinOrder?: number | null;
+  viewCount?: number;
   category: {
     slug: string;
     name: string;
   } | null;
   seller: {
+    id: string;
     slug: string;
     storeName: string;
+    category?: {
+      slug: string;
+      name: string;
+    } | null;
   };
   images: PublicImage[];
   models: PublicModel[];
@@ -43,13 +52,19 @@ export interface PublicProduct {
 }
 
 export interface PublicSeller {
+  id: string;
   slug: string;
   storeName: string;
   description: string | null;
   logoUrl: string | null;
+  themeColor?: string | null;
   contactEmail: string | null;
   contactPhone: string | null;
   address: string | null;
+  category?: {
+    slug: string;
+    name: string;
+  } | null;
   socialLinks: Record<string, string> | null;
 }
 
@@ -59,6 +74,17 @@ export interface PublicCategory {
   name: string;
   isActive: boolean;
   parentId: string | null;
+}
+
+export interface PublicPlan {
+  id: string;
+  name: string;
+  durationDays: number;
+  price: number;
+  discountPct?: number | null;
+  productLimit?: number | null;
+  storageLimitMb?: number | null;
+  features?: Record<string, unknown> | null;
 }
 
 export interface PlatformSettings {
@@ -74,4 +100,16 @@ export interface PlatformSettings {
   socialLinks?: Record<string, string> | null;
   contactEmail?: string | null;
   contactPhone?: string | null;
+}
+
+
+export interface PublicCatalog {
+  schemaVersion: number;
+  generatedAt: string;
+  version: string;
+  products: PublicProduct[];
+  sellers: PublicSeller[];
+  categories: PublicCategory[];
+  settings: PlatformSettings;
+  plans: PublicPlan[];
 }

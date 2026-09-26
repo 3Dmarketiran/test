@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useData } from "../lib/data";
+import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
 import { track } from "../lib/analytics";
@@ -58,34 +58,6 @@ function PhoneIcon() {
   );
 }
 
-function MailIcon() {
-  return (
-    <svg
-      width="17"
-      height="17"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <rect
-        x="3.5"
-        y="5"
-        width="17"
-        height="14"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.7"
-      />
-      <path
-        d="m5 7 7 5 7-5"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function PinIcon() {
   return (
@@ -168,7 +140,7 @@ function StoreSkeleton() {
         }}
       />
 
-      <div className="grid grid-4">
+      <div className="grid grid-4 seller-product-grid">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
@@ -187,6 +159,7 @@ function StoreSkeleton() {
 export default function SellerStore() {
   const { slug } = useParams();
   const { sellers, products, loading } = useData();
+  const [addressOpen, setAddressOpen] = useState(false);
 
   const seller = sellers.find((item) => item.slug === slug);
 
@@ -210,7 +183,7 @@ export default function SellerStore() {
     if (!seller) return;
 
     track("SELLER_PAGE_VIEW", {
-      sellerId: undefined,
+      sellerId: seller.id,
       metadata: {
         sellerSlug: seller.slug,
       },
@@ -287,260 +260,167 @@ export default function SellerStore() {
     );
   }
 
-  const logo = seller.logoUrl;
+  const logo = getSellerLogoUrl(seller.logoUrl);
+  const pinnedProducts = [...sellerProducts]
+    .filter((product) => product.isPinned)
+    .sort((a, b) => (a.pinOrder ?? 99) - (b.pinOrder ?? 99))
+    .slice(0, 3);
+  const popularProducts = [...sellerProducts]
+    .filter((product) => !product.isPinned)
+    .sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0))
+    .slice(0, 4);
 
   return (
-    <div className="container section">
-      <div
-        className="seller-box fade-in-up"
-        style={{
-          marginBottom: "var(--space-5)",
-          padding: 20,
-          borderRadius: 22,
-          display: "flex",
-          alignItems: "center",
-          gap: 18,
-          flexWrap: "wrap",
-        }}
+    <div className="container section seller-store-page">
+      <section
+        className="seller-profile-card seller-profile-card--clean card fade-in-up"
+        style={{ "--seller-theme": seller.themeColor || "#2e6fce" } as React.CSSProperties}
       >
-        <div
-          style={{
-            width: 88,
-            height: 88,
-            flexShrink: 0,
-            display: "grid",
-            placeItems: "center",
-            overflow: "hidden",
-            borderRadius: 20,
-            background: "var(--surface-2, #f4f4f4)",
-            border:
-              "1px solid var(--border, rgba(0,0,0,.08))",
-          }}
-        >
-          {logo ? (
-            <img
-              src={logo}
-              alt={seller.storeName}
-              loading="lazy"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-              }}
-            />
-          ) : (
-            <StoreIcon />
-          )}
-        </div>
+        <div className="seller-profile-inner">
+          <div className="seller-profile-topline">
+            <div className="seller-profile-main-row">
+              <div className={`seller-profile-avatar${logo ? " has-logo" : ""}`}>
+                {logo ? (
+                  <img
+                    src={logo}
+                    alt={seller.storeName}
+                    loading="eager"
+                    onError={(event) => {
+                      event.currentTarget.style.display = "none";
+                      const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+                      if (fallback) fallback.style.display = "grid";
+                    }}
+                  />
+                ) : null}
+                <span
+                  className="seller-profile-avatar__fallback"
+                  style={{ display: logo ? "none" : "grid" }}
+                  aria-hidden="true"
+                >
+                  {sellerInitials(seller.storeName)}
+                </span>
+              </div>
 
-        <div
-          style={{
-            minWidth: 0,
-            flex: "1 1 280px",
-          }}
-        >
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              marginBottom: 7,
-              color: "var(--color-text-muted, #777)",
-              fontSize: 12,
-              fontWeight: 750,
-            }}
-          >
-            <StoreIcon />
-            فروشگاه
-          </div>
-
-          <h1
-            style={{
-              margin: "0 0 7px",
-              fontSize: "clamp(1.45rem, 4vw, 1.9rem)",
-              lineHeight: 1.35,
-              fontWeight: 850,
-              wordBreak: "break-word",
-            }}
-          >
-            {seller.storeName}
-          </h1>
-
-          {seller.description && (
-            <p
-              className="muted"
-              style={{
-                color: "var(--color-text-muted)",
-                margin: "0 0 14px",
-                lineHeight: 1.9,
-                maxWidth: 760,
-                fontSize: 14,
-              }}
-            >
-              {seller.description}
-            </p>
-          )}
-
-          <div
-            className="contact-row"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 8,
-            }}
-          >
-            {seller.contactPhone && (
-              <a
-                href={`tel:${seller.contactPhone}`}
-                className="btn btn-outline btn-sm"
-              >
-                <PhoneIcon />
-                تماس تلفنی
-              </a>
-            )}
-
-            {seller.contactEmail && (
-              <a
-                href={`mailto:${seller.contactEmail}`}
-                className="btn btn-outline btn-sm"
-              >
-                <MailIcon />
-                ایمیل
-              </a>
-            )}
-
-            {seller.address && (
-              <span
-                className="btn btn-outline btn-sm"
-                style={{ cursor: "default" }}
-              >
-                <PinIcon />
-                {seller.address}
-              </span>
-            )}
-
-            {Object.entries(seller.socialLinks ?? {}).map(
-              ([key, value]) => {
-                if (!value) return null;
-
-                return (
-                  <a
-                    key={key}
-                    href={value}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="btn btn-outline btn-sm"
-                  >
-                    <ExternalIcon />
-                    {key}
-                  </a>
-                );
-              }
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div
-        className="section-head"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-          flexWrap: "wrap",
-          marginBottom: 18,
-        }}
-      >
-        <div>
-          <h2
-            style={{
-              margin: 0,
-              fontSize: "clamp(1.2rem, 3vw, 1.5rem)",
-              fontWeight: 850,
-            }}
-          >
-            محصولات این فروشگاه
-          </h2>
-
-          <p
-            style={{
-              margin: "5px 0 0",
-              color: "var(--color-text-muted, #777)",
-              fontSize: 13,
-            }}
-          >
-            {sellerProducts.length} محصول منتشرشده
-          </p>
-        </div>
-      </div>
-
-      {sellerProducts.length === 0 ? (
-        <div
-          className="empty-state"
-          style={{
-            minHeight: 260,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            padding: 28,
-          }}
-        >
-          <div
-            className="icon"
-            aria-hidden="true"
-            style={{
-              width: 58,
-              height: 58,
-              display: "grid",
-              placeItems: "center",
-              borderRadius: 17,
-              marginBottom: 14,
-            }}
-          >
-            <StoreIcon />
-          </div>
-
-          <h3
-            style={{
-              margin: "0 0 7px",
-              fontSize: "1.05rem",
-              fontWeight: 800,
-            }}
-          >
-            هنوز محصولی منتشر نشده است
-          </h3>
-
-          <p
-            style={{
-              margin: 0,
-              color: "var(--color-text-muted, #777)",
-              fontSize: 14,
-              lineHeight: 1.8,
-            }}
-          >
-            محصولات این فروشگاه پس از انتشار در این بخش
-            نمایش داده می‌شوند.
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-4">
-          {sellerProducts.map((product, index) => (
-            <div
-              key={product.id}
-              className="fade-in-up"
-              style={{
-                animationDelay: `${Math.min(index, 8) * 0.05}s`,
-              }}
-            >
-              <ProductCard product={product} />
+              <div className="seller-profile-copy">
+                <div className="seller-profile-handle">@{seller.slug}</div>
+                <h1>{seller.storeName}</h1>
+                {seller.category && <span className="seller-category-pill">{seller.category.name}</span>}
+                {seller.description && <p>{seller.description}</p>}
+              </div>
             </div>
+
+            <div className="seller-profile-actions seller-profile-actions--compact">
+              {seller.contactPhone && (
+                <a href={`tel:${seller.contactPhone}`} className="seller-profile-action" aria-label="تماس با فروشگاه" title="تماس با فروشگاه">
+                  <PhoneIcon />
+                </a>
+              )}
+              {seller.address && (
+                <button type="button" className="seller-profile-action" onClick={() => setAddressOpen(true)} aria-label="مشاهده آدرس فروشگاه" title="مشاهده آدرس فروشگاه">
+                  <PinIcon />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="seller-profile-stats seller-profile-stats--social">
+            <div className="seller-profile-stat seller-profile-stat--metric">
+              <strong>{sellerProducts.length}</strong>
+              <span>محصول</span>
+            </div>
+            <div className="seller-profile-stat seller-profile-stat--metric">
+              <strong>{new Set(sellerProducts.map((product) => product.category?.slug).filter(Boolean)).size}</strong>
+              <span>دسته‌بندی</span>
+            </div>
+            <div className="seller-profile-stat seller-profile-stat--metric">
+              <strong>{sellerProducts.filter((product) => product.models.length > 0).length}</strong>
+              <span>مدل سه‌بعدی</span>
+            </div>
+          </div>
+
+          <div className="seller-profile-specialty">
+            <span className="seller-profile-specialty__label">فروشگاه تخصصی</span>
+            <span className="seller-profile-specialty__value">{seller.category?.name || "فروشگاه محصولات سه‌بعدی"}</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="seller-social-nav" aria-label="بخش‌های فروشگاه">
+        {[
+          { id: "featured", label: "منتخب فروشگاه", show: pinnedProducts.length > 0 },
+          { id: "popular", label: "محبوب‌ترین‌ها", show: popularProducts.length > 0 },
+          { id: "all-products", label: "همه محصولات", show: true },
+        ]
+          .filter((item) => item.show)
+          .map((item, index) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className={index === 0 ? "active" : undefined}
+              onClick={(event) => {
+                // The app uses HashRouter, which treats a plain
+                // "#id" href as a route change (to a nonexistent
+                // "/id" route) instead of an in-page scroll. Scroll
+                // to the section manually and keep the URL as-is.
+                event.preventDefault();
+                document
+                  .getElementById(item.id)
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
+              {item.label}
+            </a>
           ))}
+      </section>
+
+      {pinnedProducts.length > 0 && (
+        <section id="featured" className="section seller-products-section seller-featured-section" aria-labelledby="seller-featured-title">
+          <div className="section-head">
+            <div><div className="page-eyebrow">منتخب فروشگاه</div><h2 id="seller-featured-title">محصولات پین‌شده</h2><p>محصولاتی که فروشنده برای نمایش در ابتدای فروشگاه انتخاب کرده است.</p></div>
+          </div>
+          <div className="seller-pinned-grid">
+            {pinnedProducts.map((product, index) => <div key={product.id} className={`seller-pinned-item seller-pinned-${index + 1}`}><ProductCard product={product} /></div>)}
+          </div>
+        </section>
+      )}
+
+      {popularProducts.length > 0 && (
+        <section id="popular" className="section seller-products-section" aria-labelledby="seller-popular-title">
+          <div className="section-head">
+            <div><div className="page-eyebrow">محبوب‌ترین‌ها</div><h2 id="seller-popular-title">محصولات محبوب این فروشگاه</h2><p>بر اساس بازدید و تعامل ثبت‌شده در سایت.</p></div>
+          </div>
+          <div className="grid grid-4 seller-product-grid">
+            {popularProducts.map((product, index) => <div key={product.id} className="fade-in-up" style={{ animationDelay: `${Math.min(index, 8) * 0.05}s` }}><ProductCard product={product} /></div>)}
+          </div>
+        </section>
+      )}
+
+      <section id="all-products" className="section seller-products-section" aria-labelledby="seller-products-title">
+        <div className="section-head">
+          <div><div className="page-eyebrow">کاتالوگ</div><h2 id="seller-products-title">همه محصولات</h2><p>{sellerProducts.length} محصول منتشرشده برای مشاهده و بررسی</p></div>
+          <Link to="/products" className="btn btn-outline btn-sm">مشاهده کاتالوگ</Link>
+        </div>
+
+        {sellerProducts.length === 0 ? (
+          <div className="empty-state seller-empty-state"><div className="icon"><StoreIcon /></div><h3>هنوز محصولی منتشر نشده است</h3><p>محصولات این فروشگاه پس از انتشار در اینجا نمایش داده می‌شوند.</p></div>
+        ) : (
+          <div className="grid grid-4 seller-product-grid">
+            {sellerProducts.map((product, index) => <div key={product.id} className="fade-in-up" style={{ animationDelay: `${Math.min(index, 8) * 0.05}s` }}><ProductCard product={product} /></div>)}
+          </div>
+        )}
+      </section>
+
+      {addressOpen && (
+        <div className="address-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setAddressOpen(false); }}>
+          <div className="address-dialog" role="dialog" aria-modal="true" aria-labelledby="seller-address-title">
+            <div className="address-dialog__head">
+              <div><div className="page-eyebrow">موقعیت فروشگاه</div><h2 id="seller-address-title" style={{margin:"4px 0 0",fontSize:"1.15rem"}}>آدرس فروشگاه</h2></div>
+              <button type="button" className="address-dialog__close" onClick={() => setAddressOpen(false)} aria-label="بستن">×</button>
+            </div>
+            <div style={{marginTop:18,padding:16,borderRadius:16,background:"var(--neo-surface-2)",border:"1px solid var(--neo-border)",lineHeight:2}}>
+              <PinIcon /> <span style={{marginInlineStart:8}}>{seller.address || "آدرسی برای این فروشگاه ثبت نشده است."}</span>
+            </div>
+          </div>
         </div>
       )}
     </div>

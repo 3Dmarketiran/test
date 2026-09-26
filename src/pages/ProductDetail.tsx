@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { useData } from "../lib/data";
+import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import ProductViewer from "../components/ProductViewer";
 import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
@@ -166,16 +166,6 @@ export default function ProductDetail() {
           {product.seller.storeName}
         </Link>
 
-        {product.category && (
-          <>
-            <span aria-hidden="true">‹</span>
-
-            <span>
-              {product.category.name}
-            </span>
-          </>
-        )}
-
         <span aria-hidden="true">‹</span>
 
         <span
@@ -205,6 +195,18 @@ export default function ProductDetail() {
           >
             فروشگاه: {product.seller.storeName}
           </Link>
+
+          {product.price != null ? (
+            <div className="product-detail-price" aria-label="قیمت محصول">
+              <span>قیمت</span>
+              <strong>{new Intl.NumberFormat("fa-IR").format(product.price)} تومان</strong>
+            </div>
+          ) : (
+            <div className="product-detail-contact-price" aria-label="قیمت محصول اعلام نشده است">
+              <strong>برای اطلاع از قیمت با فروشنده تماس بگیرید</strong>
+              <Link to={`/sellers/${encodeURIComponent(product.seller.slug)}`} className="btn btn-outline btn-sm">مشاهده فروشگاه و اطلاعات تماس</Link>
+            </div>
+          )}
 
           {product.shortDescription && (
             <p className="desc">
@@ -370,24 +372,45 @@ function SellerCard({
       className="seller-box"
       aria-label="اطلاعات فروشگاه"
     >
-      {seller.logoUrl ? (
-        <img
-          src={seller.logoUrl}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          style={{
-            width: 50,
-            height: 50,
-            objectFit: "contain",
-            borderRadius: 15,
-            flex: "0 0 auto",
-          }}
-          onError={(event) => {
-            event.currentTarget.style.display =
-              "none";
-          }}
-        />
+      {getSellerLogoUrl(seller.logoUrl) ? (
+        <>
+          <img
+            src={getSellerLogoUrl(seller.logoUrl) || undefined}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            style={{
+              width: 50,
+              height: 50,
+              objectFit: "contain",
+              borderRadius: 15,
+              flex: "0 0 auto",
+            }}
+            onError={(event) => {
+              event.currentTarget.style.display = "none";
+              const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
+              if (fallback) fallback.style.display = "flex";
+            }}
+          />
+          <div
+            aria-hidden="true"
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 15,
+              flex: "0 0 auto",
+              display: "none",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "linear-gradient(135deg, #eaf2f9, #f4f7fa)",
+              color: "var(--neo-text-strong)",
+              fontSize: 16,
+              fontWeight: 900,
+            }}
+          >
+            {sellerInitials(seller.storeName)}
+          </div>
+        </>
       ) : (
         <div
           aria-hidden="true"
@@ -399,12 +422,13 @@ function SellerCard({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background:
-              "linear-gradient(135deg, #f0efff, #eef8fa)",
-            fontSize: 21,
+            background: "linear-gradient(135deg, #eaf2f9, #f4f7fa)",
+            color: "var(--neo-text-strong)",
+            fontSize: 16,
+            fontWeight: 900,
           }}
         >
-          🏪
+          {sellerInitials(seller.storeName)}
         </div>
       )}
 

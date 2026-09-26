@@ -6,7 +6,10 @@
     "logoUrl": null,
     "contactEmail": "seller2@gmail.com",
     "contactPhone": "",
-    "socialLinks": {}
+    "socialLinks": {},
+    "address": null,
+    "category": null,
+    "id": "static-0"
   },
   {
     "slug": "test-qa20kn",
@@ -15,6 +18,9 @@
     "logoUrl": null,
     "contactEmail": "seller@gmail.com",
     "contactPhone": "",
-    "socialLinks": {}
+    "socialLinks": {},
+    "address": null,
+    "category": null,
+    "id": "static-1"
   }
 ]
