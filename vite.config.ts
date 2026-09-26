@@ -8,9 +8,6 @@ const base = process.env.PUBLIC_BASE_PATH || "/";
 
 export default defineConfig({
   base,
-  define: {
-    "import.meta.env.VITE_BUILD_VERSION": JSON.stringify(process.env.GITHUB_SHA || process.env.BUILD_ID || new Date().toISOString()),
-  },
   plugins: [react()],
   build: {
     outDir: "dist",

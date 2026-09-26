@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
+import { useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
 import { track } from "../lib/analytics";
 
@@ -196,15 +196,28 @@ export default function Products() {
       return null;
     }
 
-    return new Set(
-      sellers
-        .filter(
-          (seller) =>
-            seller.category?.slug === selectedCategory.slug
-        )
-        .map((seller) => seller.slug)
-    );
-  }, [sellers, selectedCategory]);
+    const sellerSlugs = new Set<string>();
+
+    products.forEach((product) => {
+      if (!product.category) {
+        return;
+      }
+
+      const sameCategory =
+        product.category.slug ===
+        selectedCategory.slug;
+
+      if (!sameCategory) {
+        return;
+      }
+
+      if (product.seller?.slug) {
+        sellerSlugs.add(product.seller.slug);
+      }
+    });
+
+    return sellerSlugs;
+  }, [products, selectedCategory]);
 
   const filteredSellers = useMemo(() => {
     const q = (params.get("q") ?? "")
@@ -335,7 +348,7 @@ export default function Products() {
                 }}
               >
                 {hasCategory
-                  ? `فروشگاه‌هایی که در دسته «${categoryTitle}» قرار دارند را مشاهده کنید.`
+                  ? `فروشگاه‌هایی که در دسته «${categoryTitle}» محصول دارند را مشاهده کنید.`
                   : "فروشگاه موردنظر خود را پیدا کنید و برای مشاهده محصولات، اطلاعات و مدل‌های سه‌بعدی وارد فروشگاه شوید."}
               </p>
             </div>
@@ -610,7 +623,7 @@ export default function Products() {
               }}
             >
               {hasCategory
-                ? `در حال حاضر فروشگاه فعالی در دسته «${categoryTitle}» پیدا نشد.`
+                ? `در حال حاضر فروشگاه فعالی با محصولی در دسته «${categoryTitle}» پیدا نشد.`
                 : "نام فروشگاه را بررسی کنید یا عبارت جستجو را تغییر دهید."}
             </p>
 
@@ -654,7 +667,7 @@ export default function Products() {
             }}
           >
             {filteredSellers.map((seller) => {
-              const logoUrl = getSellerLogoUrl(seller.logoUrl) || "";
+              const logoUrl = seller.logoUrl || "";
               const storeName =
                 seller.storeName ||
                 "فروشگاه بدون نام";
@@ -755,7 +768,7 @@ export default function Products() {
                           "var(--text-muted, #777)",
                       }}
                     >
-                      <span style={{fontWeight:900,fontSize:24}}>{sellerInitials(storeName)}</span>
+                      <StoreIcon />
                     </div>
                   </div>
 

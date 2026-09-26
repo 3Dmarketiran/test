@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
+import { useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
-import { ADMIN_URL } from "../lib/config";
+
+const ADMIN_URL =
+  "https://3dmarketiran.github.io/frontend-admin/#/login";
 
 function ArrowIcon() {
   return (
@@ -169,7 +171,7 @@ export default function Home() {
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                ورود فروشندگان
+                ورود / ثبت‌نام فروشندگان
               </a>
             </div>
 
@@ -203,26 +205,78 @@ export default function Home() {
           </div>
 
           {/* HERO VISUAL */}
-          <div className="hero__visual hero-showcase" style={{display:"grid",placeItems:"center",overflow:"hidden",minHeight:390}}>
-            <div className="hero-showcase__glow" />
-            <div className="hero-showcase__card">
-              <div className="hero-showcase__top">
-                <span className="hero-showcase__eyebrow">3DMARKETIRAN</span>
-                <span className="hero-showcase__live"><i /> نمایش زنده</span>
-              </div>
-              <div className="hero-showcase__model">
-                <div className="hero-showcase__cube">
-                  <ModelIcon />
+          <div
+            className="hero__visual"
+            style={{
+              display: "grid",
+              placeItems: "center",
+              overflow: "hidden",
+              minHeight: 390,
+              background:
+                "radial-gradient(circle at 30% 20%, rgba(139,92,246,.32), transparent 38%), radial-gradient(circle at 75% 75%, rgba(34,211,238,.22), transparent 35%), linear-gradient(145deg, #111827, #312e81 55%, #0f172a)",
+            }}
+          >
+            <div
+              style={{
+                width: "76%",
+                maxWidth: 360,
+                aspectRatio: "1",
+                borderRadius: 36,
+                border:
+                  "1px solid rgba(255,255,255,.18)",
+                background:
+                  "rgba(255,255,255,.08)",
+                backdropFilter: "blur(18px)",
+                WebkitBackdropFilter: "blur(18px)",
+                boxShadow:
+                  "0 30px 80px rgba(0,0,0,.28)",
+                display: "grid",
+                placeItems: "center",
+                textAlign: "center",
+                color: "#fff",
+                padding: 28,
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    width: 86,
+                    height: 86,
+                    margin: "0 auto 18px",
+                    display: "grid",
+                    placeItems: "center",
+                    borderRadius: 26,
+                    background:
+                      "rgba(255,255,255,.1)",
+                    border:
+                      "1px solid rgba(255,255,255,.12)",
+                  }}
+                >
+                  <StoreIcon />
                 </div>
-                <div className="hero-showcase__ring hero-showcase__ring--one" />
-                <div className="hero-showcase__ring hero-showcase__ring--two" />
-              </div>
-              <div className="hero-showcase__copy">
-                <strong>Plus AR · Plus 3D</strong>
-                <span>محصول را ببین، بچرخان و در محیط واقعی امتحان کن.</span>
-              </div>
-              <div className="hero-showcase__features">
-                <span>3D تعاملی</span><span>AR</span><span>تماس با فروشنده</span>
+
+                <strong
+                  style={{
+                    display: "block",
+                    fontSize: "1.3rem",
+                    marginBottom: 9,
+                  }}
+                >
+                  فروشگاه + 3D + AR
+                </strong>
+
+                <span
+                  style={{
+                    display: "block",
+                    opacity: 0.78,
+                    lineHeight: 1.9,
+                    fontSize: 14,
+                  }}
+                >
+                  وارد فروشگاه شوید و محصولات آن را
+                  با نمایش سه‌بعدی و واقعیت افزوده
+                  بررسی کنید.
+                </span>
               </div>
             </div>
           </div>
@@ -306,7 +360,7 @@ export default function Home() {
                 <Link
                   key={seller.slug}
                   to={`/sellers/${seller.slug}`}
-                  className="card featured-store-card"
+                  className="card"
                   style={{
                     padding: 18,
                     display: "flex",
@@ -319,30 +373,35 @@ export default function Home() {
                   <div
                     style={{
                       width: "100%",
-                      aspectRatio: "1.65 / 1",
+                      aspectRatio: "1.55 / 1",
                       borderRadius: 16,
                       overflow: "hidden",
                       display: "grid",
                       placeItems: "center",
                       background:
-                        "linear-gradient(145deg,#f5f8fb,#fff)",
+                        "var(--surface-2, #f4f4f4)",
                       marginBottom: 14,
                     }}
                   >
-                    {getSellerLogoUrl(seller.logoUrl) ? (
+                    {seller.logoUrl ? (
                       <img
-                        src={getSellerLogoUrl(seller.logoUrl) || undefined}
+                        src={seller.logoUrl}
                         alt={seller.storeName}
                         loading="lazy"
-                        className="featured-store-logo"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          padding: 18,
+                        }}
                         onError={(event) => {
-                          event.currentTarget.style.display = "none";
-                          const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
-                          if (fallback) fallback.style.display = "grid";
+                          event.currentTarget.style.display =
+                            "none";
                         }}
                       />
-                    ) : null}
-                    <div className="seller-logo-fallback" style={{width:92,height:92,borderRadius:24,display:getSellerLogoUrl(seller.logoUrl)?"none":"grid",placeItems:"center",fontSize:24,fontWeight:900,letterSpacing:".03em"}}>{sellerInitials(seller.storeName)}</div>
+                    ) : (
+                      <StoreIcon />
+                    )}
                   </div>
 
                   <div
@@ -353,6 +412,23 @@ export default function Home() {
                       minWidth: 0,
                     }}
                   >
+                    <div
+                      style={{
+                        width: 38,
+                        height: 38,
+                        borderRadius: 11,
+                        display: "grid",
+                        placeItems: "center",
+                        background:
+                          "var(--surface-2, #f5f5f5)",
+                        color:
+                          "var(--color-text-muted)",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <StoreIcon />
+                    </div>
+
                     <div
                       style={{
                         minWidth: 0,

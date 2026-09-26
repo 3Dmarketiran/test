@@ -26,8 +26,6 @@ export default function ProductViewer({ product }: Props) {
   const [arSupported, setArSupported] = useState<boolean | null>(null);
   const [fullscreen, setFullscreen] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [viewMode, setViewMode] = useState<"3d" | "image">(glb ? "3d" : "image");
-  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const viewerRef = useRef<HTMLElement | null>(null);
 
@@ -37,8 +35,6 @@ export default function ProductViewer({ product }: Props) {
     setArSupported(null);
     setFullscreen(false);
     setImageError(false);
-    setViewMode(glb ? "3d" : "image");
-    setLightboxOpen(false);
   }, [product.id, poster, glb?.url]);
 
   useEffect(() => {
@@ -67,7 +63,6 @@ export default function ProductViewer({ product }: Props) {
 
         track("AR_LAUNCH", {
           productId: product.id,
-          sellerId: product.seller.id,
         });
       } else if (detail?.status === "not-presenting") {
         setArSupported((prev) => prev ?? true);
@@ -117,12 +112,11 @@ export default function ProductViewer({ product }: Props) {
     if (glb) {
       track("VIEWER_3D_OPEN", {
         productId: product.id,
-        sellerId: product.seller.id,
+        sellerId: undefined,
       });
     } else {
       track("PRODUCT_DETAIL_VIEW", {
         productId: product.id,
-        sellerId: product.seller.id,
       });
     }
 
@@ -180,7 +174,7 @@ export default function ProductViewer({ product }: Props) {
         overflow: "hidden",
       }}
     >
-      {glb && viewMode === "3d" ? (
+      {glb ? (
         <>
           {status !== "error" && (
             <model-viewer
@@ -188,14 +182,13 @@ export default function ProductViewer({ product }: Props) {
                 viewerRef as React.RefObject<HTMLElement>
               }
               src={glb.url}
-              crossorigin="anonymous"
               ios-src={usdz?.url}
               alt={product.name}
               poster={poster}
               camera-controls
               auto-rotate
-              reveal="interaction"
-              loading="lazy"
+              reveal="auto"
+              loading="eager"
               shadow-intensity="1"
               exposure="1"
               ar
@@ -307,8 +300,11 @@ export default function ProductViewer({ product }: Props) {
                   type="button"
                   className="viewer-action"
                   onClick={() => {
-                    setViewMode("image");
-                    setImageError(false);
+                    setStatus("loading");
+                    setTimeout(
+                      () => setStatus("error"),
+                      8000
+                    );
                   }}
                 >
                   نمایش تصویر محصول
@@ -330,16 +326,6 @@ export default function ProductViewer({ product }: Props) {
                 {fullscreen
                   ? "خروج از تمام‌صفحه"
                   : "تمام‌صفحه"}
-              </button>
-            )}
-
-            {glb && poster && (
-              <button
-                className="viewer-action"
-                type="button"
-                onClick={() => setViewMode("image")}
-              >
-                مشاهده تصاویر
               </button>
             )}
           </div>
@@ -368,27 +354,19 @@ export default function ProductViewer({ product }: Props) {
               "var(--color-background)",
           }}
         >
-          <button
-            type="button"
-            className="viewer-image-button"
-            onClick={() => setLightboxOpen(true)}
-            aria-label={`بزرگ‌نمایی تصویر ${product.name}`}
-          >
-            <img
-              src={activeImage}
-              alt={product.name}
-              onError={handleImageError}
-              loading="eager"
-              decoding="async"
-              style={{
-                display: "block",
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
-            <span>بزرگ‌نمایی تصویر</span>
-          </button>
+          <img
+            src={activeImage}
+            alt={product.name}
+            onError={handleImageError}
+            loading="eager"
+            decoding="async"
+            style={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+          />
         </div>
       ) : (
         <div
@@ -421,16 +399,6 @@ export default function ProductViewer({ product }: Props) {
         className="viewer-toolbar"
         aria-live="polite"
       >
-        {glb && viewMode === "image" && (
-          <button
-            className="viewer-action"
-            type="button"
-            onClick={() => setViewMode("3d")}
-          >
-            مشاهده سه‌بعدی و AR
-          </button>
-        )}
-
         {dims?.realWorldScale &&
           (dims.widthM ||
             dims.heightM ||
@@ -470,10 +438,9 @@ export default function ProductViewer({ product }: Props) {
               aria-selected={
                 img.url === activeImage
               }
-              onClick={() => {
-                selectImage(img.url);
-                setViewMode("image");
-              }}
+              onClick={() =>
+                selectImage(img.url)
+              }
               style={{
                 padding: 0,
                 border: "none",
@@ -500,29 +467,6 @@ export default function ProductViewer({ product }: Props) {
               />
             </button>
           ))}
-        </div>
-      )}
-      {lightboxOpen && activeImage && (
-        <div
-          className="image-lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`تصویر بزرگ ${product.name}`}
-          onClick={() => setLightboxOpen(false)}
-        >
-          <button
-            type="button"
-            className="image-lightbox__close"
-            aria-label="بستن تصویر"
-            onClick={() => setLightboxOpen(false)}
-          >
-            ×
-          </button>
-          <img
-            src={activeImage}
-            alt={product.name}
-            onClick={(event) => event.stopPropagation()}
-          />
         </div>
       )}
     </div>

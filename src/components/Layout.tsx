@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useData } from "../lib/data";
-import { ADMIN_URL } from "../lib/config";
+
+const ADMIN_URL =
+  "https://3dmarketiran.github.io/frontend-admin/#/login";
 
 const NAV = [
   { to: "/", label: "خانه", end: true },
@@ -185,26 +187,13 @@ export default function Layout() {
                   }}
                 />
               ) : (
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
+                <span
+                  style={{
+                    fontSize: 23,
+                  }}
                 >
-                  <path
-                    d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="m4 7.5 8 4.5 8-4.5M12 12v9"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                  🧊
+                </span>
               )}
             </span>
 
@@ -220,14 +209,6 @@ export default function Layout() {
               {platformName}
             </span>
           </Link>
-
-          <div className="header-search" aria-label="جستجوی محصولات">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8"/>
-              <path d="m16 16 4.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
-            </svg>
-            <Link to="/search">جستجوی محصولات و فروشگاه‌ها...</Link>
-          </div>
 
           {/* DESKTOP / MOBILE NAV */}
           <nav
@@ -271,7 +252,7 @@ export default function Layout() {
                 className="btn btn-primary"
                 onClick={closeNav}
               >
-                ورود فروشندگان
+                ورود / ثبت‌نام فروشندگان
                 <ArrowIcon />
               </a>
 
@@ -300,7 +281,7 @@ export default function Layout() {
               className="btn btn-primary btn-sm seller-access-btn"
             >
               <span className="seller-access-full">
-                ورود فروشندگان
+                ورود / ثبت‌نام فروشندگان
               </span>
 
               <span className="seller-access-mobile">
@@ -389,7 +370,7 @@ function Footer() {
               href={ADMIN_URL}
               className="footer-seller-link"
             >
-              ورود فروشندگان
+              ورود / ثبت‌نام فروشندگان
               <ArrowIcon />
             </a>
           </div>

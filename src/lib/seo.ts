@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { PUBLIC_SITE_URL } from "./config";
 
 interface SeoOptions {
   title: string;
@@ -25,7 +24,7 @@ export function useSeo({ title, description, image, canonicalPath }: SeoOptions)
         link.rel = "canonical";
         document.head.appendChild(link);
       }
-      link.href = new URL(canonicalPath.replace(/^\//, ""), `${PUBLIC_SITE_URL}/`).href;
+      link.href = canonicalPath;
     }
   }, [title, description, image, canonicalPath]);
 }

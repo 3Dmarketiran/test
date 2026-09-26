@@ -105,7 +105,7 @@ function StoreIcon() {
 }
 
 export default function Categories() {
-  const { categories, sellers, loading } = useData();
+  const { categories, products, loading } = useData();
 
   useSeo({
     title: "دسته‌بندی‌ها",
@@ -120,22 +120,33 @@ export default function Categories() {
     (category) => category.isActive !== false
   );
 
-   const storeCounts = new Map<string, number>();
+  const activeCategorySlugs = new Set(
+    activeCategories.map((category) => category.slug)
+  );
 
-  for (const seller of sellers) {
-    const categorySlug = seller.category?.slug;
+  const storeCounts = new Map<string, Set<string>>();
 
-    if (!categorySlug) {
+  for (const product of products) {
+    if (!product.category?.slug || !product.seller?.slug) {
       continue;
     }
 
-    storeCounts.set(
-      categorySlug,
-      (storeCounts.get(categorySlug) ?? 0) + 1
-    );
+    const categorySlug = product.category.slug;
+
+    if (!activeCategorySlugs.has(categorySlug)) {
+      continue;
+    }
+
+    const sellerSlug = product.seller.slug;
+
+    if (!storeCounts.has(categorySlug)) {
+      storeCounts.set(categorySlug, new Set<string>());
+    }
+
+    storeCounts.get(categorySlug)!.add(sellerSlug);
   }
 
- return (
+  return (
     <section className="section categories-page">
       <div className="container">
         <div
@@ -284,7 +295,7 @@ export default function Categories() {
           >
             {activeCategories.map((category) => {
               const storeCount =
-                storeCounts.get(category.slug) ?? 0;
+                storeCounts.get(category.slug)?.size ?? 0;
 
               return (
                 <Link

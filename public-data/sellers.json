@@ -1,31 +1,20 @@
 [
   {
-    "id": "cmuays6st0007znuyvxh6ud5u",
-    "slug": "test-qa20kn",
-    "storeName": "test",
-    "description": "avalin forushgah",
-    "logoUrl": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/sellers/cmuays6st0007znuyvxh6ud5u/logo/NAObwTMreNpXps8u.jpeg",
-    "themeColor": null,
-    "contactEmail": "seller@gmail.com",
-    "contactPhone": "09144142898",
-    "address": "tabriz valiasr",
-    "category": {
-      "slug": "test-abfpqu",
-      "name": "test"
-    },
-    "socialLinks": {}
-  },
-  {
-    "id": "cmub0nf7u000npqapdrhv35iw",
     "slug": "test-2-vn5xio",
     "storeName": "test 2",
     "description": null,
-    "logoUrl": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/sellers/cmub0nf7u000npqapdrhv35iw/logo/uFUzgWXoT-4vqQw4.jpeg",
-    "themeColor": null,
+    "logoUrl": null,
     "contactEmail": "seller2@gmail.com",
     "contactPhone": "",
-    "address": null,
-    "category": null,
+    "socialLinks": {}
+  },
+  {
+    "slug": "test-qa20kn",
+    "storeName": "test",
+    "description": null,
+    "logoUrl": null,
+    "contactEmail": "seller@gmail.com",
+    "contactPhone": "",
     "socialLinks": {}
   }
 ]

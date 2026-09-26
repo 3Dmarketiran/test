@@ -21,7 +21,6 @@ declare global {
           exposure?: string;
           loading?: "auto" | "lazy" | "eager";
           reveal?: "auto" | "interaction" | "manual";
-          crossorigin?: "anonymous" | "use-credentials";
           "environment-image"?: string;
           "disable-pan"?: boolean;
         },

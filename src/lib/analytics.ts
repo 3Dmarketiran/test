@@ -4,8 +4,6 @@
 // (spec section 37). Collects no personal information: no IP, no
 // identifiers, just an anonymous event type + optional product/seller id.
 
-import { API_URL } from "./config";
-
 type EventType =
   | "PRODUCT_VIEW"
   | "PRODUCT_DETAIL_VIEW"
@@ -13,6 +11,8 @@ type EventType =
   | "AR_LAUNCH"
   | "SELLER_PAGE_VIEW"
   | "SEARCH";
+
+const API_URL = import.meta.env.VITE_API_URL as string | undefined;
 
 export function track(type: EventType, payload: { productId?: string; sellerId?: string; metadata?: Record<string, unknown> } = {}) {
   if (!API_URL) return; // analytics endpoint not configured for this deployment — silently skip
