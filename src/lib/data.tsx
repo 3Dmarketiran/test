@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { PlatformSettings, PublicCategory, PublicPlan, PublicProduct, PublicSeller } from "../types";
 import bundledCatalog from "../../public-data/catalog.json";
+import { API_URL, PUBLIC_CATALOG_API } from "./config";
 
 export interface PublicCatalog {
   schemaVersion: number;
@@ -56,44 +57,79 @@ function validateCatalog(value: unknown): PublicCatalog {
   if (!Array.isArray(catalog.products) || !Array.isArray(catalog.sellers) || !Array.isArray(catalog.categories) || !catalog.settings) {
     throw new Error("ساختار کاتالوگ عمومی ناقص است.");
   }
-  return { ...catalog, plans: Array.isArray(catalog.plans) ? catalog.plans : [] } as PublicCatalog;
+  return normalizeCatalog({ ...catalog, plans: Array.isArray(catalog.plans) ? catalog.plans : [] } as PublicCatalog);
 }
 
 async function fetchCatalog(signal: AbortSignal): Promise<PublicCatalog> {
-  // First try the atomic catalog. If a CDN/browser has a stale or transient
-  // response, retry once and then fall back to the individual snapshot files.
-  let lastError: unknown = null;
-  for (let attempt = 0; attempt < 2; attempt += 1) {
-    try {
-      return validateCatalog(await fetchJson(catalogUrl(), signal));
-    } catch (error) {
-      lastError = error;
-      if (signal.aborted) throw error;
-      await new Promise((resolve) => setTimeout(resolve, attempt === 0 ? 180 : 420));
-    }
-  }
+  // Live backend is the source of truth. The GitHub snapshot is only the
+  // instant first-paint/offline fallback so the site never opens blank.
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 9000);
+  const abortFromParent = () => controller.abort();
+  signal.addEventListener("abort", abortFromParent, { once: true });
 
-  const base = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
   try {
-    const [products, sellers, categories, settings, plans] = await Promise.all([
-      fetchJson(`${base}/public-data/products.json`, signal),
-      fetchJson(`${base}/public-data/sellers.json`, signal),
-      fetchJson(`${base}/public-data/categories.json`, signal),
-      fetchJson(`${base}/public-data/settings.json`, signal),
-      fetchJson(`${base}/public-data/plans.json`, signal).catch(() => []),
-    ]);
-    return validateCatalog({
-      schemaVersion: 1,
-      generatedAt: new Date().toISOString(),
-      version: "fallback",
-      products,
-      sellers,
-      categories,
-      settings,
-      plans,
+    const response = await fetch(PUBLIC_CATALOG_API, {
+      signal: controller.signal,
+      cache: "no-store",
+      headers: { Accept: "application/json" },
     });
+    if (!response.ok) throw new Error(`Live catalog failed (${response.status}).`);
+    return validateCatalog(await response.json());
+  } finally {
+    window.clearTimeout(timeout);
+    signal.removeEventListener("abort", abortFromParent);
+  }
+}
+
+
+
+function normalizeCatalog(catalog: PublicCatalog): PublicCatalog {
+  return {
+    ...catalog,
+    products: catalog.products.map((product) => ({
+      ...product,
+      models: product.models.map((model) => ({
+        ...model,
+        url: normalizePublicAssetUrl(model.url),
+      })),
+    })),
+    sellers: catalog.sellers.map((seller) => ({
+      ...seller,
+      logoUrl: seller.logoUrl ? normalizePublicAssetUrl(seller.logoUrl) : seller.logoUrl,
+    })),
+  };
+}
+
+/**
+ * Keeps old GitHub/static snapshots compatible after a storage or domain
+ * migration. Provider URLs are converted to the Backend public asset proxy;
+ * the live catalog already returns proxy URLs directly.
+ */
+function normalizePublicAssetUrl(value: string): string {
+  if (!value) return value;
+  if (value.startsWith(`${API_URL}/api/public/assets/`)) return value;
+
+  try {
+    const url = new URL(value);
+    const marker = "/storage/v1/object/public/";
+    const markerIndex = url.pathname.indexOf(marker);
+    if (markerIndex < 0) return value;
+
+    const remainder = url.pathname.slice(markerIndex + marker.length);
+    const slash = remainder.indexOf("/");
+    if (slash < 0) return value;
+
+    // First path segment is the storage bucket; the rest is the storage key.
+    const key = remainder.slice(slash + 1);
+    if (!/^(products|sellers)\//.test(key)) return value;
+
+    return `${API_URL}/api/public/assets/${key
+      .split("/")
+      .map((segment) => encodeURIComponent(decodeURIComponent(segment)))
+      .join("/")}`;
   } catch {
-    throw lastError instanceof Error ? lastError : new Error("اطلاعات سایت در دسترس نیست.");
+    return value;
   }
 }
 
@@ -123,6 +159,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 export function getSellerLogoUrl(logoUrl: string | null | undefined) {
   if (!logoUrl) return null;
   if (/^(https?:|data:|blob:)/i.test(logoUrl)) return logoUrl;
+  if (/^\/api\//i.test(logoUrl)) return `${PUBLIC_CATALOG_API.replace(/\/api\/public\/catalog$/, "")}${logoUrl}`;
   const base = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
   return `${base}/${logoUrl.replace(/^\/+/, "")}`;
 }

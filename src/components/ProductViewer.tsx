@@ -28,7 +28,6 @@ export default function ProductViewer({ product }: Props) {
   const [imageError, setImageError] = useState(false);
   const [viewMode, setViewMode] = useState<"3d" | "image">(glb ? "3d" : "image");
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [viewerKey, setViewerKey] = useState(0);
 
   const viewerRef = useRef<HTMLElement | null>(null);
 
@@ -40,7 +39,6 @@ export default function ProductViewer({ product }: Props) {
     setImageError(false);
     setViewMode(glb ? "3d" : "image");
     setLightboxOpen(false);
-    setViewerKey((value) => value + 1);
   }, [product.id, poster, glb?.url]);
 
   useEffect(() => {
@@ -58,11 +56,6 @@ export default function ProductViewer({ product }: Props) {
     const onError = () => {
       setStatus("error");
     };
-
-    // Prevent an endless loading state when the model request stalls.
-    const loadTimeout = window.setTimeout(() => {
-      setStatus((current) => current === "loading" ? "error" : current);
-    }, 45000);
 
     const onArStatus = (e: Event) => {
       const detail = (e as CustomEvent).detail as
@@ -117,7 +110,6 @@ export default function ProductViewer({ product }: Props) {
       );
 
       window.clearTimeout(arTimer);
-      window.clearTimeout(loadTimeout);
     };
   }, [glb?.url, product.id]);
 
@@ -192,7 +184,6 @@ export default function ProductViewer({ product }: Props) {
         <>
           {status !== "error" && (
             <model-viewer
-              key={viewerKey}
               ref={
                 viewerRef as React.RefObject<HTMLElement>
               }
@@ -203,8 +194,8 @@ export default function ProductViewer({ product }: Props) {
               poster={poster}
               camera-controls
               auto-rotate
-              reveal="auto"
-              loading="eager"
+              reveal="interaction"
+              loading="lazy"
               shadow-intensity="1"
               exposure="1"
               ar
@@ -308,22 +299,8 @@ export default function ProductViewer({ product }: Props) {
               </div>
 
               <p>
-                بارگذاری مدل سه‌بعدی ناموفق بود یا بیش از حد طول کشید.
+                بارگذاری مدل سه‌بعدی ناموفق بود.
               </p>
-
-              <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
-                {glb && (
-                  <button
-                    type="button"
-                    className="viewer-action"
-                    onClick={() => {
-                      setStatus("loading");
-                      setViewerKey((value) => value + 1);
-                    }}
-                  >
-                    تلاش دوباره برای بارگذاری مدل
-                  </button>
-                )}
 
               {poster && (
                 <button
@@ -337,7 +314,6 @@ export default function ProductViewer({ product }: Props) {
                   نمایش تصویر محصول
                 </button>
               )}
-              </div>
             </div>
           )}
 
