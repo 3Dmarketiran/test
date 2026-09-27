@@ -27,6 +27,41 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
+      <main className="container section">
+        <div className="product-detail" aria-busy="true" aria-label="در حال بارگذاری محصول">
+          <div className="skeleton" style={{ width: "100%", aspectRatio: "1 / 1", minHeight: 320, borderRadius: "var(--radius-lg)" }} />
+          <div style={{ minWidth: 0, paddingTop: 8 }}>
+            <div className="skeleton" style={{ height: 38, width: "72%", marginBottom: 14 }} />
+            <div className="skeleton" style={{ height: 16, width: "35%", marginBottom: 24 }} />
+            <div className="skeleton" style={{ height: 15, width: "100%", marginBottom: 9 }} />
+            <div className="skeleton" style={{ height: 15, width: "92%", marginBottom: 9 }} />
+            <div className="skeleton" style={{ height: 15, width: "78%" }} />
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (!product) {
+    return (
+      <main className="container section">
+        <div className="empty-state">
+          <div className="icon" aria-hidden="true" style={{ fontSize: 40 }}>❓</div>
+          <p>این محصول یافت نشد یا دیگر در دسترس نیست.</p>
+          <Link to="/products" className="btn btn-primary" style={{ marginTop: 12 }}>بازگشت به محصولات</Link>
+        </div>
+      </main>
+    );
+  }
+
+  const seller = sellers.find((item) => item.slug === product.seller.slug);
+  const related = products
+    .filter((p) => p.id !== product.id && p.seller.slug === product.seller.slug)
+    .slice(0, 4);
+  const dims = product.dimensions;
+  const hasDimensions = Boolean(dims?.widthM || dims?.heightM || dims?.depthM);
+
+  return (
     <main className="container section product-page-ref">
       <div className="product-detail-ref-grid">
         <section className="product-detail-main-col">
@@ -54,9 +89,7 @@ export default function ProductDetail() {
             <h1>{product.name}</h1>
             <p className="product-subtitle-ref">{product.shortDescription || `محصولی از ${product.seller.storeName}`}</p>
             <div className="product-info-divider" />
-            <p className="product-info-description">
-              {product.fullDescription || product.shortDescription || "توضیحات این محصول توسط فروشنده ثبت نشده است."}
-            </p>
+            <p className="product-info-description">{product.fullDescription || product.shortDescription || "توضیحات این محصول توسط فروشنده ثبت نشده است."}</p>
 
             <section className="product-spec-card-ref" aria-label="مشخصات محصول">
               <div className="product-spec-row-ref">
@@ -91,7 +124,6 @@ export default function ProductDetail() {
       )}
     </main>
   );
-
 }
 
 function formatMeters(meters: number) {
