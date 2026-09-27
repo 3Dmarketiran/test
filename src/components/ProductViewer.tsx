@@ -6,128 +6,89 @@ interface Props {
   product: PublicProduct;
 }
 
+type ViewMode = "image" | "3d";
 type ViewerStatus = "loading" | "ready" | "error";
 
+function Icon({ name, size = 20 }: { name: "cube" | "ar" | "zoom" | "close" | "download" | "image" | "layers" | "chevron"; size?: number }) {
+  const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+  if (name === "cube") return <svg {...common}><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg>;
+  if (name === "ar") return <svg {...common}><path d="M8 4H5a1 1 0 0 0-1 1v3M16 4h3a1 1 0 0 1 1 1v3M8 20H5a1 1 0 0 1-1-1v-3M16 20h3a1 1 0 0 0 1-1v-3"/><path d="m9 9 3-2 3 2v4l-3 2-3-2V9Z"/><path d="m9 9 3 2 3-2M12 11v4"/></svg>;
+  if (name === "zoom") return <svg {...common}><path d="m15 15 5 5"/><circle cx="10.5" cy="10.5" r="6.5"/><path d="M10.5 7.5v6M7.5 10.5h6"/></svg>;
+  if (name === "close") return <svg {...common}><path d="m6 6 12 12M18 6 6 18"/></svg>;
+  if (name === "download") return <svg {...common}><path d="M12 3v11M8 10l4 4 4-4M5 20h14"/></svg>;
+  if (name === "layers") return <svg {...common}><path d="m12 4 8 4-8 4-8-4 8-4Z"/><path d="m4 12 8 4 8-4M4 16l8 4 8-4"/></svg>;
+  if (name === "chevron") return <svg {...common}><path d="m9 6 6 6-6 6"/></svg>;
+  return <svg {...common}><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m5 17 4.5-4 3 2.5 2-2 4.5 4"/></svg>;
+}
+
 export default function ProductViewer({ product }: Props) {
-  const glb = product.models.find(
-    (m) => m.kind === "GLB" || m.kind === "GLTF"
-  );
-
+  const glb = product.models.find((m) => m.kind === "GLB" || m.kind === "GLTF");
   const usdz = product.models.find((m) => m.kind === "USDZ");
-
-  const poster =
-    product.images.find((i) => i.isPrimary)?.url ??
-    product.images[0]?.url;
+  const images = product.images;
+  const poster = images.find((i) => i.isPrimary)?.url ?? images[0]?.url;
 
   const [activeImage, setActiveImage] = useState(poster);
-  const [status, setStatus] = useState<ViewerStatus>(
-    glb ? "loading" : "ready"
-  );
+  const [viewMode, setViewMode] = useState<ViewMode>("image");
+  const [status, setStatus] = useState<ViewerStatus>(glb ? "ready" : "ready");
   const [arSupported, setArSupported] = useState<boolean | null>(null);
-  const [fullscreen, setFullscreen] = useState(false);
-  const [imageError, setImageError] = useState(false);
-  const [viewMode, setViewMode] = useState<"3d" | "image">(glb ? "3d" : "image");
   const [lightboxOpen, setLightboxOpen] = useState(false);
-
+  const [imageError, setImageError] = useState(false);
   const viewerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     setActiveImage(poster);
-    setStatus(glb ? "loading" : "ready");
+    setViewMode("image");
+    setStatus("ready");
     setArSupported(null);
-    setFullscreen(false);
     setImageError(false);
-    setViewMode(glb ? "3d" : "image");
     setLightboxOpen(false);
-  }, [product.id, poster, glb?.url]);
+  }, [product.id, poster]);
 
   useEffect(() => {
     const el = viewerRef.current;
-    if (!el || !glb) return;
-
-    const onLoad = () => {
-      setStatus("ready");
-    };
-
-    const onError = () => {
-      setStatus("error");
-    };
-
-    const onArStatus = (e: Event) => {
-      const detail = (e as CustomEvent).detail as
-        | { status?: string }
-        | undefined;
-
+    if (!el || !glb || viewMode !== "3d") return;
+    const onLoad = () => setStatus("ready");
+    const onError = () => setStatus("error");
+    const onArStatus = (event: Event) => {
+      const detail = (event as CustomEvent).detail as { status?: string } | undefined;
       if (detail?.status === "session-started") {
         setArSupported(true);
-
-        track("AR_LAUNCH", {
-          productId: product.id,
-          sellerId: product.seller.id,
-        });
-      } else if (detail?.status === "not-presenting") {
-        setArSupported((prev) => prev ?? true);
-      } else if (detail?.status === "failed") {
-        setArSupported(false);
-      }
+        track("AR_LAUNCH", { productId: product.id, sellerId: product.seller.id });
+      } else if (detail?.status === "failed") setArSupported(false);
     };
-
     el.addEventListener("load", onLoad);
     el.addEventListener("error", onError);
     el.addEventListener("ar-status", onArStatus);
-
-    const checkAr = () => {
-      const canAr = (
-        el as unknown as {
-          canActivateAR?: boolean;
-        }
-      ).canActivateAR;
-
-      if (typeof canAr === "boolean") {
-        setArSupported(canAr);
-      }
-    };
-
-    const arTimer = window.setTimeout(checkAr, 800);
-
-
+    const timer = window.setTimeout(() => {
+      const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
+      if (typeof canAr === "boolean") setArSupported(canAr);
+    }, 800);
     return () => {
       el.removeEventListener("load", onLoad);
       el.removeEventListener("error", onError);
       el.removeEventListener("ar-status", onArStatus);
-
-      window.clearTimeout(arTimer);
+      window.clearTimeout(timer);
     };
-  }, [glb?.url, product.id]);
+  }, [glb?.url, product.id, viewMode]);
 
   useEffect(() => {
-    if (glb) {
-      track("VIEWER_3D_OPEN", {
-        productId: product.id,
-        sellerId: product.seller.id,
-      });
-    } else {
-      track("PRODUCT_DETAIL_VIEW", {
-        productId: product.id,
-        sellerId: product.seller.id,
-      });
-    }
-
+    track(glb ? "VIEWER_3D_OPEN" : "PRODUCT_DETAIL_VIEW", { productId: product.id, sellerId: product.seller.id });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.id]);
 
   const dims = product.dimensions;
+  const arScaleAttr = dims?.widthM && dims?.heightM && dims?.depthM ? "fixed" : "auto";
 
-  const arScaleAttr =
-    dims &&
-    dims.widthM &&
-    dims.heightM &&
-    dims.depthM
-      ? "fixed"
-      : "auto";
+  const selectImage = (url: string) => {
+    setActiveImage(url);
+    setImageError(false);
+    setViewMode("image");
+  };
 
-  const toggleFullscreen = () => {
-    setFullscreen(true);
+  const open3D = () => {
+    if (!glb) return;
+    setStatus("loading");
+    setViewMode("3d");
   };
 
   const saveImage = async () => {
@@ -149,403 +110,96 @@ export default function ProductViewer({ product }: Props) {
     }
   };
 
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
-  const selectImage = (url: string) => {
-    setActiveImage(url);
-    setImageError(false);
-  };
-
-  const showImage =
-    Boolean(activeImage) && !imageError;
-
   return (
-    <div
-      className="viewer-shell"
-      style={{
-        position: "relative",
-        width: "100%",
-        overflow: "hidden",
-      }}
-    >
-      {glb && viewMode === "3d" ? (
-        <>
-          {status !== "error" && (
-            <model-viewer
-              ref={
-                viewerRef as React.RefObject<HTMLElement>
-              }
-              src={glb.url}
-              crossorigin="anonymous"
-              ios-src={usdz?.url}
-              alt={product.name}
-              poster={poster}
-              camera-controls
-              auto-rotate
-              reveal="auto"
-              loading="eager"
-              shadow-intensity="1"
-              exposure="1"
-              ar
-              ar-modes="webxr scene-viewer quick-look"
-              ar-scale={arScaleAttr}
-              touch-action="pan-y"
-              style={{
-                display: "block",
-                width: "100%",
-                minHeight: "420px",
-                background:
-                  "var(--color-background)",
-                touchAction: "pan-y",
-              }}
-            >
-              <button
-                slot="ar-button"
-                className="viewer-ar-button"
-                type="button"
-              >
-                مشاهده در AR
-              </button>
-            </model-viewer>
-          )}
-
-          {status === "loading" && (
-            <div
-              className="viewer-loading"
-              aria-live="polite"
-              style={{
-                position: "absolute",
-                inset: 0,
-                zIndex: 3,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                gap: 14,
-                padding: 24,
-                textAlign: "center",
-                background:
-                  "color-mix(in srgb, var(--color-background) 92%, transparent)",
-                backdropFilter: "blur(6px)",
-              }}
-            >
-              <div
-                aria-hidden
-                style={{
-                  width: 42,
-                  height: 42,
-                  borderRadius: "50%",
-                  border: "4px solid rgba(127,127,127,.22)",
-                  borderTopColor:
-                    "currentColor",
-                  animation:
-                    "productViewerSpin .8s linear infinite",
-                }}
-              />
-
-              <div
-                style={{
-                  fontWeight: 700,
-                  fontSize: 15,
-                }}
-              >
-                در حال بارگذاری مدل سه‌بعدی…
-              </div>
-
-              <div
-                style={{
-                  fontSize: 12,
-                  opacity: 0.65,
-                  maxWidth: 260,
-                }}
-              >
-                لطفاً چند لحظه صبر کنید تا مدل کامل
-                بارگذاری شود.
-              </div>
-            </div>
-          )}
-
-          {status === "error" && (
-            <div
-              className="empty-state"
-              style={{
-                minHeight: 420,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                textAlign: "center",
-                padding: 24,
-              }}
-            >
-              <div
-                className="icon"
-                aria-hidden
-                style={{ fontSize: 38 }}
-              >
-                ⚠️
-              </div>
-
-              <p>
-                بارگذاری مدل سه‌بعدی ناموفق بود.
-              </p>
-
-              {poster && (
-                <button
-                  type="button"
-                  className="viewer-action"
-                  onClick={() => {
-                    setViewMode("image");
-                    setImageError(false);
-                  }}
-                >
-                  نمایش تصویر محصول
-                </button>
-              )}
-            </div>
-          )}
-
-          <div
-            className="viewer-actions"
-            aria-label="کنترل‌های نمایشگر"
-          >
-            {status !== "error" && (
-              <button
-                className="viewer-action"
-                type="button"
-                onClick={toggleFullscreen}
-              >
-                {fullscreen
-                  ? "بستن نمایش بزرگ"
-                  : "نمایش بزرگ"}
-              </button>
-            )}
-
-            {poster && (
-              <button
-                className="viewer-action"
-                type="button"
-                onClick={() => {
-                  setImageError(false);
-                  setViewMode("image");
-                }}
-              >
-                مشاهده تصاویر محصول
-              </button>
-            )}
-          </div>
-
-          <style>
-            {`
-              @keyframes productViewerSpin {
-                from {
-                  transform: rotate(0deg);
-                }
-                to {
-                  transform: rotate(360deg);
-                }
-              }
-            `}
-          </style>
-        </>
-      ) : showImage ? (
-        <div
-          style={{
-            position: "relative",
-            width: "100%",
-            aspectRatio: "1 / 1",
-            overflow: "hidden",
-            background:
-              "var(--color-background)",
-          }}
-        >
+    <div className="product-viewer-ref">
+      <div className="product-viewer-ref__rail" aria-label="رسانه‌های محصول">
+        {images.map((img, index) => (
           <button
+            key={`${img.url}-${index}`}
             type="button"
-            className="viewer-image-button"
-            onClick={() => setLightboxOpen(true)}
-            aria-label={`بزرگ‌نمایی تصویر ${product.name}`}
+            className={`product-media-thumb ${viewMode === "image" && img.url === activeImage ? "is-active" : ""}`}
+            onClick={() => selectImage(img.url)}
+            aria-label={`تصویر ${index + 1} محصول`}
           >
-            <img
-              src={activeImage}
-              alt={product.name}
-              onError={handleImageError}
-              loading="eager"
-              decoding="async"
-              style={{
-                display: "block",
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            />
-            <span>بزرگ‌نمایی تصویر</span>
+            <img src={img.url} alt="" loading={index < 3 ? "eager" : "lazy"} onError={(e) => { e.currentTarget.style.opacity = "0.3"; }} />
           </button>
-        </div>
-      ) : (
-        <div
-          className="empty-state"
-          style={{
-            minHeight: 320,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "column",
-            textAlign: "center",
-            padding: 24,
-          }}
-        >
-          <div
-            className="icon"
-            aria-hidden
-            style={{ fontSize: 38 }}
-          >
-            🖼️
-          </div>
-
-          <p>
-            تصویر محصول در حال حاضر قابل نمایش نیست.
-          </p>
-        </div>
-      )}
-
-      <div
-        className="viewer-toolbar"
-        aria-live="polite"
-      >
-        {glb && viewMode === "image" && (
-          <button
-            className="viewer-action"
-            type="button"
-            onClick={() => setViewMode("3d")}
-          >
-            مشاهده سه‌بعدی و AR
+        ))}
+        {glb && (
+          <button type="button" className={`product-media-thumb product-media-thumb--tool ${viewMode === "3d" ? "is-active" : ""}`} onClick={open3D} aria-label="نمایش سه‌بعدی">
+            <Icon name="cube" size={27} />
+            <span>3D</span>
           </button>
         )}
-
-        {dims?.realWorldScale &&
-          (dims.widthM ||
-            dims.heightM ||
-            dims.depthM) && (
-            <span
-              className="scale-badge"
-              title="اندازه واقعی محصول در واقعیت افزوده رعایت می‌شود"
-            >
-              ✅ مقیاس واقعی
-            </span>
-          )}
-
-        {glb && arSupported === false && (
-          <span
-            className="ar-note"
-            style={{
-              padding: 0,
-            }}
-          >
-            واقعیت افزوده روی این دستگاه
-            پشتیبانی نمی‌شود.
-          </span>
+        {glb && (
+          <button type="button" className="product-media-thumb product-media-thumb--tool" onClick={open3D} aria-label="نمایش واقعیت افزوده">
+            <Icon name="ar" size={26} />
+            <span>AR</span>
+          </button>
         )}
       </div>
 
-      {product.images.length > 1 && (
-        <div
-          className="thumb-row"
-          role="tablist"
-          aria-label="تصاویر محصول"
-        >
-          {product.images.map((img) => (
-            <button
-              key={img.url}
-              type="button"
-              role="tab"
-              aria-selected={
-                img.url === activeImage
-              }
-              onClick={() => {
-                selectImage(img.url);
-                setViewMode("image");
-              }}
-              style={{
-                padding: 0,
-                border: "none",
-                background: "transparent",
-                cursor: "pointer",
-                borderRadius: 8,
-                overflow: "hidden",
-              }}
-            >
-              <img
-                src={img.url}
-                alt={product.name}
-                loading="lazy"
-                decoding="async"
-                className={
-                  img.url === activeImage
-                    ? "active"
-                    : ""
-                }
-                onError={(event) => {
-                  event.currentTarget.style.opacity =
-                    "0.35";
-                }}
-              />
-            </button>
-          ))}
-        </div>
-      )}
-      {fullscreen && (
-        <div className="viewer-modal" role="dialog" aria-modal="true" aria-label={`نمایش بزرگ ${product.name}`}>
-          <div className="viewer-modal__frame">
-            <div className="viewer-modal__topbar">
-              <span>{product.name}</span>
-              <button type="button" className="viewer-modal__close" onClick={() => setFullscreen(false)} aria-label="بستن">×</button>
-            </div>
-            <div className="viewer-modal__body">
-              <div className="viewer-modal__stage">
-                {viewMode === "3d" && glb ? (
-                  <model-viewer
-                    className="viewer-modal__model"
-                    src={glb.url}
-                    crossorigin="anonymous"
-                    ios-src={usdz?.url}
-                    alt={product.name}
-                    camera-controls
-                    auto-rotate
-                    reveal="auto"
-                    loading="eager"
-                    ar
-                    ar-modes="webxr scene-viewer quick-look"
-                  />
-                ) : activeImage ? (
-                  <img src={activeImage} alt={product.name} />
-                ) : null}
+      <div className="product-viewer-ref__main">
+        {viewMode === "image" && activeImage && !imageError ? (
+          <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول">
+            <img src={activeImage} alt={product.name} onError={() => setImageError(true)} />
+            <span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span>
+          </button>
+        ) : viewMode === "3d" && glb ? (
+          <div className="product-main-3d">
+            {status === "error" ? (
+              <div className="product-viewer-error">
+                <strong>بارگذاری مدل سه‌بعدی ناموفق بود.</strong>
+                {poster && <button type="button" className="viewer-action" onClick={() => { setViewMode("image"); setImageError(false); }}>نمایش تصاویر محصول</button>}
               </div>
-            </div>
-            <div className="viewer-modal__bottombar">
-              <button type="button" className="viewer-action" onClick={saveImage}>Save Image</button>
-              {glb && <button type="button" className="viewer-action" onClick={() => setViewMode(viewMode === "3d" ? "image" : "3d")}>{viewMode === "3d" ? "نمایش تصویر" : "نمایش سه‌بعدی"}</button>}
-            </div>
+            ) : (
+              <>
+                <model-viewer
+                  ref={viewerRef as React.RefObject<HTMLElement>}
+                  src={glb.url}
+                  crossorigin="anonymous"
+                  ios-src={usdz?.url}
+                  alt={product.name}
+                  camera-controls
+                  auto-rotate
+                  reveal="auto"
+                  loading="eager"
+                  shadow-intensity="1"
+                  exposure="1"
+                  ar
+                  ar-modes="webxr scene-viewer quick-look"
+                  ar-scale={arScaleAttr}
+                  touch-action="pan-y"
+                  className="product-model-viewer"
+                >
+                  <button slot="ar-button" className="viewer-ar-button" type="button"><Icon name="ar" size={18} /> مشاهده در واقعیت افزوده</button>
+                </model-viewer>
+                {status === "loading" && <div className="product-model-loading"><span className="product-spinner"/><strong>در حال بارگذاری مدل سه‌بعدی…</strong><small>لطفاً چند لحظه صبر کنید.</small></div>}
+              </>
+            )}
           </div>
+        ) : (
+          <div className="product-viewer-error"><Icon name="image" size={38} /><strong>تصویر محصول در دسترس نیست.</strong></div>
+        )}
+
+        <div className="product-main-media__bottom">
+          {glb && <button type="button" className={`product-mode-pill ${viewMode === "3d" ? "is-active" : ""}`} onClick={open3D}><Icon name="cube" size={19} />نمای سه‌بعدی</button>}
+          <div className="product-dots" aria-label="تصاویر محصول">
+            {images.map((img, index) => <button key={`${img.url}-dot`} type="button" aria-label={`رفتن به تصویر ${index + 1}`} className={viewMode === "image" && img.url === activeImage ? "is-active" : ""} onClick={() => selectImage(img.url)} />)}
+          </div>
+          <button type="button" className="product-zoom-button" onClick={() => setLightboxOpen(true)} aria-label="نمایش بزرگ"><Icon name="zoom" size={19} /></button>
         </div>
-      )}
+      </div>
+
+      {dims?.realWorldScale && (dims.widthM || dims.heightM || dims.depthM) && <span className="product-scale-badge">✓ مقیاس واقعی</span>}
+
+      {arSupported === false && viewMode === "3d" && <span className="product-ar-note">AR روی این دستگاه پشتیبانی نمی‌شود.</span>}
 
       {lightboxOpen && activeImage && (
-        <div className="image-lightbox" role="dialog" aria-modal="true" aria-label={`تصویر بزرگ ${product.name}`} onClick={() => setLightboxOpen(false)}>
-          <div className="viewer-modal__frame" onClick={(event) => event.stopPropagation()}>
-            <div className="viewer-modal__topbar">
-              <span>{product.name}</span>
-              <button type="button" className="viewer-modal__close" aria-label="بستن تصویر" onClick={() => setLightboxOpen(false)}>×</button>
-            </div>
-            <div className="viewer-modal__body">
-              <div className="viewer-modal__stage">
-                <img src={activeImage} alt={product.name} />
-              </div>
-            </div>
-            <div className="viewer-modal__bottombar">
-              <button type="button" className="viewer-action" onClick={saveImage}>Save Image</button>
-            </div>
+        <div className="product-lightbox" role="dialog" aria-modal="true" aria-label={`تصویر بزرگ ${product.name}`} onClick={() => setLightboxOpen(false)}>
+          <div className="product-lightbox__frame" onClick={(event) => event.stopPropagation()}>
+            <div className="product-lightbox__topbar"><strong>{product.name}</strong><button type="button" onClick={() => setLightboxOpen(false)} aria-label="بستن"><Icon name="close" size={22} /></button></div>
+            <div className="product-lightbox__body"><img src={activeImage} alt={product.name} /></div>
+            <div className="product-lightbox__bottom"><button type="button" className="viewer-action viewer-action--primary" onClick={saveImage}><Icon name="download" size={18} /> Save Image</button></div>
           </div>
         </div>
       )}
