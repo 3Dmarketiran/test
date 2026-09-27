@@ -45,10 +45,6 @@ export default function ProductViewer({ product }: Props) {
     const el = viewerRef.current;
     if (!el || !glb) return;
 
-    const onFullscreenChange = () => {
-      setFullscreen(Boolean(document.fullscreenElement));
-    };
-
     const onLoad = () => {
       setStatus("ready");
     };
@@ -94,20 +90,11 @@ export default function ProductViewer({ product }: Props) {
 
     const arTimer = window.setTimeout(checkAr, 800);
 
-    document.addEventListener(
-      "fullscreenchange",
-      onFullscreenChange
-    );
 
     return () => {
       el.removeEventListener("load", onLoad);
       el.removeEventListener("error", onError);
       el.removeEventListener("ar-status", onArStatus);
-
-      document.removeEventListener(
-        "fullscreenchange",
-        onFullscreenChange
-      );
 
       window.clearTimeout(arTimer);
     };
@@ -139,23 +126,26 @@ export default function ProductViewer({ product }: Props) {
       ? "fixed"
       : "auto";
 
-  const toggleFullscreen = async () => {
-    const target = viewerRef.current?.parentElement;
+  const toggleFullscreen = () => {
+    setFullscreen(true);
+  };
 
-    if (!target) return;
-
+  const saveImage = async () => {
+    const url = activeImage || poster;
+    if (!url) return;
     try {
-      if (!document.fullscreenElement) {
-        await target.requestFullscreen();
-        setFullscreen(true);
-      } else {
-        await document.exitFullscreen();
-        setFullscreen(false);
-      }
+      const response = await fetch(url, { mode: "cors" });
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = `${product.slug || "product"}-image.${blob.type.includes("png") ? "png" : "webp"}`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
     } catch {
-      setFullscreen(
-        Boolean(document.fullscreenElement)
-      );
+      window.open(url, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -328,8 +318,8 @@ export default function ProductViewer({ product }: Props) {
                 onClick={toggleFullscreen}
               >
                 {fullscreen
-                  ? "خروج از تمام‌صفحه"
-                  : "تمام‌صفحه"}
+                  ? "بستن نمایش بزرگ"
+                  : "نمایش بزرگ"}
               </button>
             )}
 
@@ -505,27 +495,38 @@ export default function ProductViewer({ product }: Props) {
           ))}
         </div>
       )}
+      {fullscreen && (
+        <div className="viewer-modal" role="dialog" aria-modal="true" aria-label={`نمایش بزرگ ${product.name}`}>
+          <div className="viewer-modal__topbar">
+            <span>{product.name}</span>
+            <button type="button" className="viewer-modal__close" onClick={() => setFullscreen(false)} aria-label="بستن">×</button>
+          </div>
+          <div className="viewer-modal__body">
+            {viewMode === "3d" && glb ? (
+              <model-viewer src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} camera-controls auto-rotate ar ar-modes="webxr scene-viewer quick-look" style={{ width: "100%", height: "100%", minHeight: 520, background: "#f7f9fc" }} />
+            ) : activeImage ? (
+              <img src={activeImage} alt={product.name} />
+            ) : null}
+          </div>
+          <div className="viewer-modal__bottombar">
+            <button type="button" className="viewer-action" onClick={saveImage}>Save Image</button>
+            {glb && <button type="button" className="viewer-action" onClick={() => setViewMode(viewMode === "3d" ? "image" : "3d")}>{viewMode === "3d" ? "نمایش تصویر" : "نمایش سه‌بعدی"}</button>}
+          </div>
+        </div>
+      )}
+
       {lightboxOpen && activeImage && (
-        <div
-          className="image-lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`تصویر بزرگ ${product.name}`}
-          onClick={() => setLightboxOpen(false)}
-        >
-          <button
-            type="button"
-            className="image-lightbox__close"
-            aria-label="بستن تصویر"
-            onClick={() => setLightboxOpen(false)}
-          >
-            ×
-          </button>
-          <img
-            src={activeImage}
-            alt={product.name}
-            onClick={(event) => event.stopPropagation()}
-          />
+        <div className="image-lightbox" role="dialog" aria-modal="true" aria-label={`تصویر بزرگ ${product.name}`} onClick={() => setLightboxOpen(false)}>
+          <div className="viewer-modal__topbar" onClick={(event) => event.stopPropagation()}>
+            <span>{product.name}</span>
+            <button type="button" className="viewer-modal__close" aria-label="بستن تصویر" onClick={() => setLightboxOpen(false)}>×</button>
+          </div>
+          <div className="viewer-modal__body" onClick={(event) => event.stopPropagation()}>
+            <img src={activeImage} alt={product.name} />
+          </div>
+          <div className="viewer-modal__bottombar" onClick={(event) => event.stopPropagation()}>
+            <button type="button" className="viewer-action" onClick={saveImage}>Save Image</button>
+          </div>
         </div>
       )}
     </div>

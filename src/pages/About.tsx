@@ -77,7 +77,7 @@ export default function About() {
   const { settings } = useData();
 
   const platformName =
-    settings?.platformName ?? "پلتفرم نمایشگاه محصول";
+    settings?.platformName ?? "3Dmarketiran";
 
   useSeo({
     title: "درباره ما",

@@ -28,6 +28,8 @@ export interface PublicProduct {
   shortDescription: string | null;
   fullDescription: string | null;
   tags: string[];
+  material?: string | null;
+  colors?: Array<{ name: string; value: string }>;
   price: number | null;
   isPinned?: boolean;
   pinOrder?: number | null;

@@ -257,6 +257,23 @@ export default function ProductDetail() {
             </section>
           )}
 
+          {(product.material || (product.colors && product.colors.length > 0)) && (
+            <section className="product-attributes-card" aria-label="ویژگی‌های محصول">
+              {product.material && (
+                <div className="product-attribute-row">
+                  <div className="product-attribute-icon">✦</div>
+                  <div><strong>جنس متریال</strong><span>{product.material}</span></div>
+                </div>
+              )}
+              {product.colors && product.colors.length > 0 && (
+                <div className="product-attribute-row product-color-attribute">
+                  <div className="product-attribute-icon">●</div>
+                  <div><strong>رنگ</strong><div className="product-detail-colors">{product.colors.map((color, index) => <span key={`${color.name}-${index}`} className="product-detail-color"><i style={{ background: color.value }} aria-hidden="true" />{color.name}</span>)}</div></div>
+                </div>
+              )}
+            </section>
+          )}
+
           {product.tags.length > 0 && (
             <div
               className="tag-row"
@@ -339,159 +356,21 @@ function formatMeters(meters: number) {
   return `${meters.toFixed(2)} متر`;
 }
 
-function SellerCard({
-  seller,
-  sellerSlug,
-}: {
-  seller:
-    | {
-        slug: string;
-        storeName: string;
-        description: string | null;
-        logoUrl: string | null;
-        contactEmail: string | null;
-        contactPhone: string | null;
-        socialLinks: Record<
-          string,
-          string
-        > | null;
-      }
-    | undefined;
-  sellerSlug: string;
-}) {
-  if (!seller) {
-    return null;
-  }
-
-  const hasContact =
-    Boolean(seller.contactPhone) ||
-    Boolean(seller.contactEmail);
-
+function SellerCard({ seller, sellerSlug }: { seller: { slug: string; storeName: string; description: string | null; logoUrl: string | null; contactEmail: string | null; contactPhone: string | null; address?: string | null; socialLinks: Record<string,string> | null } | undefined; sellerSlug: string; }) {
+  if (!seller) return null;
+  const logo = getSellerLogoUrl(seller.logoUrl);
   return (
-    <section
-      className="seller-box"
-      aria-label="اطلاعات فروشگاه"
-    >
-      {getSellerLogoUrl(seller.logoUrl) ? (
-        <>
-          <img
-            src={getSellerLogoUrl(seller.logoUrl) || undefined}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            style={{
-              width: 50,
-              height: 50,
-              objectFit: "contain",
-              borderRadius: 15,
-              flex: "0 0 auto",
-            }}
-            onError={(event) => {
-              event.currentTarget.style.display = "none";
-              const fallback = event.currentTarget.nextElementSibling as HTMLElement | null;
-              if (fallback) fallback.style.display = "flex";
-            }}
-          />
-          <div
-            aria-hidden="true"
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 15,
-              flex: "0 0 auto",
-              display: "none",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "linear-gradient(135deg, #eaf2f9, #f4f7fa)",
-              color: "var(--neo-text-strong)",
-              fontSize: 16,
-              fontWeight: 900,
-            }}
-          >
-            {sellerInitials(seller.storeName)}
-          </div>
-        </>
-      ) : (
-        <div
-          aria-hidden="true"
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 15,
-            flex: "0 0 auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "linear-gradient(135deg, #eaf2f9, #f4f7fa)",
-            color: "var(--neo-text-strong)",
-            fontSize: 16,
-            fontWeight: 900,
-          }}
-        >
-          {sellerInitials(seller.storeName)}
-        </div>
-      )}
-
-      <div
-        style={{
-          minWidth: 0,
-          flex: 1,
-        }}
-      >
-        <div
-          className="name"
-          style={{
-            overflowWrap: "anywhere",
-          }}
-        >
-          {seller.storeName}
-        </div>
-
-        {seller.description && (
-          <p
-            style={{
-              margin: "4px 0 10px",
-              color:
-                "var(--color-text-muted, #777)",
-              fontSize: 13,
-              lineHeight: 1.8,
-            }}
-          >
-            {seller.description}
-          </p>
-        )}
-
-        <div className="contact-row">
-          {seller.contactPhone && (
-            <a
-              href={`tel:${seller.contactPhone}`}
-              className="btn btn-outline btn-sm"
-              aria-label={`تماس با ${seller.storeName}`}
-            >
-              تماس تلفنی
-            </a>
-          )}
-
-          {seller.contactEmail && (
-            <a
-              href={`mailto:${seller.contactEmail}`}
-              className="btn btn-outline btn-sm"
-              aria-label={`ارسال ایمیل به ${seller.storeName}`}
-            >
-              ایمیل
-            </a>
-          )}
-
-          <Link
-            to={`/sellers/${encodeURIComponent(
-              sellerSlug
-            )}`}
-            className="btn btn-primary btn-sm"
-          >
-            مشاهده فروشگاه
-          </Link>
-        </div>
+    <section className="seller-box seller-box--detail" aria-label="اطلاعات فروشگاه">
+      <div className="seller-box__head">
+        {logo ? <img src={logo} alt={seller.storeName} loading="lazy" /> : <div className="seller-box__fallback">{sellerInitials(seller.storeName)}</div>}
+        <div><span className="page-eyebrow">اطلاعات فروشگاه</span><h3>{seller.storeName}</h3></div>
       </div>
+      {seller.description && <p className="seller-box__description">{seller.description}</p>}
+      <div className="seller-box__contact-list">
+        {seller.contactPhone && <a href={`tel:${seller.contactPhone}`}><span className="seller-box__contact-icon">⌕</span><span><small>شماره تماس</small><strong>{seller.contactPhone}</strong></span></a>}
+        {seller.address && <div><span className="seller-box__contact-icon">⌖</span><span><small>آدرس</small><strong>{seller.address}</strong></span></div>}
+      </div>
+      <Link to={`/sellers/${encodeURIComponent(sellerSlug)}`} className="btn btn-primary seller-box__button">مشاهده فروشگاه</Link>
     </section>
   );
 }

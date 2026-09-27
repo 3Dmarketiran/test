@@ -274,7 +274,7 @@ export default function SellerStore() {
     <div className="container section seller-store-page">
       <section
         className="seller-profile-card seller-profile-card--clean card fade-in-up"
-        style={{ "--seller-theme": seller.themeColor || "#2e6fce" } as React.CSSProperties}
+        style={{ "--seller-theme": seller.themeColor || "#eef3f8" } as React.CSSProperties}
       >
         <div className="seller-profile-inner">
           <div className="seller-profile-topline">
@@ -338,10 +338,6 @@ export default function SellerStore() {
             </div>
           </div>
 
-          <div className="seller-profile-specialty">
-            <span className="seller-profile-specialty__label">فروشگاه تخصصی</span>
-            <span className="seller-profile-specialty__value">{seller.category?.name || "فروشگاه محصولات سه‌بعدی"}</span>
-          </div>
         </div>
       </section>
 

@@ -80,7 +80,7 @@ export default function Contact() {
   const { settings } = useData();
 
   const platformName =
-    settings?.platformName ?? "پلتفرم نمایشگاه محصول";
+    settings?.platformName ?? "3Dmarketiran";
 
   const phone =
     settings?.contactPhone || "09144142898";

@@ -100,7 +100,7 @@ export default function Layout() {
 
   const platformName =
     settings?.platformName ??
-    "پلتفرم نمایشگاه محصول";
+    "3Dmarketiran";
 
   const phone =
     settings?.contactPhone ||
@@ -359,7 +359,7 @@ function Footer() {
 
   const platformName =
     settings?.platformName ??
-    "پلتفرم نمایشگاه محصول";
+    "3Dmarketiran";
 
   const social = settings?.socialLinks ?? {};
 
