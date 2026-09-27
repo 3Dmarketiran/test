@@ -1,6 +1,8 @@
 export const API_URL =
   (import.meta.env.VITE_API_URL || "https://threedmarketiran-backend.onrender.com").replace(/\/$/, "");
 
+export const PUBLIC_CATALOG_API = `${API_URL}/api/public/catalog`;
+
 export const PUBLIC_SITE_URL =
   (import.meta.env.VITE_PUBLIC_SITE_URL || window.location.origin).replace(/\/$/, "");
 
