@@ -194,8 +194,8 @@ export default function ProductViewer({ product }: Props) {
               poster={poster}
               camera-controls
               auto-rotate
-              reveal="interaction"
-              loading="lazy"
+              reveal="auto"
+              loading="eager"
               shadow-intensity="1"
               exposure="1"
               ar
@@ -333,13 +333,16 @@ export default function ProductViewer({ product }: Props) {
               </button>
             )}
 
-            {glb && poster && (
+            {poster && (
               <button
                 className="viewer-action"
                 type="button"
-                onClick={() => setViewMode("image")}
+                onClick={() => {
+                  setImageError(false);
+                  setViewMode("image");
+                }}
               >
-                مشاهده تصاویر
+                مشاهده تصاویر محصول
               </button>
             )}
           </div>
