@@ -497,35 +497,55 @@ export default function ProductViewer({ product }: Props) {
       )}
       {fullscreen && (
         <div className="viewer-modal" role="dialog" aria-modal="true" aria-label={`نمایش بزرگ ${product.name}`}>
-          <div className="viewer-modal__topbar">
-            <span>{product.name}</span>
-            <button type="button" className="viewer-modal__close" onClick={() => setFullscreen(false)} aria-label="بستن">×</button>
-          </div>
-          <div className="viewer-modal__body">
-            {viewMode === "3d" && glb ? (
-              <model-viewer src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} camera-controls auto-rotate ar ar-modes="webxr scene-viewer quick-look" style={{ width: "100%", height: "100%", minHeight: 520, background: "#f7f9fc" }} />
-            ) : activeImage ? (
-              <img src={activeImage} alt={product.name} />
-            ) : null}
-          </div>
-          <div className="viewer-modal__bottombar">
-            <button type="button" className="viewer-action" onClick={saveImage}>Save Image</button>
-            {glb && <button type="button" className="viewer-action" onClick={() => setViewMode(viewMode === "3d" ? "image" : "3d")}>{viewMode === "3d" ? "نمایش تصویر" : "نمایش سه‌بعدی"}</button>}
+          <div className="viewer-modal__frame">
+            <div className="viewer-modal__topbar">
+              <span>{product.name}</span>
+              <button type="button" className="viewer-modal__close" onClick={() => setFullscreen(false)} aria-label="بستن">×</button>
+            </div>
+            <div className="viewer-modal__body">
+              <div className="viewer-modal__stage">
+                {viewMode === "3d" && glb ? (
+                  <model-viewer
+                    className="viewer-modal__model"
+                    src={glb.url}
+                    crossorigin="anonymous"
+                    ios-src={usdz?.url}
+                    alt={product.name}
+                    camera-controls
+                    auto-rotate
+                    reveal="auto"
+                    loading="eager"
+                    ar
+                    ar-modes="webxr scene-viewer quick-look"
+                  />
+                ) : activeImage ? (
+                  <img src={activeImage} alt={product.name} />
+                ) : null}
+              </div>
+            </div>
+            <div className="viewer-modal__bottombar">
+              <button type="button" className="viewer-action" onClick={saveImage}>Save Image</button>
+              {glb && <button type="button" className="viewer-action" onClick={() => setViewMode(viewMode === "3d" ? "image" : "3d")}>{viewMode === "3d" ? "نمایش تصویر" : "نمایش سه‌بعدی"}</button>}
+            </div>
           </div>
         </div>
       )}
 
       {lightboxOpen && activeImage && (
         <div className="image-lightbox" role="dialog" aria-modal="true" aria-label={`تصویر بزرگ ${product.name}`} onClick={() => setLightboxOpen(false)}>
-          <div className="viewer-modal__topbar" onClick={(event) => event.stopPropagation()}>
-            <span>{product.name}</span>
-            <button type="button" className="viewer-modal__close" aria-label="بستن تصویر" onClick={() => setLightboxOpen(false)}>×</button>
-          </div>
-          <div className="viewer-modal__body" onClick={(event) => event.stopPropagation()}>
-            <img src={activeImage} alt={product.name} />
-          </div>
-          <div className="viewer-modal__bottombar" onClick={(event) => event.stopPropagation()}>
-            <button type="button" className="viewer-action" onClick={saveImage}>Save Image</button>
+          <div className="viewer-modal__frame" onClick={(event) => event.stopPropagation()}>
+            <div className="viewer-modal__topbar">
+              <span>{product.name}</span>
+              <button type="button" className="viewer-modal__close" aria-label="بستن تصویر" onClick={() => setLightboxOpen(false)}>×</button>
+            </div>
+            <div className="viewer-modal__body">
+              <div className="viewer-modal__stage">
+                <img src={activeImage} alt={product.name} />
+              </div>
+            </div>
+            <div className="viewer-modal__bottombar">
+              <button type="button" className="viewer-action" onClick={saveImage}>Save Image</button>
+            </div>
           </div>
         </div>
       )}
