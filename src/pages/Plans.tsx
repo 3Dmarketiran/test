@@ -450,7 +450,7 @@ export default function Plans() {
         <>
           {/* PLANS */}
           <section
-            className="plans-single-column"
+            className="grid grid-3"
             style={{
               maxWidth: 1100,
               margin: "0 auto",

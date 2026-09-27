@@ -194,8 +194,8 @@ export default function ProductViewer({ product }: Props) {
               poster={poster}
               camera-controls
               auto-rotate
-              reveal="interaction"
-              loading="lazy"
+              reveal="auto"
+              loading="eager"
               shadow-intensity="1"
               exposure="1"
               ar
