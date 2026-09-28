@@ -605,3 +605,7 @@
   .product-media-thumb--tool{width:52px!important;height:44px!important;flex:0 0 52px!important;}
   .model-viewer-ar-button{top:10px;left:10px;min-width:46px;height:32px;font-size:10px;}
 }
+
+/* V32 — one zoom control only; AR delegates to model-viewer's native handler. */
+.product-main-media__bottom .product-zoom-button{display:none!important;}
+.product-main-3d .model-viewer-ar-button{display:inline-flex!important;}
