@@ -115,18 +115,19 @@ export default function ProductViewer({ product }: Props) {
       setArSupported(false);
       return;
     }
-    // Prefer model-viewer's native AR button. Its internal handler preserves
-    // the browser's user-activation requirement on mobile Safari/Chrome.
-    const nativeButton = el.querySelector('[slot="ar-button"]') as HTMLButtonElement | null;
-    if (nativeButton) {
-      nativeButton.click();
+    // IMPORTANT: call activateAR directly from this click handler.
+    // A synthetic click on the slotted model-viewer AR button can lose the
+    // browser's user-activation on iOS/Android, which makes AR silently fail.
+    if (typeof el.activateAR !== "function") {
+      setArSupported(false);
       return;
     }
-    if (!modelReadyRef.current || typeof el.activateAR !== "function") {
-      setStatus(modelReadyRef.current ? "ready" : "loading");
-      return;
+    try {
+      const result = el.activateAR();
+      void Promise.resolve(result).catch(() => setArSupported(false));
+    } catch {
+      setArSupported(false);
     }
-    void el.activateAR().catch(() => setArSupported(false));
   };
   const previousImage = () => { if (!images.length) return; const next = (activeIndex - 1 + images.length) % images.length; selectImage(images[next].url, next); };
   const nextImage = () => { if (!images.length) return; const next = (activeIndex + 1) % images.length; selectImage(images[next].url, next); };
