@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-28T15:08:57.358Z",
-  "version": "719d7da1",
+  "generatedAt": "2026-09-28T15:11:49.971Z",
+  "version": "87c80730",
   "products": [
     {
       "id": "cmuayu5fg000nznuyxalg8q9h",
       "slug": "test-7olbw_",
-      "name": "test",
-      "shortDescription": "test",
+      "name": "sandal",
+      "shortDescription": "tak nafare",
       "fullDescription": "avalin mahsul",
       "price": 1200000,
       "isPinned": true,
@@ -17,12 +17,7 @@
         "test"
       ],
       "material": "پارچه مرغوب",
-      "colors": [
-        {
-          "name": "طوسی",
-          "value": "#a3a3a3"
-        }
-      ],
+      "colors": [],
       "seller": {
         "id": "cmuays6st0007znuyvxh6ud5u",
         "slug": "test-qa20kn",
