@@ -316,8 +316,7 @@ export default function Home() {
                       overflow: "hidden",
                       display: "grid",
                       placeItems: "center",
-                      background:
-                        "linear-gradient(145deg,#f5f8fb,#fff)",
+                      background: seller.themeColor || "#f5f8fb",
                       marginBottom: 14,
                     }}
                   >

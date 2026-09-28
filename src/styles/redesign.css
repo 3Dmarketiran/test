@@ -205,7 +205,7 @@
   .product-viewer-ref{grid-template-columns:1fr;gap:10px;}
   .product-viewer-ref__rail{order:2;flex-direction:row;overflow-x:auto;justify-content:flex-start;padding:2px 2px 5px;}
   .product-media-thumb{width:64px;height:64px;flex:0 0 64px;}
-  .product-viewer-ref__main{order:1;aspect-ratio:1 / 1;}
+  .product-viewer-ref__main{order:1;}
   .product-ar-note{left:0;bottom:-24px;}
 }
 @media(max-width:560px){
@@ -422,7 +422,6 @@
 
   .product-viewer-ref__main {
     order: 1 !important;
-    aspect-ratio: 1 / 1 !important;
     border-radius: 14px !important;
   }
 
@@ -548,3 +547,14 @@
     margin-bottom: 10px !important;
   }
 }
+
+
+/* V26 — media frame follows the actual image ratio */
+.product-viewer-ref__main{min-height:420px}
+.product-viewer-ref__main .product-main-media img{object-fit:contain}
+@media(max-width:800px){.product-viewer-ref__main{min-height:0}}
+/* AR must be clearly separated from the 3D controls on mobile. */
+@media(max-width:800px){.product-main-3d .viewer-ar-button{top:16px!important;bottom:auto!important;left:16px!important;right:auto!important;padding:11px 15px!important;font-size:12px!important;font-weight:900!important;border-radius:12px!important;z-index:20!important;box-shadow:0 8px 22px rgba(15,35,60,.16)!important}.product-scale-badge{top:16px;right:16px}}
+
+/* Seller theme is also the logo backdrop. */
+.seller-profile-avatar{background:var(--seller-theme,#eef3f8)!important}
