@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-28T16:15:47.661Z",
-  "version": "40222faa",
+  "generatedAt": "2026-09-28T16:16:30.418Z",
+  "version": "0ee28b9d",
   "products": [
     {
       "id": "cmuayu5fg000nznuyxalg8q9h",
@@ -45,7 +45,7 @@
         "depthM": 0.1,
         "realWorldScale": true
       },
-      "publishedAt": "2026-09-28T15:43:38.330Z"
+      "publishedAt": "2026-09-28T16:15:49.258Z"
     },
     {
       "id": "cmub0obpk0013pqapa6n9vma7",
@@ -88,7 +88,7 @@
       "storeName": "test",
       "description": "avalin forushgah",
       "logoUrl": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/sellers/cmuays6st0007znuyvxh6ud5u/logo/NAObwTMreNpXps8u.jpeg",
-      "themeColor": null,
+      "themeColor": "#ff0000",
       "contactEmail": "seller@gmail.com",
       "contactPhone": "09144142898",
       "address": "tabriz valiasr",
