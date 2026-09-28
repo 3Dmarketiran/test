@@ -558,3 +558,16 @@
 
 /* Seller theme is also the logo backdrop. */
 .seller-profile-avatar{background:var(--seller-theme,#eef3f8)!important}
+
+/* V27 — AR is a small, direct mobile action. Keep it out of the 3D footer controls. */
+.product-ar-bottom{display:none}
+@media(max-width:800px){
+ .product-ar-bottom{position:absolute;display:inline-flex;align-items:center;justify-content:center;gap:6px;top:14px;left:14px;z-index:30;min-width:54px;height:38px;padding:0 12px;border:1px solid rgba(23,58,99,.14);border-radius:10px;background:#fff;color:#173a63;font-size:12px;font-weight:900;box-shadow:0 7px 20px rgba(15,35,60,.16);cursor:pointer}
+ .product-ar-bottom:active{transform:translateY(1px)}
+ .product-main-3d .viewer-ar-button{display:none!important}
+ .product-scale-badge{top:14px!important;right:14px!important}
+}
+.product-viewer-controls{position:absolute;inset:0;z-index:12;pointer-events:none}
+.product-viewer-controls>*{pointer-events:auto}
+.product-viewer-controls .product-main-media__bottom{pointer-events:none}
+.product-viewer-controls .product-main-media__bottom>*{pointer-events:auto}

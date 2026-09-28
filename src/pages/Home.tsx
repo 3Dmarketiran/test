@@ -316,8 +316,9 @@ export default function Home() {
                       overflow: "hidden",
                       display: "grid",
                       placeItems: "center",
-                      background: seller.themeColor || "#f5f8fb",
+                      background: "#fff",
                       marginBottom: 14,
+                      ["--seller-logo-theme" as string]: seller.themeColor || "#eef2f6",
                     }}
                   >
                     {getSellerLogoUrl(seller.logoUrl) ? (
