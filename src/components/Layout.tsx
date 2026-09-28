@@ -94,10 +94,16 @@ function PhoneIcon() {
 export default function Layout() {
   const { settings } = useData();
   const location = useLocation();
+
   const [navOpen, setNavOpen] = useState(false);
 
-  const platformName = settings?.platformName ?? "3Dmarketiran";
-  const phone = settings?.contactPhone || "09144142898";
+  const platformName =
+    settings?.platformName ??
+    "3Dmarketiran";
+
+  const phone =
+    settings?.contactPhone ||
+    "09144142898";
 
   useEffect(() => {
     setNavOpen(false);
@@ -105,60 +111,243 @@ export default function Layout() {
 
   useEffect(() => {
     if (!navOpen) return;
-    const original = document.body.style.overflow;
+
+    const originalOverflow =
+      document.body.style.overflow;
+
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = original; };
+
+    return () => {
+      document.body.style.overflow =
+        originalOverflow;
+    };
   }, [navOpen]);
+
+  const handleNavToggle = () => {
+    setNavOpen((value) => !value);
+  };
+
+  const closeNav = () => {
+    setNavOpen(false);
+  };
 
   return (
     <div className="app-shell">
-      <a href="#main-content" className="visually-hidden">رفتن به محتوای اصلی</a>
+      <a
+        href="#main-content"
+        className="visually-hidden"
+      >
+        رفتن به محتوای اصلی
+      </a>
 
-      <header className="site-header clean-header">
-        <div className="container clean-header__inner">
-          <button
-            type="button"
-            className="clean-header__menu"
-            onClick={() => setNavOpen(v => !v)}
-            aria-expanded={navOpen}
-            aria-controls="main-navigation"
-            aria-label={navOpen ? "بستن منو" : "باز کردن منو"}
+      <header
+        className="site-header"
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 100,
+        }}
+      >
+        <div className="container site-header__inner">
+          {/* BRAND */}
+          <Link
+            to="/"
+            className="brand"
+            onClick={closeNav}
+            aria-label={`رفتن به صفحه اصلی ${platformName}`}
           >
-            <MenuIcon open={navOpen} />
-          </button>
-
-          <Link to="/" className="clean-header__brand" onClick={() => setNavOpen(false)} aria-label={`صفحه اصلی ${platformName}`}>
-            <span className="clean-header__brand-mark" aria-hidden="true">
-              {settings?.logoUrl ? <img src={settings.logoUrl} alt="" /> : <span>3D</span>}
+            <span
+              className="brand__logo"
+              aria-hidden="true"
+              style={{
+                width: 42,
+                height: 42,
+                flexShrink: 0,
+                display: "grid",
+                placeItems: "center",
+                overflow: "hidden",
+                borderRadius: 12,
+              }}
+            >
+              {settings?.logoUrl ? (
+                <img
+                  src={settings.logoUrl}
+                  alt=""
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                  onError={(event) => {
+                    event.currentTarget.style.display =
+                      "none";
+                  }}
+                />
+              ) : (
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="m4 7.5 8 4.5 8-4.5M12 12v9"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
             </span>
-            <span className="clean-header__brand-name">{platformName}</span>
+
+            <span
+              className="brand__name"
+              style={{
+                minWidth: 0,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {platformName}
+            </span>
           </Link>
 
-          <div className="clean-header__actions">
-            <a href={ADMIN_URL} className="clean-header__seller">ورود فروشندگان</a>
+          <div className="header-search" aria-label="جستجوی محصولات">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8"/>
+              <path d="m16 16 4.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+            </svg>
+            <Link to="/search">جستجوی محصولات و فروشگاه‌ها...</Link>
           </div>
 
-          {navOpen && (
-            <>
-              <button type="button" className="clean-header__backdrop" aria-label="بستن منو" onClick={() => setNavOpen(false)} />
-              <nav className="clean-header__menu-panel" id="main-navigation" aria-label="منوی اصلی">
-                <div className="clean-header__menu-list">
-                  {NAV.map(item => (
-                    <NavLink key={item.to} to={item.to} end={item.end} onClick={() => setNavOpen(false)} className={({isActive}) => isActive ? "active" : ""}>
-                      {item.label}
-                    </NavLink>
-                  ))}
-                  <a href={`tel:${phone}`} onClick={() => setNavOpen(false)} className="clean-header__menu-contact">
-                    <PhoneIcon /> تماس با ما
-                  </a>
-                </div>
-              </nav>
-            </>
-          )}
+          {/* DESKTOP / MOBILE NAV */}
+          <nav
+            className={`nav-links${
+              navOpen ? " open" : ""
+            }`}
+            id="main-navigation"
+            aria-label="منوی اصلی"
+          >
+            <div
+              className="nav-links__inner"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+              }}
+            >
+              {NAV.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.end}
+                  onClick={closeNav}
+                  className={({ isActive }) =>
+                    isActive ? "active" : ""
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
+
+            {/* MOBILE CTA */}
+            <div
+              className="mobile-nav-cta"
+              style={{
+                display: "none",
+              }}
+            >
+              <a
+                href={ADMIN_URL}
+                className="btn btn-primary"
+                onClick={closeNav}
+              >
+                ورود فروشندگان
+                <ArrowIcon />
+              </a>
+
+              <a
+                href={`tel:${phone}`}
+                className="btn btn-outline"
+                onClick={closeNav}
+              >
+                <PhoneIcon />
+                تماس با ما
+              </a>
+            </div>
+          </nav>
+
+          {/* HEADER ACTIONS */}
+          <div
+            className="header-actions"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <a
+              href={ADMIN_URL}
+              className="btn btn-primary btn-sm seller-access-btn"
+            >
+              <span className="seller-access-full">
+                ورود فروشندگان
+              </span>
+
+              <span className="seller-access-mobile">
+                ورود فروشندگان
+              </span>
+            </a>
+
+            <button
+              type="button"
+              className="btn btn-outline btn-sm mobile-nav-toggle"
+              onClick={handleNavToggle}
+              aria-expanded={navOpen}
+              aria-controls="main-navigation"
+              aria-label={
+                navOpen
+                  ? "بستن منوی اصلی"
+                  : "باز کردن منوی اصلی"
+              }
+            >
+              <MenuIcon open={navOpen} />
+            </button>
+          </div>
         </div>
+
+        {/* MOBILE BACKDROP */}
+        {navOpen && (
+          <button
+            type="button"
+            aria-label="بستن منو"
+            onClick={closeNav}
+            className="mobile-nav-backdrop"
+            style={{
+              position: "fixed",
+              inset: "var(--header-height, 72px) 0 0",
+              zIndex: -1,
+              border: 0,
+              background:
+                "rgba(0,0,0,.28)",
+            }}
+          />
+        )}
       </header>
 
-      <main id="main-content"><Outlet /></main>
+      <main id="main-content">
+        <Outlet />
+      </main>
+
       <Footer />
     </div>
   );

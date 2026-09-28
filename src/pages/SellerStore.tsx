@@ -5,6 +5,16 @@ import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
 import { track } from "../lib/analytics";
 
+function readableThemeInk(hex: string | null | undefined) {
+  const value = String(hex || "#eef3f8").replace("#", "");
+  const full = value.length === 3 ? value.split("").map((c) => c + c).join("") : value;
+  if (!/^[0-9a-fA-F]{6}$/.test(full)) return "#173a63";
+  const rgb = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255);
+  const linear = rgb.map((c) => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  const luminance = 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+  return luminance < 0.38 ? "#ffffff" : "#173a63";
+}
+
 function StoreIcon() {
   return (
     <svg
@@ -274,7 +284,7 @@ export default function SellerStore() {
     <div className="container section seller-store-page">
       <section
         className="seller-profile-card seller-profile-card--clean card fade-in-up"
-        style={{ "--seller-theme": seller.themeColor || "#eef3f8" } as React.CSSProperties}
+        style={{ "--seller-theme": seller.themeColor || "#eef3f8", "--seller-theme-ink": readableThemeInk(seller.themeColor) } as React.CSSProperties}
       >
         <div className="seller-profile-inner">
           <div className="seller-profile-topline">

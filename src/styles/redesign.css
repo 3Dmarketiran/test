@@ -571,3 +571,25 @@
 .product-viewer-controls>*{pointer-events:auto}
 .product-viewer-controls .product-main-media__bottom{pointer-events:none}
 .product-viewer-controls .product-main-media__bottom>*{pointer-events:auto}
+
+/* V28 — seller store theme: theme the store surface, keep actions/footer controls readable. */
+.seller-profile-card--clean{background:var(--seller-theme,#eef3f8)!important;}
+.seller-profile-card--clean .seller-profile-actions--compact .seller-profile-action{background:#fff!important;color:#173a63!important;border-color:rgba(23,58,99,.12)!important;}
+.seller-profile-card--clean .seller-profile-stats--social{background:#fff!important;border-radius:14px;padding:14px 16px!important;margin-top:22px!important;}
+.seller-profile-card--clean .seller-profile-stats--social .seller-profile-stat--metric strong,.seller-profile-card--clean .seller-profile-stats--social .seller-profile-stat--metric span{color:#173a63!important;}
+.seller-profile-avatar{background:var(--seller-theme,#eef3f8)!important;}
+.seller-profile-avatar img,.seller-profile-avatar__fallback{background:#fff!important;object-fit:contain!important;}
+
+/* V28 — keep the model mounted while images are shown so mobile AR has a ready user gesture target. */
+.product-main-3d--preloaded{position:absolute!important;inset:0!important;visibility:hidden!important;pointer-events:none!important;z-index:0!important;}
+.product-main-3d:not(.product-main-3d--preloaded){position:absolute;inset:0;z-index:2;}
+.product-main-media__bottom .product-ar-bottom{display:inline-flex!important;position:static!important;min-width:54px;height:38px;padding:0 12px;border:1px solid rgba(23,58,99,.14);border-radius:10px;background:#fff;color:#173a63;font-size:12px;font-weight:900;box-shadow:0 4px 12px rgba(15,35,60,.10);cursor:pointer;}
+.product-main-media__bottom .product-ar-bottom:hover{border-color:#3454d1;color:#22348f;}
+@media(max-width:800px){
+  .product-main-media__bottom{display:grid!important;grid-template-columns:auto 1fr auto auto!important;align-items:center;gap:8px!important;}
+  .product-main-media__bottom .product-dots{min-width:0;}
+  .product-main-media__bottom .product-ar-bottom{height:36px;min-width:50px;padding:0 10px;font-size:11px;}
+}
+.seller-profile-card--clean .seller-profile-copy h1,
+.seller-profile-card--clean .seller-profile-copy p,
+.seller-profile-card--clean .seller-profile-handle{color:var(--seller-theme-ink,#173a63)!important;}
