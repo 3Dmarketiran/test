@@ -13,7 +13,12 @@
       "test"
     ],
     "material": "پارچه مرغوب",
-    "colors": [],
+    "colors": [
+      {
+        "name": "toosi",
+        "value": "#8f8f8f"
+      }
+    ],
     "seller": {
       "id": "cmuays6st0007znuyvxh6ud5u",
       "slug": "test-qa20kn",
