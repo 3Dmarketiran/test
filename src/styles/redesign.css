@@ -774,3 +774,9 @@
 @media(max-width:800px){.product-ar-bottom{min-width:44px;height:32px;padding:0 9px;font-size:10px;}}
 
 .product-main-3d .viewer-ar-button{display:none!important;}
+
+
+/* V41 FINAL: the AR control must be a real model-viewer slotted button.
+   Override legacy rules that hid it; keep it visible whenever the viewer is active. */
+.product-main-3d .viewer-ar-button{display:inline-flex!important;visibility:visible!important;pointer-events:auto!important;}
+.product-main-3d .product-ar-bottom{display:none!important;}
