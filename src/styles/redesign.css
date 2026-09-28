@@ -766,3 +766,11 @@
     font-size:10px !important;
   }
 }
+
+/* V40 — explicit AR action, invoked directly from the user's click. This avoids
+   relying on model-viewer's conditional slotted-button visibility while retaining
+   its native activateAR() flow for Quick Look / Scene Viewer. */
+.product-ar-bottom{display:inline-flex!important;align-items:center;justify-content:center;gap:5px;min-width:46px;height:34px;padding:0 10px;border:1px solid rgba(23,58,99,.12);border-radius:10px;background:rgba(255,255,255,.97);color:#173a63;font-size:11px;font-weight:900;box-shadow:0 6px 16px rgba(15,35,60,.12);cursor:pointer;z-index:30;}
+@media(max-width:800px){.product-ar-bottom{min-width:44px;height:32px;padding:0 9px;font-size:10px;}}
+
+.product-main-3d .viewer-ar-button{display:none!important;}
