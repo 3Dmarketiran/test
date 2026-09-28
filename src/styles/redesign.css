@@ -614,3 +614,10 @@
 .product-viewer-ref .product-zoom-button,
 .product-viewer-ref .viewer-image-button,
 .product-viewer-ref .viewer-zoom-button{display:none!important;}
+
+/* V34: Native model-viewer AR trigger. Keep Quick Look / Scene Viewer in the
+   browser's own user-gesture flow so the OS permission/AR handoff can open. */
+.model-viewer-ar-button{position:absolute;left:14px;bottom:14px;top:auto;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:48px;height:34px;padding:0 10px;border:1px solid rgba(23,58,99,.12);border-radius:9px;background:rgba(255,255,255,.96);color:#173a63;font-size:11px;font-weight:900;box-shadow:0 6px 16px rgba(15,35,60,.12);cursor:pointer;z-index:20}
+.product-ar-bottom,.product-media-thumb--ar{display:none!important}
+@media(min-width:801px){.model-viewer-ar-button{left:14px;bottom:14px}}
+@media(max-width:800px){.model-viewer-ar-button{left:10px;bottom:10px;min-width:44px;height:32px;padding:0 9px;font-size:10px}}
