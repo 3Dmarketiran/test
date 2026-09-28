@@ -28,7 +28,7 @@ export default function ProductViewer({ product }: Props) {
   const [activeImage, setActiveImage] = useState(poster);
   const [activeIndex, setActiveIndex] = useState(initialIndex);
   const [viewMode, setViewMode] = useState<ViewMode>("image");
-  const [status, setStatus] = useState<ViewerStatus>(glb ? "ready" : "ready");
+  const [status, setStatus] = useState<ViewerStatus>("ready");
   const [arSupported, setArSupported] = useState<boolean | null>(null);
   const modelReadyRef = useRef(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -76,11 +76,15 @@ export default function ProductViewer({ product }: Props) {
       const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
       if (typeof canAr === "boolean") setArSupported(canAr);
     }, 500);
+    const failSafe = window.setTimeout(() => {
+      if (!modelReadyRef.current) setStatus("error");
+    }, 15000);
     return () => {
       el.removeEventListener("load", onLoad);
       el.removeEventListener("error", onError);
       el.removeEventListener("ar-status", onArStatus);
       window.clearTimeout(timer);
+      window.clearTimeout(failSafe);
     };
   }, [glb?.url, product.id]);
 
@@ -97,7 +101,7 @@ export default function ProductViewer({ product }: Props) {
       modelReadyRef.current = true;
       setStatus("ready");
     } else {
-      setStatus("ready");
+      setStatus("loading");
     }
   };
 
@@ -127,6 +131,7 @@ export default function ProductViewer({ product }: Props) {
           <button slot="ar-button" type="button" className="viewer-ar-button" aria-label="AR"><Icon name="ar" size={15} />AR</button>
         </model-viewer>
         {viewMode === "3d" && status === "error" && <div className="product-viewer-error"><strong>بارگذاری مدل سه‌بعدی ناموفق بود.</strong>{poster && <button type="button" className="viewer-action" onClick={() => { setViewMode("image"); setImageError(false); }}>نمایش تصاویر محصول</button>}</div>}
+        {viewMode === "3d" && status === "loading" && <div className="product-model-loading"><span className="product-spinner"/><strong>در حال بارگذاری مدل سه‌بعدی…</strong><small>لطفاً چند لحظه صبر کنید.</small></div>}
       </div> : viewMode !== "image" ? <div className="product-viewer-error"><Icon name="image" size={38} /><strong>تصویر محصول در دسترس نیست.</strong></div> : null}
       <div className="product-viewer-controls">
         <div className="product-main-media__bottom">{glb && <button type="button" className={`product-mode-pill ${viewMode === "3d" ? "is-active" : ""}`} onClick={open3D}><Icon name="cube" size={19} />نمای سه‌بعدی</button>}<div className="product-dots" aria-label="تصاویر محصول">{images.map((img, index) => <button key={`${img.url}-dot`} type="button" aria-label={`رفتن به تصویر ${index + 1}`} className={viewMode === "image" && index === activeIndex ? "is-active" : ""} onClick={() => selectImage(img.url, index)} />)}</div></div>
