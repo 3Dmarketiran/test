@@ -123,7 +123,6 @@
 .seller-profile-handle{font-size:.68rem!important;color:#728095!important;}
 .seller-profile-copy h1{font-size:clamp(1.55rem,3vw,2rem)!important;color:var(--ref-navy)!important;margin:5px 0 6px!important;}
 .seller-profile-copy p{max-width:720px!important;font-size:.8rem!important;line-height:2!important;margin-top:8px!important;color:#657387!important;}
-.seller-category-pill{min-height:30px!important;padding:6px 11px!important;border-radius:9px!important;background:rgba(255,255,255,.72)!important;border-color:rgba(23,58,99,.10)!important;color:var(--ref-navy)!important;font-size:.67rem!important;}
 .seller-profile-actions--compact{gap:8px!important;padding-top:0!important;}
 .seller-profile-action{width:44px!important;height:44px!important;border-radius:11px!important;background:#fff!important;border-color:#dbe3ec!important;color:var(--ref-navy)!important;box-shadow:0 3px 10px rgba(23,58,99,.06)!important;}
 .seller-profile-action:hover{background:var(--ref-navy)!important;color:#fff!important;border-color:var(--ref-navy)!important;transform:none!important;}

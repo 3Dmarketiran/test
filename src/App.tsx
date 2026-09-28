@@ -12,7 +12,6 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import SellerStore from "./pages/SellerStore";
-import Categories from "./pages/Categories";
 import Search from "./pages/Search";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -72,12 +71,6 @@ function BrandedApp() {
           <Route
             path="sellers/:slug"
             element={<SellerStore />}
-          />
-
-          {/* Categories */}
-          <Route
-            path="categories"
-            element={<Categories />}
           />
 
           {/* Search */}

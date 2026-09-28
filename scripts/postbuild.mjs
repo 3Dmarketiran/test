@@ -20,7 +20,7 @@ const catalog = JSON.parse(readFileSync(path.join(dataDir, "catalog.json"), "utf
 const products = catalog.products;
 const sellers = catalog.sellers;
 
-const staticUrls = ["/", "/#/products", "/#/categories", "/#/about", "/#/contact"];
+const staticUrls = ["/", "/#/products", "/#/about", "/#/contact"];
 const productUrls = products.map((p) => `/#/products/${p.slug}`);
 const sellerUrls = sellers.map((s) => `/#/sellers/${s.slug}`);
 

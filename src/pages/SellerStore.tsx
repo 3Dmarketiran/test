@@ -304,7 +304,6 @@ export default function SellerStore() {
               <div className="seller-profile-copy">
                 <div className="seller-profile-handle">@{seller.slug}</div>
                 <h1>{seller.storeName}</h1>
-                {seller.category && <span className="seller-category-pill">{seller.category.name}</span>}
                 {seller.description && <p>{seller.description}</p>}
               </div>
             </div>
@@ -329,8 +328,6 @@ export default function SellerStore() {
               <span>محصول</span>
             </div>
             <div className="seller-profile-stat seller-profile-stat--metric">
-              <strong>{new Set(sellerProducts.map((product) => product.category?.slug).filter(Boolean)).size}</strong>
-              <span>دسته‌بندی</span>
             </div>
             <div className="seller-profile-stat seller-profile-stat--metric">
               <strong>{sellerProducts.filter((product) => product.models.length > 0).length}</strong>

@@ -85,7 +85,6 @@ function ModelIcon() {
 export default function Home() {
   const {
     sellers,
-    categories,
     settings,
     loading,
   } = useData();
@@ -154,13 +153,6 @@ export default function Home() {
                 className="btn btn-primary"
               >
                 مشاهده فروشگاه‌ها
-              </Link>
-
-              <Link
-                to="/categories"
-                className="btn btn-outline"
-              >
-                دسته‌بندی‌ها
               </Link>
 
               <a
@@ -416,51 +408,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CATEGORIES */}
-      {categories.length > 0 && (
-        <section className="section section-alt">
-          <div className="container">
-            <div className="section-head">
-              <div>
-                <h2>دسته‌بندی‌ها</h2>
-
-                <p>
-                  دسته‌بندی موردنظر را انتخاب کنید و
-                  فروشگاه‌های مرتبط را پیدا کنید.
-                </p>
-              </div>
-
-              <Link
-                to="/categories"
-                className="btn btn-outline btn-sm"
-              >
-                همه دسته‌بندی‌ها
-                <ArrowIcon />
-              </Link>
-            </div>
-
-            <div
-              className="pill-row"
-              style={{
-                marginBottom: 0,
-              }}
-            >
-              {categories.map((category) => (
-                <Link
-                  key={category.id}
-                  to={`/products?category=${encodeURIComponent(
-                    category.slug
-                  )}`}
-                  className="pill"
-                >
-                  {category.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* SELLER CTA */}
       <section className="section">
         <div className="container">
@@ -569,8 +516,7 @@ export default function Home() {
               <strong>پیدا کردن فروشگاه</strong>
 
               <p className="muted">
-                فروشگاه موردنظر خود را از طریق جستجو،
-                دسته‌بندی‌ها یا فهرست فروشگاه‌ها پیدا کنید.
+                فروشگاه موردنظر خود را از طریق جستجو یا فهرست فروشگاه‌ها پیدا کنید.
               </p>
             </div>
 

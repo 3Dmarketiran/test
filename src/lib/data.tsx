@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import type { PlatformSettings, PublicCategory, PublicPlan, PublicProduct, PublicSeller } from "../types";
+import type { PlatformSettings, PublicPlan, PublicProduct, PublicSeller } from "../types";
 import bundledCatalog from "../../public-data/catalog.json";
 import { API_URL, PUBLIC_CATALOG_API } from "./config";
 
@@ -9,7 +9,6 @@ export interface PublicCatalog {
   version: string;
   products: PublicProduct[];
   sellers: PublicSeller[];
-  categories: PublicCategory[];
   settings: PlatformSettings;
   plans: PublicPlan[];
 }
@@ -17,7 +16,6 @@ export interface PublicCatalog {
 interface DataState {
   products: PublicProduct[];
   sellers: PublicSeller[];
-  categories: PublicCategory[];
   settings: PlatformSettings | null;
   plans: PublicPlan[];
   loading: boolean;
@@ -28,7 +26,6 @@ const initialCatalog = validateCatalog(bundledCatalog);
 const initialState: DataState = {
   products: initialCatalog.products,
   sellers: initialCatalog.sellers,
-  categories: initialCatalog.categories,
   settings: initialCatalog.settings,
   plans: initialCatalog.plans,
   loading: false,
@@ -54,7 +51,7 @@ async function fetchJson(path: string, signal: AbortSignal) {
 function validateCatalog(value: unknown): PublicCatalog {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("کاتالوگ عمومی معتبر نیست.");
   const catalog = value as Partial<PublicCatalog>;
-  if (!Array.isArray(catalog.products) || !Array.isArray(catalog.sellers) || !Array.isArray(catalog.categories) || !catalog.settings) {
+  if (!Array.isArray(catalog.products) || !Array.isArray(catalog.sellers) || !catalog.settings) {
     throw new Error("ساختار کاتالوگ عمومی ناقص است.");
   }
   return normalizeCatalog({ ...catalog, plans: Array.isArray(catalog.plans) ? catalog.plans : [] } as PublicCatalog);
@@ -84,6 +81,15 @@ async function fetchCatalog(signal: AbortSignal): Promise<PublicCatalog> {
 
 
 
+function shuffle<T>(items: T[]): T[] {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
 function normalizeCatalog(catalog: PublicCatalog): PublicCatalog {
   return {
     ...catalog,
@@ -98,7 +104,7 @@ function normalizeCatalog(catalog: PublicCatalog): PublicCatalog {
         url: normalizePublicAssetUrl(model.url),
       })),
     })),
-    sellers: catalog.sellers.map((seller) => ({
+    sellers: shuffle(catalog.sellers).map((seller) => ({
       ...seller,
       logoUrl: seller.logoUrl ? normalizePublicAssetUrl(seller.logoUrl) : seller.logoUrl,
     })),
@@ -146,7 +152,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     fetchCatalog(controller.signal)
       .then((catalog) => {
         if (!mounted) return;
-        setState({ products: catalog.products, sellers: catalog.sellers, categories: catalog.categories, settings: catalog.settings, plans: catalog.plans, loading: false, error: null });
+        setState({ products: catalog.products, sellers: catalog.sellers, settings: catalog.settings, plans: catalog.plans, loading: false, error: null });
       })
       .catch((error) => {
         if (!mounted || (error instanceof DOMException && error.name === "AbortError")) return;

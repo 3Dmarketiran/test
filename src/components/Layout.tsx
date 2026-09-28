@@ -6,7 +6,6 @@ import { ADMIN_URL } from "../lib/config";
 const NAV = [
   { to: "/", label: "خانه", end: true },
   { to: "/products", label: "فروشگاه‌ها" },
-  { to: "/categories", label: "دسته‌بندی‌ها" },
   { to: "/plans", label: "اشتراک فروشندگان" },
   { to: "/about", label: "درباره ما" },
   { to: "/contact", label: "تماس با ما" },
@@ -234,6 +233,7 @@ export default function Layout() {
             className={`nav-links${
               navOpen ? " open" : ""
             }`}
+            id="main-navigation"
             aria-label="منوی اصلی"
           >
             <div
@@ -333,7 +333,6 @@ export default function Layout() {
             onClick={closeNav}
             className="mobile-nav-backdrop"
             style={{
-              display: "none",
               position: "fixed",
               inset: "var(--header-height, 72px) 0 0",
               zIndex: -1,
@@ -402,9 +401,6 @@ function Footer() {
               فروشگاه‌ها
             </Link>
 
-            <Link to="/categories">
-              دسته‌بندی‌ها
-            </Link>
 
             <Link to="/plans">
               اشتراک فروشندگان

@@ -34,7 +34,7 @@ export default function ProductCard({ product }: { product: PublicProduct }) {
       </div>
       <div className="product-card__body">
         <h3 title={product.name}>{product.name}</h3>
-        <div className="product-card-store">{product.category?.name || "محصول"}{product.seller?.storeName ? ` / ${product.seller.storeName}` : ""}</div>
+        <div className="product-card-store">{product.seller?.storeName || "فروشگاه"}</div>
         <div className="product-card-dimensions">
           <span>طول: {formatDimension(dims?.depthM)}</span>
           <span>عرض: {formatDimension(dims?.widthM)}</span>

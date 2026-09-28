@@ -12,7 +12,6 @@ const dataDir = path.join(root, "public-data");
 const files = {
   "products.json": validateProducts,
   "sellers.json": validateSellers,
-  "categories.json": validateArray,
   "settings.json": validateSettings,
   "catalog.json": validateCatalog,
   "plans.json": validatePlans,
@@ -69,7 +68,7 @@ function validateSettings(data) {
 
 function validateCatalog(data) {
   if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("catalog.json must be an object");
-  if (!Array.isArray(data.products) || !Array.isArray(data.sellers) || !Array.isArray(data.categories)) throw new Error("catalog.json arrays are missing");
+  if (!Array.isArray(data.products) || !Array.isArray(data.sellers)) throw new Error("catalog.json arrays are missing");
   if (!data.settings || typeof data.settings !== "object") throw new Error("catalog.json settings are missing");
   if (!Array.isArray(data.plans)) throw new Error("catalog.json plans are missing");
   if (!data.version || !data.generatedAt) throw new Error("catalog.json version metadata is missing");

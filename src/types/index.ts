@@ -34,18 +34,10 @@ export interface PublicProduct {
   isPinned?: boolean;
   pinOrder?: number | null;
   viewCount?: number;
-  category: {
-    slug: string;
-    name: string;
-  } | null;
   seller: {
     id: string;
     slug: string;
     storeName: string;
-    category?: {
-      slug: string;
-      name: string;
-    } | null;
   };
   images: PublicImage[];
   models: PublicModel[];
@@ -63,19 +55,7 @@ export interface PublicSeller {
   contactEmail: string | null;
   contactPhone: string | null;
   address: string | null;
-  category?: {
-    slug: string;
-    name: string;
-  } | null;
   socialLinks: Record<string, string> | null;
-}
-
-export interface PublicCategory {
-  id: string;
-  slug: string;
-  name: string;
-  isActive: boolean;
-  parentId: string | null;
 }
 
 export interface PublicPlan {
@@ -111,7 +91,6 @@ export interface PublicCatalog {
   version: string;
   products: PublicProduct[];
   sellers: PublicSeller[];
-  categories: PublicCategory[];
   settings: PlatformSettings;
   plans: PublicPlan[];
 }
