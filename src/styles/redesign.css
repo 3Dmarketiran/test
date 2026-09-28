@@ -651,3 +651,11 @@
 @media(max-width:800px){
   .product-main-3d .model-viewer-ar-button{left:10px;bottom:10px;min-width:44px;height:32px;padding:0 9px;font-size:10px;}
 }
+
+
+/* V36: stable native model-viewer AR button + clean compact positioning */
+.product-main-3d .model-viewer-ar-button,
+.viewer-ar-button{display:none!important;}
+.product-main-3d:not(.product-main-3d--preloaded) .viewer-ar-button{display:inline-flex!important;position:absolute;top:14px;left:14px;bottom:auto;right:auto;align-items:center;justify-content:center;gap:5px;min-width:44px;height:32px;padding:0 9px;border:1px solid rgba(23,58,99,.12);border-radius:9px;background:rgba(255,255,255,.96);color:#173a63;font-size:10px;font-weight:900;box-shadow:0 6px 16px rgba(15,35,60,.12);cursor:pointer;z-index:20;}
+@media(min-width:801px){.product-main-3d:not(.product-main-3d--preloaded) .viewer-ar-button{top:14px;left:14px;}}
+@media(max-width:800px){.product-main-3d:not(.product-main-3d--preloaded) .viewer-ar-button{top:10px;left:10px;min-width:44px;height:32px;padding:0 9px;font-size:10px;}}
