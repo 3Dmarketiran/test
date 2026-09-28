@@ -30,7 +30,6 @@ export default function ProductViewer({ product }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>("image");
   const [status, setStatus] = useState<ViewerStatus>("ready");
   const [arSupported, setArSupported] = useState<boolean | null>(null);
-  const [arRequested, setArRequested] = useState(false);
   const modelReadyRef = useRef(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -38,12 +37,15 @@ export default function ProductViewer({ product }: Props) {
   const viewerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setImageRatio(1.12); setStatus("ready"); setArSupported(null); setArRequested(false); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
+    setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setImageRatio(1.12); setStatus("ready"); setArSupported(null); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
   }, [product.id, poster, initialIndex]);
 
   useEffect(() => {
     const el = viewerRef.current;
-    if (!el || !glb || viewMode !== "3d") return;
+    if (!el || !glb) return;
+    const alreadyLoaded = Boolean((el as HTMLElement & { loaded?: boolean }).loaded);
+    modelReadyRef.current = alreadyLoaded;
+    if (alreadyLoaded) setStatus("ready");
     const onLoad = () => {
       modelReadyRef.current = true;
       setStatus("ready");
@@ -51,17 +53,17 @@ export default function ProductViewer({ product }: Props) {
     const onError = () => {
       modelReadyRef.current = false;
       setStatus("error");
-      setArRequested(false);
+     
     };
     const onArStatus = (event: Event) => {
       const detail = (event as CustomEvent).detail as { status?: string } | undefined;
       if (detail?.status === "session-started") {
         setArSupported(true);
-        setArRequested(false);
+       
         track("AR_LAUNCH", { productId: product.id, sellerId: product.seller.id });
       } else if (detail?.status === "failed") {
         setArSupported(false);
-        setArRequested(false);
+       
       }
     };
     el.addEventListener("load", onLoad);
@@ -77,31 +79,7 @@ export default function ProductViewer({ product }: Props) {
       el.removeEventListener("ar-status", onArStatus);
       window.clearTimeout(timer);
     };
-  }, [glb?.url, product.id, viewMode]);
-
-  useEffect(() => {
-    if (!arRequested || viewMode !== "3d" || !glb) return;
-    const timer = window.setInterval(() => {
-      const el = viewerRef.current as (HTMLElement & { canActivateAR?: boolean; activateAR?: () => Promise<void> }) | null;
-      if (!el || !modelReadyRef.current) return;
-      window.clearInterval(timer);
-      if (el.canActivateAR === false) {
-        setArSupported(false);
-        setArRequested(false);
-        return;
-      }
-      if (typeof el.activateAR === "function") {
-        void el.activateAR().catch(() => {
-          setArSupported(false);
-          setArRequested(false);
-        });
-      } else {
-        setArSupported(false);
-        setArRequested(false);
-      }
-    }, 120);
-    return () => window.clearInterval(timer);
-  }, [arRequested, viewMode, glb?.url]);
+  }, [glb?.url, product.id]);
 
   useEffect(() => { track(glb ? "VIEWER_3D_OPEN" : "PRODUCT_DETAIL_VIEW", { productId: product.id, sellerId: product.seller.id }); }, [product.id]);
 
@@ -110,28 +88,25 @@ export default function ProductViewer({ product }: Props) {
   const selectImage = (url: string, index = images.findIndex((item) => item.url === url)) => { setActiveImage(url); setActiveIndex(Math.max(0, index)); setImageError(false); setViewMode("image"); };
   const open3D = () => {
     if (!glb) return;
-    setArRequested(false);
+   
     setStatus("loading");
     setViewMode("3d");
   };
 
   const openAR = () => {
     if (!glb) return;
-    setArSupported(null);
-    setStatus("loading");
     setViewMode("3d");
+    setArSupported(null);
     const el = viewerRef.current as (HTMLElement & { canActivateAR?: boolean; activateAR?: () => Promise<void> }) | null;
-    if (el && modelReadyRef.current && typeof el.activateAR === "function") {
-      if (el.canActivateAR === false) {
-        setArSupported(false);
-        return;
-      }
-      setArRequested(false);
-      void el.activateAR().catch(() => setArSupported(false));
+    if (!el || !modelReadyRef.current || typeof el.activateAR !== "function") {
+      setStatus(modelReadyRef.current ? "ready" : "loading");
       return;
     }
-    setArRequested(true);
-    if (!modelReadyRef.current) setStatus("loading");
+    if (el.canActivateAR === false) {
+      setArSupported(false);
+      return;
+    }
+    void el.activateAR().catch(() => setArSupported(false));
   };
   const previousImage = () => { if (!images.length) return; const next = (activeIndex - 1 + images.length) % images.length; selectImage(images[next].url, next); };
   const nextImage = () => { if (!images.length) return; const next = (activeIndex + 1) % images.length; selectImage(images[next].url, next); };
@@ -153,7 +128,7 @@ export default function ProductViewer({ product }: Props) {
     </div>
     <div className="product-viewer-ref__main" style={{ aspectRatio: `${imageRatio}` }}>
       {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} onLoad={(event) => { const image = event.currentTarget; if (image.naturalWidth && image.naturalHeight) setImageRatio(image.naturalWidth / image.naturalHeight); }} onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
-      {glb ? <div className={`product-main-3d${viewMode === "image" ? " product-main-3d--preloaded" : ""}`}>{status === "error" ? <div className="product-viewer-error"><strong>بارگذاری مدل سه‌بعدی ناموفق بود.</strong>{poster && <button type="button" className="viewer-action" onClick={() => { setViewMode("image"); setImageError(false); }}>نمایش تصاویر محصول</button>}</div> : <><model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="webxr scene-viewer quick-look" reveal="auto" ar-scale={arScaleAttr} touch-action="pan-y" className="product-model-viewer"></model-viewer>{status === "loading" && viewMode === "3d" && <div className="product-model-loading"><span className="product-spinner"/><strong>در حال بارگذاری مدل سه‌بعدی…</strong><small>لطفاً چند لحظه صبر کنید.</small></div>}</>}</div> : viewMode !== "image" ? <div className="product-viewer-error"><Icon name="image" size={38} /><strong>تصویر محصول در دسترس نیست.</strong></div> : null}
+      {glb ? <div className={`product-main-3d${viewMode === "image" ? " product-main-3d--preloaded" : ""}`}>{status === "error" ? <div className="product-viewer-error"><strong>بارگذاری مدل سه‌بعدی ناموفق بود.</strong>{poster && <button type="button" className="viewer-action" onClick={() => { setViewMode("image"); setImageError(false); }}>نمایش تصاویر محصول</button>}</div> : <><model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="webxr scene-viewer quick-look" reveal="auto" ar-scale={arScaleAttr} touch-action="pan-y" className="product-model-viewer"><button slot="ar-button" type="button" className="model-viewer-ar-button" aria-label="AR"><Icon name="ar" size={16} />AR</button></model-viewer>{status === "loading" && viewMode === "3d" && <div className="product-model-loading"><span className="product-spinner"/><strong>در حال بارگذاری مدل سه‌بعدی…</strong><small>لطفاً چند لحظه صبر کنید.</small></div>}</>}</div> : viewMode !== "image" ? <div className="product-viewer-error"><Icon name="image" size={38} /><strong>تصویر محصول در دسترس نیست.</strong></div> : null}
       <div className="product-viewer-controls">
         <div className="product-main-media__bottom">{glb && <button type="button" className={`product-mode-pill ${viewMode === "3d" ? "is-active" : ""}`} onClick={open3D}><Icon name="cube" size={19} />نمای سه‌بعدی</button>}{glb && <button type="button" className="product-ar-bottom" onClick={openAR} aria-label="AR"><Icon name="ar" size={16} />AR</button>}<div className="product-dots" aria-label="تصاویر محصول">{images.map((img, index) => <button key={`${img.url}-dot`} type="button" aria-label={`رفتن به تصویر ${index + 1}`} className={viewMode === "image" && index === activeIndex ? "is-active" : ""} onClick={() => selectImage(img.url, index)} />)}</div><button type="button" className="product-zoom-button" onClick={() => setLightboxOpen(true)} aria-label="نمایش بزرگ"><Icon name="zoom" size={19} /></button></div>
       </div>

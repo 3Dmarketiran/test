@@ -593,3 +593,15 @@
 .seller-profile-card--clean .seller-profile-copy h1,
 .seller-profile-card--clean .seller-profile-copy p,
 .seller-profile-card--clean .seller-profile-handle{color:var(--seller-theme-ink,#173a63)!important;}
+
+
+/* V30 — compact 3D/AR controls and reliable model lifecycle. */
+.product-media-thumb--tool{width:54px!important;height:46px!important;gap:2px!important;border-radius:10px!important;font-size:10px!important;}
+.product-media-thumb--tool svg{width:20px!important;height:20px!important;}
+.product-main-media__bottom .product-mode-pill,.product-main-media__bottom .product-ar-bottom{display:none!important;}
+.model-viewer-ar-button{position:absolute;top:14px;left:14px;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:48px;height:34px;padding:0 10px;border:1px solid rgba(23,58,99,.12);border-radius:9px;background:rgba(255,255,255,.96);color:#173a63;font-size:11px;font-weight:900;box-shadow:0 6px 16px rgba(15,35,60,.12);cursor:pointer;z-index:12;}
+.product-main-3d--preloaded .model-viewer-ar-button{display:none!important;}
+@media(max-width:800px){
+  .product-media-thumb--tool{width:52px!important;height:44px!important;flex:0 0 52px!important;}
+  .model-viewer-ar-button{top:10px;left:10px;min-width:46px;height:32px;font-size:10px;}
+}
