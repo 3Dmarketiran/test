@@ -102,6 +102,64 @@ export default function ProductViewer({ product }: Props) {
   };
 
 
+  const openAR = () => {
+    const el = viewerRef.current as (HTMLElement & {
+      activateAR?: () => Promise<void> | void;
+      canActivateAR?: boolean;
+    }) | null;
+    if (!el || !glb) return;
+
+    setViewMode("3d");
+
+    const ua = navigator.userAgent || "";
+    const isIOS = /iPad|iPhone|iPod/i.test(ua) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    // On iOS, when a real USDZ is available, use Apple's native Quick Look
+    // anchor directly. This is the most reliable user-gesture path on Safari.
+    if (isIOS && usdz?.url) {
+      const link = document.createElement("a");
+      link.rel = "ar";
+      link.href = usdz.url;
+      const img = document.createElement("img");
+      img.src = poster || usdz.url;
+      img.alt = "";
+      link.appendChild(img);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      return;
+    }
+
+    // Android / WebXR / Scene Viewer: call model-viewer directly from this
+    // physical click. Do not delay it with a timeout or a second effect.
+    try {
+      if (typeof el.activateAR === "function") {
+        const result = el.activateAR();
+        Promise.resolve(result).catch(() => {
+          // Fall through to the explicit Scene Viewer URL below.
+          if (/Android/i.test(ua)) {
+            const sceneViewer = `https://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb.url)}&mode=ar_preferred&title=${encodeURIComponent(product.name)}`;
+            window.location.href = sceneViewer;
+          } else {
+            setArSupported(false);
+          }
+        });
+        return;
+      }
+    } catch {
+      // Fall through to the explicit Android Scene Viewer path.
+    }
+
+    if (/Android/i.test(ua)) {
+      const sceneViewer = `https://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb.url)}&mode=ar_preferred&title=${encodeURIComponent(product.name)}`;
+      window.location.href = sceneViewer;
+    } else {
+      setArSupported(false);
+    }
+  };
+
+
   const previousImage = () => { if (!images.length) return; const next = (activeIndex - 1 + images.length) % images.length; selectImage(images[next].url, next); };
   const nextImage = () => { if (!images.length) return; const next = (activeIndex + 1) % images.length; selectImage(images[next].url, next); };
   const saveImage = async () => {
@@ -123,9 +181,8 @@ export default function ProductViewer({ product }: Props) {
     <div className="product-viewer-ref__main" style={{ aspectRatio: `${imageRatio}` }}>
       {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} onLoad={(event) => { const image = event.currentTarget; if (image.naturalWidth && image.naturalHeight) setImageRatio(image.naturalWidth / image.naturalHeight); }} onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
       {glb ? <div className={`product-main-3d ${viewMode === "3d" ? "is-visible" : "is-preloaded"}`}>
-        <model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="webxr scene-viewer quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); }} onError={() => { modelReadyRef.current = false; setStatus("error"); }}>
-          <button slot="ar-button" type="button" className="viewer-ar-button" aria-label="AR"><Icon name="ar" size={15} />AR</button>
-        </model-viewer>
+        <model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="webxr scene-viewer quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); }} onError={() => { modelReadyRef.current = false; setStatus("error"); }} />
+        {viewMode === "3d" && <button type="button" className="viewer-ar-button viewer-ar-button--direct" onClick={openAR} aria-label="نمایش در واقعیت افزوده"><Icon name="ar" size={15} />AR</button>}
         {viewMode === "3d" && status === "error" && <div className="product-viewer-error"><strong>بارگذاری مدل سه‌بعدی ناموفق بود.</strong>{poster && <button type="button" className="viewer-action" onClick={() => { setViewMode("image"); setImageError(false); }}>نمایش تصاویر محصول</button>}</div>}
       </div> : viewMode !== "image" ? <div className="product-viewer-error"><Icon name="image" size={38} /><strong>تصویر محصول در دسترس نیست.</strong></div> : null}
       <div className="product-viewer-controls">
