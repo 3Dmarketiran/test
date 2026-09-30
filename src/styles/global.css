@@ -389,3 +389,88 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
 @keyframes hero-label-float{50%{transform:translateY(-6px)}}
 @media(max-width:800px){.hero-3d-stage{min-height:300px;perspective:850px}.hero-3d-object{width:150px;height:150px;top:49%;transform:translate(-50%,-50%) translateZ(25px) rotateX(var(--hero-rx)) rotateY(var(--hero-ry));}.hero-3d-object__core{inset:6px}.hero-3d-face--front{transform:translateZ(69px);border-radius:14px}.hero-3d-face--back{transform:rotateY(180deg) translateZ(69px);border-radius:14px}.hero-3d-face--right{transform:rotateY(90deg) translateZ(69px)}.hero-3d-face--left{transform:rotateY(-90deg) translateZ(69px)}.hero-3d-face--top{transform:rotateX(90deg) translateZ(69px)}.hero-3d-face--bottom{transform:rotateX(-90deg) translateZ(69px)}.hero-3d-face b{font-size:35px}.hero-3d-face i{font-size:18px;margin-top:4px}.hero-3d-orbit--one{width:255px;height:95px}.hero-3d-orbit--two{width:220px;height:78px}.hero-3d-label{font-size:7px;padding:6px 8px}.hero-3d-label--one{left:4%;top:18%}.hero-3d-label--two{right:4%;bottom:19%}}
 @media(prefers-reduced-motion:reduce){.hero-3d-stage__stars,.hero-3d-stage__halo,.hero-3d-orbit,.hero-3d-object__core,.hero-3d-label{animation:none!important}.hero-3d-object{transition:none!important}}
+
+/* V58 — Brand logo hero: only the actual 3DMarketIran logo, no catalog model, labels or scroll UI. */
+.hero-logo-stage{
+  --logo-rx:0deg;
+  --logo-ry:0deg;
+  position:relative;
+  width:100%;
+  height:100%;
+  min-height:360px;
+  display:grid;
+  place-items:center;
+  perspective:900px;
+  overflow:visible;
+  contain:layout paint;
+}
+.hero-logo-glow{
+  position:absolute;
+  width:210px;
+  height:150px;
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(72,126,255,.22),transparent 68%);
+  filter:blur(18px);
+  transform:translateY(16px);
+  pointer-events:none;
+}
+.hero-logo-3d{
+  position:relative;
+  width:170px;
+  height:180px;
+  display:grid;
+  place-items:center;
+  transform:rotateX(var(--logo-rx)) rotateY(var(--logo-ry));
+  transform-style:preserve-3d;
+  transition:transform .32s cubic-bezier(.2,.8,.2,1);
+  animation:hero-logo-float 5.5s ease-in-out infinite;
+  will-change:transform;
+  z-index:2;
+}
+.hero-logo-3d__depth,
+.hero-logo-3d__image{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  pointer-events:none;
+  user-select:none;
+}
+.hero-logo-3d__depth{
+  transform:translate3d(8px,10px,-8px);
+  filter:brightness(.42) saturate(1.15) blur(.15px);
+  opacity:.9;
+}
+.hero-logo-3d__image{
+  transform:translateZ(7px);
+  filter:drop-shadow(0 18px 20px rgba(0,18,65,.22)) drop-shadow(0 5px 9px rgba(33,91,190,.15));
+}
+.hero-logo-3d::after{
+  content:"";
+  position:absolute;
+  left:15%;
+  right:15%;
+  bottom:-14px;
+  height:18px;
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(0,19,65,.28),transparent 72%);
+  filter:blur(7px);
+  transform:rotateX(70deg) translateZ(-10px);
+  pointer-events:none;
+}
+@keyframes hero-logo-float{
+  0%,100%{transform:rotateX(var(--logo-rx)) rotateY(var(--logo-ry)) translateY(0)}
+  50%{transform:rotateX(var(--logo-rx)) rotateY(var(--logo-ry)) translateY(-5px)}
+}
+@media(max-width:800px){
+  .hero-logo-stage{min-height:270px}
+  .hero-logo-glow{width:155px;height:110px}
+  .hero-logo-3d{width:118px;height:126px}
+  .hero-logo-3d__depth{transform:translate3d(5px,7px,-5px)}
+  .hero-logo-3d__image{transform:translateZ(5px)}
+  .hero-logo-3d::after{bottom:-9px;height:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-logo-3d{animation:none!important;transition:none!important}
+}

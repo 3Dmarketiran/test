@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import logo3d from "../assets/3dmarket-logo-3d.png";
 import { Link } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
@@ -93,28 +94,24 @@ function Hero3DScene() {
     let targetY = 0;
 
     const render = () => {
-      scene.style.setProperty("--hero-rx", `${targetY}deg`);
-      scene.style.setProperty("--hero-ry", `${targetX}deg`);
+      scene.style.setProperty("--logo-rx", `${targetY}deg`);
+      scene.style.setProperty("--logo-ry", `${targetX}deg`);
       raf = 0;
-    };
-
-    const schedule = () => {
-      if (!raf) raf = requestAnimationFrame(render);
     };
 
     const move = (event: MouseEvent) => {
       const rect = scene.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - 0.5;
       const y = (event.clientY - rect.top) / rect.height - 0.5;
-      targetX = x * 12;
-      targetY = -y * 8;
-      schedule();
+      targetX = x * 7;
+      targetY = -y * 5;
+      if (!raf) raf = requestAnimationFrame(render);
     };
 
     const leave = () => {
       targetX = 0;
       targetY = 0;
-      schedule();
+      if (!raf) raf = requestAnimationFrame(render);
     };
 
     scene.addEventListener("mousemove", move);
@@ -129,25 +126,12 @@ function Hero3DScene() {
   }, []);
 
   return (
-    <div className="hero-3d-stage" ref={sceneRef} aria-label="نمایش سه‌بعدی لوگوی 3D AR در 3DMarketIran">
-      <div className="hero-3d-stage__stars" aria-hidden="true" />
-      <div className="hero-3d-stage__halo hero-3d-stage__halo--a" aria-hidden="true" />
-      <div className="hero-3d-stage__halo hero-3d-stage__halo--b" aria-hidden="true" />
-      <div className="hero-3d-orbit hero-3d-orbit--one" aria-hidden="true" />
-      <div className="hero-3d-orbit hero-3d-orbit--two" aria-hidden="true" />
-      <div className="hero-3d-object">
-        <div className="hero-3d-object__shadow" aria-hidden="true" />
-        <div className="hero-3d-object__core">
-          <span className="hero-3d-face hero-3d-face--front"><b>3D</b><i>AR</i></span>
-          <span className="hero-3d-face hero-3d-face--back"><b>AR</b><i>3D</i></span>
-          <span className="hero-3d-face hero-3d-face--top" />
-          <span className="hero-3d-face hero-3d-face--bottom" />
-          <span className="hero-3d-face hero-3d-face--left" />
-          <span className="hero-3d-face hero-3d-face--right" />
-        </div>
+    <div className="hero-logo-stage" ref={sceneRef} aria-label="لوگوی سه‌بعدی 3DMarketIran">
+      <div className="hero-logo-glow" aria-hidden="true" />
+      <div className="hero-logo-3d">
+        <div className="hero-logo-3d__depth" aria-hidden="true" />
+        <img src={logo3d} alt="3DMarketIran" className="hero-logo-3d__image" />
       </div>
-      <div className="hero-3d-label hero-3d-label--one"><b>3D</b><span>Interactive</span></div>
-      <div className="hero-3d-label hero-3d-label--two"><b>AR</b><span>Ready</span></div>
     </div>
   );
 }
@@ -155,7 +139,6 @@ function Hero3DScene() {
 export default function Home() {
   const {
     sellers,
-    products,
     settings,
     loading,
   } = useData();
@@ -265,7 +248,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* HERO VISUAL — abstract interactive 3D scene; intentionally not a catalog product */}
+          {/* HERO VISUAL — the brand logo only */}
           <div className="hero__visual hero-showcase">
             <Hero3DScene />
           </div>
