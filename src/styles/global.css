@@ -278,3 +278,64 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
   filter:none!important;
   mix-blend-mode:normal!important;
 }
+
+/* V52 — motion/3D polish: richer depth without adding a new dependency. */
+@keyframes v52-float-3d{0%,100%{transform:translate3d(0,0,0) rotateZ(-2deg) rotateY(0deg)}50%{transform:translate3d(0,-10px,0) rotateZ(2deg) rotateY(10deg)}}
+@keyframes v52-orbit{from{transform:translate(-50%,-50%) rotateX(68deg) rotateZ(0deg)}to{transform:translate(-50%,-50%) rotateX(68deg) rotateZ(360deg)}}
+@keyframes v52-orbit-reverse{from{transform:translate(-50%,-50%) rotateX(68deg) rotateZ(360deg)}to{transform:translate(-50%,-50%) rotateX(68deg) rotateZ(0deg)}}
+@keyframes v52-pulse-depth{0%,100%{opacity:.32;transform:translate(-50%,-50%) scale(.92)}50%{opacity:.72;transform:translate(-50%,-50%) scale(1.05)}}
+@keyframes v52-model-in{from{opacity:0;transform:translateY(18px) scale(.92) rotateX(8deg)}to{opacity:1;transform:translateY(0) scale(1) rotateX(0)}}
+@keyframes v52-shine{0%{transform:translateX(-140%) skewX(-18deg);opacity:0}18%{opacity:.35}45%,100%{transform:translateX(170%) skewX(-18deg);opacity:0}}
+@keyframes v52-badge-float{0%,100%{transform:translateY(0) rotateZ(0)}50%{transform:translateY(-4px) rotateZ(-1deg)}}
+
+.hero-showcase__model{perspective:900px;transform-style:preserve-3d;overflow:visible}
+.hero-showcase__cube{transform-style:preserve-3d;animation:v52-float-3d 4.8s ease-in-out infinite;box-shadow:0 28px 55px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.2);}
+.hero-showcase__cube svg{filter:drop-shadow(0 10px 12px rgba(0,0,0,.18));transform:translateZ(18px);}
+.hero-showcase__ring{transform-origin:center;animation:v52-orbit 12s linear infinite;}
+.hero-showcase__ring--two{animation:v52-orbit-reverse 15s linear infinite;}
+.hero-showcase__glow{animation:v52-pulse-depth 4s ease-in-out infinite;}
+.hero-showcase__features span{transition:transform .25s ease,background .25s ease,border-color .25s ease;}
+.hero-showcase__features span:hover{transform:translateY(-4px) translateZ(8px);background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28);}
+
+/* Product cards: the photo behaves like a shallow 3D surface rather than a flat image. */
+.premium-product-card{transform-style:preserve-3d;perspective:900px;transition:transform .38s cubic-bezier(.2,.75,.2,1),box-shadow .38s ease,border-color .3s ease!important;}
+.premium-product-card .product-card__media{transform-style:preserve-3d;position:relative;}
+.premium-product-card .product-card__media::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.18) 47%,transparent 62%);transform:translateX(-140%) skewX(-18deg);opacity:0;}
+.premium-product-card:hover{transform:translateY(-8px) rotateX(1.5deg) rotateY(-1deg);box-shadow:0 24px 52px rgba(15,35,60,.14)!important;}
+.premium-product-card:hover .product-card__media::before{animation:v52-shine 1.1s ease-out forwards;}
+.premium-product-card:hover .product-card__media>img{transform:scale(1.045) translateZ(10px)!important;}
+.product-card-capabilities--overlay span{animation:v52-badge-float 3.2s ease-in-out infinite;}
+.product-card-capabilities--overlay span:nth-child(2){animation-delay:.55s;}
+
+/* 3D viewer: emphasize depth, loading-in and the model's shadow without touching the model asset. */
+.product-main-3d{isolation:isolate;perspective:1200px;transform-style:preserve-3d;background:radial-gradient(circle at 50% 44%,rgba(255,255,255,.98) 0 16%,rgba(247,249,252,.92) 48%,#edf2f7 100%)!important;}
+.product-main-3d::before{content:"";position:absolute;inset:8% 10%;z-index:0;pointer-events:none;border:1px solid rgba(23,58,99,.07);border-radius:50%;transform:rotateX(68deg);box-shadow:0 0 70px rgba(23,58,99,.08);animation:v52-orbit 18s linear infinite;}
+.product-main-3d::after{content:"";position:absolute;left:50%;bottom:13%;width:42%;height:13%;z-index:0;pointer-events:none;border-radius:50%;background:radial-gradient(ellipse,rgba(15,35,60,.2),transparent 70%);filter:blur(8px);transform:translateX(-50%);animation:v52-pulse-depth 3.6s ease-in-out infinite;}
+.product-main-3d model-viewer{position:relative;z-index:1;transform:translateZ(0);filter:drop-shadow(0 22px 22px rgba(15,35,60,.12));animation:v52-model-in .7s cubic-bezier(.2,.8,.2,1) both;}
+.product-main-3d.is-preloaded model-viewer{animation:none;}
+.product-mode-pill,.viewer-ar-button--direct{transition:transform .22s ease,box-shadow .22s ease,background .22s ease!important;}
+.product-mode-pill:hover,.viewer-ar-button--direct:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(15,35,60,.14)!important;}
+.product-media-thumb{transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,border-color .25s ease!important;}
+.product-media-thumb:hover{transform:translateY(-4px) rotateY(-5deg);box-shadow:0 10px 22px rgba(15,35,60,.11);}
+.product-media-thumb--tool{transform-style:preserve-3d;}
+.product-media-thumb--tool svg{transition:transform .35s ease;}
+.product-media-thumb--tool:hover svg{transform:rotateY(22deg) rotateX(8deg) translateZ(4px);}
+
+/* Seller/store cards gain the same soft depth language. */
+.featured-store-card,.seller-profile-card--clean,.ig-tile{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease,border-color .3s ease!important;}
+.featured-store-card:hover,.seller-profile-card--clean:hover{transform:translateY(-6px);box-shadow:0 22px 48px rgba(15,35,60,.12)!important;}
+.ig-tile{transform-style:preserve-3d;}
+.ig-tile:hover{transform:translateY(-5px) scale(1.012);}
+
+@media(max-width:800px){
+  .premium-product-card:hover{transform:translateY(-4px);}
+  .product-main-3d::before{inset:10% 4%;}
+  .product-main-3d::after{bottom:10%;width:55%;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hero-showcase__cube,.hero-showcase__ring,.hero-showcase__ring--two,.hero-showcase__glow,
+  .product-card-capabilities--overlay span,.product-main-3d::before,.product-main-3d::after,
+  .product-main-3d model-viewer{animation:none!important;}
+  .premium-product-card:hover,.featured-store-card:hover,.seller-profile-card--clean:hover,.ig-tile:hover{transform:none!important;}
+}
