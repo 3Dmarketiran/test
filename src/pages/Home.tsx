@@ -130,7 +130,7 @@ export default function Home() {
               }}
             >
               <StoreIcon />
-              فروشگاه‌های 3D و AR
+              AR + 3D + فروشگاه‌های معتبر
             </div>
 
             <h1>
@@ -325,7 +325,9 @@ export default function Home() {
                       <img
                         src={getSellerLogoUrl(seller.logoUrl) || undefined}
                         alt={seller.storeName}
-                        loading="lazy"
+                        loading={seller === featuredSellers[0] || seller === featuredSellers[1] ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchPriority={seller === featuredSellers[0] ? "high" : "auto"}
                         className="featured-store-logo"
                         onError={(event) => {
                           event.currentTarget.style.display = "none";

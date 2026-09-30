@@ -2,19 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import type { PublicProduct } from "../types";
 
-function formatDimension(valueM: number | null | undefined) {
-  if (!valueM) return "—";
-  if (valueM < 1) return `${Math.round(valueM * 100)} سانتی‌متر`;
-  return `${valueM.toFixed(2)} متر`;
-}
-
 export default function ProductCard({ product }: { product: PublicProduct }) {
   const primary = product.images.find((image) => image.isPrimary) ?? product.images[0];
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const has3d = product.models.some((model) => model.kind === "GLB" || model.kind === "GLTF");
   const hasAr = product.models.some((model) => model.kind === "USDZ");
-  const dims = product.dimensions;
 
   return (
     <Link to={`/products/${product.slug}`} className="card premium-product-card screenshot-product-card" aria-label={`مشاهده ${product.name}`}>
@@ -35,13 +28,18 @@ export default function ProductCard({ product }: { product: PublicProduct }) {
       <div className="product-card__body">
         <h3 title={product.name}>{product.name}</h3>
         <div className="product-card-store">{product.seller?.storeName || "فروشگاه"}</div>
-        <div className="product-card-dimensions">
-          <span>طول: {formatDimension(dims?.depthM)}</span>
-          <span>عرض: {formatDimension(dims?.widthM)}</span>
-          <span>ارتفاع: {formatDimension(dims?.heightM)}</span>
-        </div>
+        {product.price != null ? (
+          <div className="product-card-price">{formatPrice(product.price)}</div>
+        ) : (
+          <div className="product-card-contact-price"><strong>قیمت</strong>برای استعلام با فروشنده تماس بگیرید</div>
+        )}
         <div className="product-card-detail-link">مشاهده جزئیات <span aria-hidden="true">←</span></div>
       </div>
     </Link>
   );
+}
+
+
+function formatPrice(value: number) {
+  return `${new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 }).format(value)} تومان`;
 }

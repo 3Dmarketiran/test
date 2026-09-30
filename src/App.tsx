@@ -20,6 +20,8 @@ import NotFound from "./pages/NotFound";
 
 import { DataProvider, useData } from "./lib/data";
 import { applyBranding } from "./lib/theme";
+import SitePreloader from "./components/SitePreloader";
+import IranVpnNotice from "./components/IranVpnNotice";
 
 function ScrollToTop() {
   const location = useLocation();
@@ -110,10 +112,14 @@ function BrandedApp() {
 
 export default function App() {
   return (
-    <HashRouter>
-      <DataProvider>
+    <>
+      <SitePreloader />
+      <IranVpnNotice />
+      <HashRouter>
+        <DataProvider>
         <BrandedApp />
-      </DataProvider>
-    </HashRouter>
+        </DataProvider>
+      </HashRouter>
+    </>
   );
 }

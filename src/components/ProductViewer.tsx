@@ -34,6 +34,8 @@ export default function ProductViewer({ product }: Props) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [imageRatio, setImageRatio] = useState(1.12);
+  const [viewerKey, setViewerKey] = useState(0);
+  const arSessionStartedRef = useRef(false);
   const viewerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -60,12 +62,17 @@ export default function ProductViewer({ product }: Props) {
     const onArStatus = (event: Event) => {
       const detail = (event as CustomEvent).detail as { status?: string } | undefined;
       if (detail?.status === "session-started") {
+        arSessionStartedRef.current = true;
         setArSupported(true);
-       
         track("AR_LAUNCH", { productId: product.id, sellerId: product.seller.id });
-      } else if (detail?.status === "failed") {
-        setArSupported(false);
-       
+      } else if (detail?.status === "not-presenting" || detail?.status === "failed") {
+        // A fresh model-viewer instance clears stale AR/session state, which
+        // makes the next AR click reliable after the user exits AR.
+        setArSupported(detail?.status === "failed" ? false : null);
+        if (detail?.status === "not-presenting" && arSessionStartedRef.current) {
+          arSessionStartedRef.current = false;
+          window.setTimeout(() => setViewerKey((value) => value + 1), 0);
+        }
       }
     };
     el.addEventListener("load", onLoad);
@@ -82,7 +89,7 @@ export default function ProductViewer({ product }: Props) {
       el.removeEventListener("ar-status", onArStatus);
       window.clearTimeout(timer);
     };
-  }, [glb?.url, product.id]);
+  }, [glb?.url, product.id, viewerKey]);
 
   useEffect(() => { track(glb ? "VIEWER_3D_OPEN" : "PRODUCT_DETAIL_VIEW", { productId: product.id, sellerId: product.seller.id }); }, [product.id]);
 
@@ -108,37 +115,36 @@ export default function ProductViewer({ product }: Props) {
   };
 
   const openAR = () => {
-    const el = viewerRef.current as (HTMLElement & {
-      activateAR?: () => Promise<void> | void;
-    }) | null;
-    if (!el || !glb) return;
-
+    if (!glb) return;
     setViewMode("3d");
 
-    // Android/WebXR/Scene Viewer: keep this call directly inside the user's
-    // click handler so the browser preserves the user gesture.
-    try {
-      if (typeof el.activateAR === "function") {
-        Promise.resolve(el.activateAR()).catch(() => {
-          if (/Android/i.test(navigator.userAgent || "")) {
-            const sceneViewer = `https://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb.url)}&mode=ar_preferred&title=${encodeURIComponent(product.name)}`;
-            window.location.assign(sceneViewer);
-          } else {
-            setArSupported(false);
-          }
-        });
-        return;
-      }
-    } catch {
-      if (/Android/i.test(navigator.userAgent || "")) {
-        const sceneViewer = `https://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb.url)}&mode=ar_preferred&title=${encodeURIComponent(product.name)}`;
-        window.location.assign(sceneViewer);
-        return;
-      }
-    }
-    setArSupported(false);
-  };
+    const ua = navigator.userAgent || "";
+    const isAndroid = /Android/i.test(ua);
+    const isIOS = isIOSDevice();
 
+    // Android: launch Scene Viewer directly from the user click. This avoids
+    // stale model-viewer AR state after returning from a previous AR session.
+    if (isAndroid) {
+      const sceneViewer = `https://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glb.url)}&mode=ar_preferred&title=${encodeURIComponent(product.name)}`;
+      window.location.assign(sceneViewer);
+      return;
+    }
+
+    // iOS uses the real Quick Look rel=ar anchor rendered below.
+    if (isIOS && usdz?.url) return;
+
+    const el = viewerRef.current as (HTMLElement & { activateAR?: () => Promise<void> | void }) | null;
+    if (!el || typeof el.activateAR !== "function") {
+      setArSupported(false);
+      return;
+    }
+
+    try {
+      Promise.resolve(el.activateAR()).catch(() => setArSupported(false));
+    } catch {
+      setArSupported(false);
+    }
+  };
 
 
   const previousImage = () => { if (!images.length) return; const next = (activeIndex - 1 + images.length) % images.length; selectImage(images[next].url, next); };
@@ -162,7 +168,7 @@ export default function ProductViewer({ product }: Props) {
     <div className="product-viewer-ref__main" style={{ aspectRatio: `${imageRatio}` }}>
       {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} onLoad={(event) => { const image = event.currentTarget; if (image.naturalWidth && image.naturalHeight) setImageRatio(image.naturalWidth / image.naturalHeight); }} onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
       {glb ? <div className={`product-main-3d ${viewMode === "3d" ? "is-visible" : "is-preloaded"}`}>
-        <model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="webxr scene-viewer quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); }} onError={() => { modelReadyRef.current = false; setStatus("error"); }} />
+        <model-viewer key={viewerKey} ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="webxr scene-viewer quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); }} onError={() => { modelReadyRef.current = false; setStatus("error"); }} />
         {viewMode === "3d" && usdz?.url && isIOSDevice() ? (
           <a
             className="viewer-ar-button viewer-ar-button--quicklook"

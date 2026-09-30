@@ -95,6 +95,10 @@ export default function ProductDetail() {
             <h1>{product.name}</h1>
             <p className="product-subtitle-ref">{subtitle}</p>
             <div className="product-info-divider" />
+            <div className="product-detail-price" aria-label="قیمت محصول">
+              <span>قیمت</span>
+              <strong>{product.price != null ? formatPrice(product.price) : "تماس با فروشنده"}</strong>
+            </div>
             <section className="product-spec-card-ref" aria-label="مشخصات محصول">
               <div className="product-spec-row-ref">
                 <span className="product-spec-icon-ref"><IconCube /></span>
@@ -128,6 +132,10 @@ export default function ProductDetail() {
       )}
     </main>
   );
+}
+
+function formatPrice(value: number) {
+  return `${new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 }).format(value)} تومان`;
 }
 
 function formatMeters(meters: number) {
