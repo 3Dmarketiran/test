@@ -168,8 +168,28 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
 export function getSellerLogoUrl(logoUrl: string | null | undefined) {
   if (!logoUrl) return null;
+  const backendBase = PUBLIC_CATALOG_API.replace(/\/api\/public\/catalog$/, "");
+
+  if (/^\/api\/public\/assets\//i.test(logoUrl)) return `${backendBase}${logoUrl}`;
+
+  try {
+    const url = new URL(logoUrl, window.location.origin);
+    const marker = "/storage/v1/object/public/";
+    const markerIndex = url.pathname.indexOf(marker);
+    if (markerIndex >= 0) {
+      const remainder = url.pathname.slice(markerIndex + marker.length);
+      const slash = remainder.indexOf("/");
+      const key = slash >= 0 ? remainder.slice(slash + 1) : "";
+      if (/^sellers\//.test(key)) {
+        return `${backendBase}/api/public/assets/${key.split("/").map((segment) => encodeURIComponent(decodeURIComponent(segment))).join("/")}`;
+      }
+    }
+  } catch {
+    // Fall through to the static/base-path resolver below.
+  }
+
   if (/^(https?:|data:|blob:)/i.test(logoUrl)) return logoUrl;
-  if (/^\/api\//i.test(logoUrl)) return `${PUBLIC_CATALOG_API.replace(/\/api\/public\/catalog$/, "")}${logoUrl}`;
+  if (/^\/api\//i.test(logoUrl)) return `${backendBase}${logoUrl}`;
   const base = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
   return `${base}/${logoUrl.replace(/^\/+/, "")}`;
 }

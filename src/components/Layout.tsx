@@ -169,30 +169,21 @@ export default function Layout() {
                 borderRadius: 12,
               }}
             >
-              {settings?.logoUrl ? (
-                <img
-                  src={settings.logoUrl}
-                  alt=""
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                  onError={(event) => {
-                    event.currentTarget.src = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.webp`;
-                  }}
-                />
-              ) : (
-                <img
-                  src={`${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.webp`}
-                  alt=""
-                  width={42}
-                  height={42}
-                  decoding="async"
-                  fetchPriority="high"
-                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
-                />
-              )}
+              <img
+                src={`${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.webp`}
+                alt=""
+                width={42}
+                height={42}
+                decoding="async"
+                fetchPriority="high"
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                onError={(event) => {
+                  const target = event.currentTarget;
+                  if (!target.src.endsWith(".png")) {
+                    target.src = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`;
+                  }
+                }}
+              />
             </span>
 
             <span

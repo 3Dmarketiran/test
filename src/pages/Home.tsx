@@ -309,6 +309,7 @@ export default function Home() {
                   }}
                 >
                   <div
+                    className="featured-store-logo-wrap"
                     style={{
                       width: "100%",
                       aspectRatio: "1.65 / 1",

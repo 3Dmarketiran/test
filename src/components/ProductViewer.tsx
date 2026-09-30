@@ -42,6 +42,19 @@ export default function ProductViewer({ product }: Props) {
     setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setImageRatio(1.12); setStatus("ready"); setArSupported(null); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
   }, [product.id, poster, initialIndex]);
 
+  // Start the primary product photo immediately, and warm the next photos in the background.
+  // This keeps the first image fast without downloading every asset before it is needed.
+  useEffect(() => {
+    const urls = images.slice(0, 4).map((image) => image.url).filter(Boolean);
+    const warm = (url: string, priority: boolean) => {
+      const image = new Image();
+      image.decoding = "async";
+      if ("fetchPriority" in image) (image as HTMLImageElement & { fetchPriority?: string }).fetchPriority = priority ? "high" : "low";
+      image.src = url;
+    };
+    urls.forEach((url, index) => warm(url, index === 0));
+  }, [product.id, images]);
+
   useEffect(() => {
     const el = viewerRef.current as (HTMLElement & { loaded?: boolean; updateComplete?: Promise<unknown> }) | null;
     if (!el || !glb) return;
@@ -161,12 +174,12 @@ export default function ProductViewer({ product }: Props) {
 
   return <div className="product-viewer-ref">
     <div className="product-viewer-ref__rail" aria-label="رسانه‌های محصول">
-      {images.map((img, index) => <button key={`${img.url}-${index}`} type="button" className={`product-media-thumb ${viewMode === "image" && index === activeIndex ? "is-active" : ""}`} onClick={() => selectImage(img.url, index)} aria-label={`تصویر ${index + 1} محصول`}><img src={img.url} alt="" loading={index < 3 ? "eager" : "lazy"} onError={(e) => { e.currentTarget.style.opacity = "0.3"; }} /></button>)}
+      {images.map((img, index) => <button key={`${img.url}-${index}`} type="button" className={`product-media-thumb ${viewMode === "image" && index === activeIndex ? "is-active" : ""}`} onClick={() => selectImage(img.url, index)} aria-label={`تصویر ${index + 1} محصول`}><img src={img.url} alt="" loading={index === 0 ? "eager" : "lazy"} decoding="async" width={76} height={76} onError={(e) => { e.currentTarget.style.opacity = "0.3"; }} /></button>)}
       {glb && <button type="button" className={`product-media-thumb product-media-thumb--tool ${viewMode === "3d" ? "is-active" : ""}`} onClick={open3D} aria-label="نمایش سه‌بعدی"><Icon name="cube" size={27} /><span>3D</span></button>}
       
     </div>
     <div className="product-viewer-ref__main" style={{ aspectRatio: `${imageRatio}` }}>
-      {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} onLoad={(event) => { const image = event.currentTarget; if (image.naturalWidth && image.naturalHeight) setImageRatio(image.naturalWidth / image.naturalHeight); }} onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
+      {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} loading="eager" decoding="async" fetchPriority="high" onLoad={(event) => { const image = event.currentTarget; if (image.naturalWidth && image.naturalHeight) setImageRatio(image.naturalWidth / image.naturalHeight); }} onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
       {glb ? <div className={`product-main-3d ${viewMode === "3d" ? "is-visible" : "is-preloaded"}`}>
         <model-viewer key={viewerKey} ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="webxr scene-viewer quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); }} onError={() => { modelReadyRef.current = false; setStatus("error"); }} />
         {viewMode === "3d" && usdz?.url && isIOSDevice() ? (
@@ -177,7 +190,7 @@ export default function ProductViewer({ product }: Props) {
             aria-label="نمایش در واقعیت افزوده"
             onClick={() => track("AR_LAUNCH", { productId: product.id, sellerId: product.seller.id })}
           >
-            <img src={poster || usdz.url} alt="" aria-hidden="true" />
+            <img src={poster || usdz.url} alt="" aria-hidden="true" loading="eager" decoding="async" width={64} height={64} />
             <Icon name="ar" size={15} />AR
           </a>
         ) : viewMode === "3d" ? (

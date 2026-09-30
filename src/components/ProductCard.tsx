@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import type { PublicProduct } from "../types";
 
-export default function ProductCard({ product }: { product: PublicProduct }) {
+export default function ProductCard({ product, priority = false }: { product: PublicProduct; priority?: boolean }) {
   const primary = product.images.find((image) => image.isPrimary) ?? product.images[0];
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -15,7 +15,7 @@ export default function ProductCard({ product }: { product: PublicProduct }) {
         {primary?.url && !imageError ? (
           <>
             {!imageLoaded && <div className="skeleton" aria-hidden="true" style={{ position: "absolute", inset: 0, borderRadius: 0 }} />}
-            <img src={primary.url} alt={product.name} loading="lazy" decoding="async" onLoad={() => setImageLoaded(true)} onError={() => { setImageError(true); setImageLoaded(false); }} style={{ opacity: imageLoaded ? 1 : 0 }} />
+            <img src={primary.url} alt={product.name} loading={priority ? "eager" : "lazy"} decoding="async" fetchPriority={priority ? "high" : "auto"} width={720} height={720} onLoad={() => setImageLoaded(true)} onError={() => { setImageError(true); setImageLoaded(false); }} style={{ opacity: imageLoaded ? 1 : 0 }} />
           </>
         ) : (
           <div className="product-image-fallback" role="img" aria-label={`تصویر ${product.name} در دسترس نیست`}><span aria-hidden="true">□</span><span>تصویر در دسترس نیست</span></div>

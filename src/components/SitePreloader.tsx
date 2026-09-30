@@ -51,7 +51,19 @@ export default function SitePreloader() {
     <div className={`site-preloader${leaving ? " is-leaving" : ""}`} aria-label="در حال آماده‌سازی سایت" role="status">
       <div className="site-preloader__content">
         <div className="site-preloader__logo-wrap">
-          <img className="site-preloader__logo" src={LOGO_SRC} alt="3Dmarketiran" width={210} height={212} />
+          <img
+            className="site-preloader__logo"
+            src={LOGO_SRC}
+            alt="3Dmarketiran"
+            width={210}
+            height={212}
+            decoding="async"
+            fetchPriority="high"
+            onError={(event) => {
+              const target = event.currentTarget;
+              if (!target.src.endsWith(".png")) target.src = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`;
+            }}
+          />
         </div>
         <div className="site-preloader__line" aria-hidden="true"><span /></div>
         <span className="site-preloader__label">3Dmarketiran</span>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import ProductViewer from "../components/ProductViewer";
@@ -13,6 +13,17 @@ export default function ProductDetail() {
   const product = products.find(
     (p) => p.slug === slug
   );
+
+  useEffect(() => {
+    if (!product) return;
+    const urls = product.images.slice(0, 4).map((image) => image.url).filter(Boolean);
+    urls.forEach((url, index) => {
+      const image = new Image();
+      image.decoding = "async";
+      if ("fetchPriority" in image) (image as HTMLImageElement & { fetchPriority?: string }).fetchPriority = index === 0 ? "high" : "low";
+      image.src = url;
+    });
+  }, [slug]);
 
   useSeo({
     title: product
@@ -158,7 +169,12 @@ function SellerCard({ seller, sellerSlug }: { seller: { slug: string; storeName:
   return (
     <section className="seller-box seller-box--detail" aria-label="اطلاعات فروشگاه">
       <div className="seller-box__head">
-        {logo ? <img src={logo} alt={seller.storeName} loading="lazy" /> : <div className="seller-box__fallback">{sellerInitials(seller.storeName)}</div>}
+        {logo ? (
+          <>
+            <img src={logo} alt={seller.storeName} loading="eager" decoding="async" width={52} height={52} onError={(event) => { event.currentTarget.style.display = "none"; const fallback = event.currentTarget.nextElementSibling as HTMLElement | null; if (fallback) fallback.style.display = "grid"; }} />
+            <div className="seller-box__fallback" style={{ display: "none" }}>{sellerInitials(seller.storeName)}</div>
+          </>
+        ) : <div className="seller-box__fallback">{sellerInitials(seller.storeName)}</div>}
         <div><span className="page-eyebrow">اطلاعات فروشگاه</span><h3>{seller.storeName}</h3></div>
       </div>
       {seller.description && <p className="seller-box__description">{seller.description}</p>}

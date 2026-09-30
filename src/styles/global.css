@@ -207,3 +207,14 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
   .product-card-detail-link{margin-top:4px!important}
 }
 @media(prefers-reduced-motion:reduce){.site-preloader__logo-wrap,.site-preloader__line span{animation:none!important}}
+
+
+/* V46 — seller logos: stable contain box, especially on narrow mobile cards. */
+.seller-directory-logo-wrap,.featured-store-logo-wrap{overflow:hidden;contain:layout paint;}
+.seller-directory-logo,.seller-directory-logo-fallback,.featured-store-logo{max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;}
+@media(max-width:800px){
+  .seller-directory-logo-wrap{min-height:142px!important;height:142px!important;padding:14px!important;}
+  .seller-directory-logo,.seller-directory-logo-fallback{width:84px!important;height:84px!important;border-radius:18px!important;padding:4px!important;box-sizing:border-box!important;}
+  .featured-store-logo-wrap{aspect-ratio:1.45/1!important;min-height:132px!important;}
+  .featured-store-card .featured-store-logo{width:92px!important;height:92px!important;padding:8px!important;border-radius:18px!important;}
+}
