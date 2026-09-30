@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
@@ -82,9 +82,91 @@ function ModelIcon() {
   );
 }
 
+function Hero3DScene() {
+  const sceneRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return;
+    let raf = 0;
+    let scrollY = window.scrollY;
+    let targetX = 0;
+    let targetY = 0;
+
+    const render = () => {
+      const progress = Math.min(scrollY / Math.max(window.innerHeight, 1), 1);
+      const rotateY = targetX + progress * 34;
+      const rotateX = targetY - progress * 10;
+      scene.style.setProperty("--hero-rx", `${rotateX}deg`);
+      scene.style.setProperty("--hero-ry", `${rotateY}deg`);
+      scene.style.setProperty("--hero-scroll", `${progress}`);
+      raf = 0;
+    };
+
+    const schedule = () => {
+      scrollY = window.scrollY;
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+
+    const move = (event: MouseEvent) => {
+      const rect = scene.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      targetX = x * 18;
+      targetY = -y * 12;
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+
+    const leave = () => {
+      targetX = 0;
+      targetY = 0;
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    scene.addEventListener("mousemove", move);
+    scene.addEventListener("mouseleave", leave);
+    render();
+
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      scene.removeEventListener("mousemove", move);
+      scene.removeEventListener("mouseleave", leave);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <div className="hero-3d-stage" ref={sceneRef} aria-label="نمایش سه‌بعدی تعاملی 3DMarketIran">
+      <div className="hero-3d-stage__stars" aria-hidden="true" />
+      <div className="hero-3d-stage__halo hero-3d-stage__halo--a" aria-hidden="true" />
+      <div className="hero-3d-stage__halo hero-3d-stage__halo--b" aria-hidden="true" />
+      <div className="hero-3d-orbit hero-3d-orbit--one" aria-hidden="true" />
+      <div className="hero-3d-orbit hero-3d-orbit--two" aria-hidden="true" />
+      <div className="hero-3d-object">
+        <div className="hero-3d-object__shadow" aria-hidden="true" />
+        <div className="hero-3d-object__core">
+          <span className="hero-3d-face hero-3d-face--front">3D</span>
+          <span className="hero-3d-face hero-3d-face--back">AR</span>
+          <span className="hero-3d-face hero-3d-face--top" />
+          <span className="hero-3d-face hero-3d-face--bottom" />
+          <span className="hero-3d-face hero-3d-face--left" />
+          <span className="hero-3d-face hero-3d-face--right" />
+        </div>
+        <div className="hero-3d-object__wire hero-3d-object__wire--one" />
+        <div className="hero-3d-object__wire hero-3d-object__wire--two" />
+      </div>
+      <div className="hero-3d-label hero-3d-label--one"><b>01</b><span>Interactive 3D</span></div>
+      <div className="hero-3d-label hero-3d-label--two"><b>02</b><span>AR Ready</span></div>
+      <div className="hero-3d-scroll" aria-hidden="true"><span /> SCROLL</div>
+    </div>
+  );
+}
+
 export default function Home() {
   const {
     sellers,
+    products,
     settings,
     loading,
   } = useData();
@@ -194,29 +276,9 @@ export default function Home() {
             </div>
           </div>
 
-          {/* HERO VISUAL */}
-          <div className="hero__visual hero-showcase" style={{display:"grid",placeItems:"center",overflow:"hidden",minHeight:390}}>
-            <div className="hero-showcase__glow" />
-            <div className="hero-showcase__card">
-              <div className="hero-showcase__top">
-                <span className="hero-showcase__eyebrow">3DMARKETIRAN</span>
-                <span className="hero-showcase__live"><i /> نمایش زنده</span>
-              </div>
-              <div className="hero-showcase__model">
-                <div className="hero-showcase__cube">
-                  <ModelIcon />
-                </div>
-                <div className="hero-showcase__ring hero-showcase__ring--one" />
-                <div className="hero-showcase__ring hero-showcase__ring--two" />
-              </div>
-              <div className="hero-showcase__copy">
-                <strong>Plus AR · Plus 3D</strong>
-                <span>محصول را ببین، بچرخان و در محیط واقعی امتحان کن.</span>
-              </div>
-              <div className="hero-showcase__features">
-                <span>3D تعاملی</span><span>AR</span><span>تماس با فروشنده</span>
-              </div>
-            </div>
+          {/* HERO VISUAL — abstract interactive 3D scene; intentionally not a catalog product */}
+          <div className="hero__visual hero-showcase">
+            <Hero3DScene />
           </div>
         </div>
       </section>
