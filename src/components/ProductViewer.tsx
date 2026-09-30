@@ -30,6 +30,7 @@ export default function ProductViewer({ product }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>("image");
   const [status, setStatus] = useState<ViewerStatus>(glb ? "ready" : "ready");
   const [arSupported, setArSupported] = useState<boolean | null>(null);
+  const [arReady, setArReady] = useState(false);
   const modelReadyRef = useRef(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -39,7 +40,7 @@ export default function ProductViewer({ product }: Props) {
   const viewerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setImageRatio(1.12); setStatus("ready"); setArSupported(null); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
+    setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setImageRatio(1.12); setStatus("ready"); setArSupported(null); setArReady(false); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
   }, [product.id, poster, initialIndex]);
 
   // Start the primary product photo immediately, and warm the next photos in the background.
@@ -61,12 +62,18 @@ export default function ProductViewer({ product }: Props) {
     const syncLoaded = () => {
       const loaded = Boolean(el.loaded);
       modelReadyRef.current = loaded;
-      if (loaded) setStatus("ready");
+      if (loaded) {
+        setStatus("ready");
+        const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
+        if (typeof canAr === "boolean") { setArSupported(canAr); setArReady(canAr); }
+      }
     };
     syncLoaded();
     const onLoad = () => {
       modelReadyRef.current = true;
       setStatus("ready");
+      const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
+      if (typeof canAr === "boolean") { setArSupported(canAr); setArReady(canAr); }
     };
     const onError = () => {
       modelReadyRef.current = false;
@@ -82,6 +89,7 @@ export default function ProductViewer({ product }: Props) {
         // A fresh model-viewer instance clears stale AR/session state, which
         // makes the next AR click reliable after the user exits AR.
         setArSupported(detail?.status === "failed" ? false : null);
+        if (detail?.status === "failed") setArReady(false);
         if (detail?.status === "not-presenting" && arSessionStartedRef.current) {
           arSessionStartedRef.current = false;
           window.setTimeout(() => setViewerKey((value) => value + 1), 0);
@@ -94,7 +102,7 @@ export default function ProductViewer({ product }: Props) {
     const timer = window.setTimeout(() => {
       syncLoaded();
       const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
-      if (typeof canAr === "boolean") setArSupported(canAr);
+      if (typeof canAr === "boolean") { setArSupported(canAr); setArReady(canAr); }
     }, 500);
     return () => {
       el.removeEventListener("load", onLoad);
@@ -116,6 +124,8 @@ export default function ProductViewer({ product }: Props) {
     if (modelReadyRef.current || Boolean(el?.loaded)) {
       modelReadyRef.current = true;
       setStatus("ready");
+      const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
+      if (typeof canAr === "boolean") { setArSupported(canAr); setArReady(canAr); }
     } else {
       setStatus("ready");
     }
@@ -123,55 +133,24 @@ export default function ProductViewer({ product }: Props) {
 
 
 
-  const openAR = async () => {
-    if (!glb) return;
-    setViewMode("3d");
-    setArSupported(null);
-
-    // The AR button can be tapped while the 3D view is still mounting.
-    // Wait for the actual model-viewer element and its model before calling
-    // activateAR; otherwise a perfectly supported device can report a false
-    // failure simply because the custom element was not ready yet.
-    const waitForViewer = async () => {
-      for (let attempt = 0; attempt < 24; attempt += 1) {
-        const el = viewerRef.current as (HTMLElement & {
-          activateAR?: () => Promise<void> | void;
-          loaded?: boolean;
-          updateComplete?: Promise<unknown>;
-        }) | null;
-        if (el && typeof el.activateAR === "function") {
-          try { if (el.updateComplete) await el.updateComplete; } catch { /* model-viewer can still activate AR after a settled update */ }
-          if (el.loaded || attempt >= 6) return el;
-        }
-        await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
-      }
-      return null;
-    };
-
+  // Important: model-viewer.activateAR() must be called directly from the
+  // user gesture. Awaiting model readiness here can lose Safari/iOS's
+  // transient user activation and make the same AR button work only
+  // intermittently. We therefore enable the button only after the viewer
+  // reports that AR can be activated, then invoke activateAR synchronously.
+  const openAR = () => {
+    if (!glb || !arReady) return;
+    const el = viewerRef.current as (HTMLElement & {
+      activateAR?: () => Promise<void> | void;
+    }) | null;
+    if (!el || typeof el.activateAR !== "function") return;
     try {
-      const el = await waitForViewer();
-      if (!el || typeof el.activateAR !== "function") {
-        setArSupported(false);
-        return;
-      }
-
-      // Let model-viewer own the platform AR launch on both iOS and Android.
-      // ar-scale="fixed" remains on the model-viewer element so the native
-      // AR experience keeps the product at its real-world scale.
-      await Promise.resolve(el.activateAR());
+      void el.activateAR();
     } catch {
-      // One retry covers transient model-viewer/session initialization races.
-      try {
-        await new Promise<void>((resolve) => window.setTimeout(resolve, 180));
-        const retry = viewerRef.current as (HTMLElement & { activateAR?: () => Promise<void> | void }) | null;
-        if (retry && typeof retry.activateAR === "function") await Promise.resolve(retry.activateAR());
-        else setArSupported(false);
-      } catch {
-        setArSupported(false);
-      }
+      setArSupported(false);
+      setArReady(false);
     }
   };
-
 
   const previousImage = () => { if (!images.length) return; const next = (activeIndex - 1 + images.length) % images.length; selectImage(images[next].url, next); };
   const nextImage = () => { if (!images.length) return; const next = (activeIndex + 1) % images.length; selectImage(images[next].url, next); };
@@ -196,7 +175,7 @@ export default function ProductViewer({ product }: Props) {
       {glb ? <div className={`product-main-3d ${viewMode === "3d" ? "is-visible" : "is-preloaded"}`}>
         <model-viewer key={viewerKey} ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="webxr scene-viewer quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} scale="1 1 1" touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); }} onError={() => { modelReadyRef.current = false; setStatus("error"); }} />
         {viewMode === "3d" ? (
-          <button type="button" className="viewer-ar-button viewer-ar-button--direct" onClick={openAR} aria-label="نمایش در واقعیت افزوده">
+          <button type="button" className="viewer-ar-button viewer-ar-button--direct" onClick={openAR} disabled={!arReady} aria-disabled={!arReady} aria-label={arReady ? "نمایش در واقعیت افزوده" : "در حال آماده‌سازی واقعیت افزوده"}>
             <Icon name="ar" size={15} />AR
           </button>
         ) : null}

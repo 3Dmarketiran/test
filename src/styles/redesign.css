@@ -916,3 +916,6 @@
     min-width:44px!important;height:32px!important;padding:0 9px!important;font-size:10px!important;
   }
 }
+
+/* V54: AR is enabled only after model-viewer reports a real AR-ready state. */
+.viewer-ar-button--direct:disabled{opacity:.55!important;cursor:wait!important;transform:none!important;box-shadow:none!important;pointer-events:auto!important;}
