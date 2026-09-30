@@ -291,7 +291,7 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
 .hero-showcase__model{perspective:900px;transform-style:preserve-3d;overflow:visible}
 .hero-showcase__cube{transform-style:preserve-3d;animation:v52-float-3d 4.8s ease-in-out infinite;box-shadow:0 28px 55px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.2);}
 .hero-showcase__cube svg{filter:drop-shadow(0 10px 12px rgba(0,0,0,.18));transform:translateZ(18px);}
-.hero-showcase__ring{transform-origin:center;animation:v52-orbit 12s linear infinite;}
+.hero-showcase__ring{left:50%;top:50%;transform-origin:center;animation:v52-orbit 12s linear infinite;}
 .hero-showcase__ring--two{animation:v52-orbit-reverse 15s linear infinite;}
 .hero-showcase__glow{animation:v52-pulse-depth 4s ease-in-out infinite;}
 .hero-showcase__features span{transition:transform .25s ease,background .25s ease,border-color .25s ease;}

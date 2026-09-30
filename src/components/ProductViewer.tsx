@@ -123,25 +123,52 @@ export default function ProductViewer({ product }: Props) {
 
 
 
-  const openAR = () => {
+  const openAR = async () => {
     if (!glb) return;
     setViewMode("3d");
+    setArSupported(null);
 
-    const el = viewerRef.current as (HTMLElement & { activateAR?: () => Promise<void> | void }) | null;
-    if (!el || typeof el.activateAR !== "function") {
-      setArSupported(false);
-      return;
-    }
-
-    // Let model-viewer own the platform AR launch on both iOS and Android.
-    // This is important because ar-scale="fixed" is propagated into the
-    // native AR experience; a hand-built Scene Viewer/Quick Look URL would
-    // bypass that scale lock.
+    // The AR button can be tapped while the 3D view is still mounting.
+    // Wait for the actual model-viewer element and its model before calling
+    // activateAR; otherwise a perfectly supported device can report a false
+    // failure simply because the custom element was not ready yet.
+    const waitForViewer = async () => {
+      for (let attempt = 0; attempt < 24; attempt += 1) {
+        const el = viewerRef.current as (HTMLElement & {
+          activateAR?: () => Promise<void> | void;
+          loaded?: boolean;
+          updateComplete?: Promise<unknown>;
+        }) | null;
+        if (el && typeof el.activateAR === "function") {
+          try { if (el.updateComplete) await el.updateComplete; } catch { /* model-viewer can still activate AR after a settled update */ }
+          if (el.loaded || attempt >= 6) return el;
+        }
+        await new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()));
+      }
+      return null;
+    };
 
     try {
-      Promise.resolve(el.activateAR()).catch(() => setArSupported(false));
+      const el = await waitForViewer();
+      if (!el || typeof el.activateAR !== "function") {
+        setArSupported(false);
+        return;
+      }
+
+      // Let model-viewer own the platform AR launch on both iOS and Android.
+      // ar-scale="fixed" remains on the model-viewer element so the native
+      // AR experience keeps the product at its real-world scale.
+      await Promise.resolve(el.activateAR());
     } catch {
-      setArSupported(false);
+      // One retry covers transient model-viewer/session initialization races.
+      try {
+        await new Promise<void>((resolve) => window.setTimeout(resolve, 180));
+        const retry = viewerRef.current as (HTMLElement & { activateAR?: () => Promise<void> | void }) | null;
+        if (retry && typeof retry.activateAR === "function") await Promise.resolve(retry.activateAR());
+        else setArSupported(false);
+      } catch {
+        setArSupported(false);
+      }
     }
   };
 
