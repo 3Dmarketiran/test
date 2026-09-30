@@ -11,6 +11,9 @@ type Plan = {
   discountPct?: number | null;
   productLimit?: number | null;
   storageLimitMb?: number | null;
+  categoryId?: string | null;
+  sortOrder?: number;
+  features?: Record<string, unknown> | null;
 };
 
 function formatPrice(value: number) {
@@ -112,9 +115,20 @@ function ArrowIcon() {
 }
 
 export default function Plans() {
-  const { settings, plans: catalogPlans, loading: catalogLoading, error: catalogError } = useData();
+  const { settings, plans: catalogPlans, planCategories: catalogCategories, loading: catalogLoading, error: catalogError } = useData();
 
   const plans = catalogPlans as Plan[];
+  const baseCategories = catalogCategories || [];
+  const hasUncategorized = plans.some((plan) => !plan.categoryId);
+  const categories = baseCategories.length > 0
+    ? [...baseCategories, ...(hasUncategorized ? [{ id: "__uncategorized", name: "سایر پلن‌ها", slug: "uncategorized", description: "پلن‌هایی که هنوز دسته‌بندی نشده‌اند", sortOrder: 999, isActive: true }] : [])]
+    : (plans.length > 0 ? [{ id: "general", name: "پلن‌های فروشندگان", slug: "general", description: "پلن‌های فعلی فروشندگان", sortOrder: 0, isActive: true }] : []);
+  const [selectedCategoryId, setSelectedCategoryId] = React.useState<string>(categories[0]?.id || "");
+
+  React.useEffect(() => {
+    if (!selectedCategoryId && categories[0]?.id) setSelectedCategoryId(categories[0].id);
+    if (selectedCategoryId && !categories.some((category) => category.id === selectedCategoryId)) setSelectedCategoryId(categories[0]?.id || "");
+  }, [categories, selectedCategoryId]);
   const loading = catalogLoading;
   const error = Boolean(catalogError);
 
@@ -448,267 +462,120 @@ export default function Plans() {
         </div>
       ) : (
         <>
-          {/* PLANS */}
-          <section
-            className="plans-single-column"
-            style={{
-              maxWidth: 1100,
-              margin: "0 auto",
-              alignItems: "stretch",
-            }}
-          >
-            {plans.map((plan, index) => {
-              const isLongTerm =
-                plan.durationDays >= 365;
-
-              const hasDiscount =
-                Boolean(plan.discountPct);
-
-              return (
-                <article
-                  key={plan.id}
-                  className="card"
-                  style={{
-                    padding:
-                      "clamp(20px, 4vw, 26px)",
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    overflow: "hidden",
-                    border:
-                      isLongTerm
-                        ? "1px solid rgba(99,91,255,.28)"
-                        : undefined,
-                    boxShadow:
-                      isLongTerm
-                        ? "0 12px 35px rgba(99,91,255,.09)"
-                        : undefined,
-                  }}
-                >
-                  {isLongTerm && (
-                    <div
+          {/* PLAN CATEGORIES + PLANS */}
+          {categories.length > 0 && (
+            <section style={{ maxWidth: 1100, margin: "0 auto 24px" }}>
+              <div
+                role="tablist"
+                aria-label="دسته‌بندی پلن‌ها"
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  overflowX: "auto",
+                  padding: 5,
+                  marginBottom: 18,
+                  borderRadius: 16,
+                  background: "var(--surface-2, #f5f6fa)",
+                  scrollbarWidth: "none",
+                }}
+              >
+                {categories.map((category) => {
+                  const active = category.id === selectedCategoryId;
+                  const count = plans.filter((plan) => category.id === "__uncategorized" ? !plan.categoryId : plan.categoryId === category.id).length;
+                  return (
+                    <button
+                      key={category.id}
+                      role="tab"
+                      aria-selected={active}
+                      onClick={() => setSelectedCategoryId(category.id)}
                       style={{
-                        position: "absolute",
-                        top: 16,
-                        left: 16,
-                        padding:
-                          "5px 10px",
-                        borderRadius: 999,
-                        background:
-                          "rgba(99,91,255,.1)",
-                        color:
-                          "var(--color-primary)",
-                        fontSize: 11,
+                        flex: "0 0 auto",
+                        minHeight: 46,
+                        padding: "0 16px",
+                        borderRadius: 12,
+                        border: active ? "1px solid var(--color-primary)" : "1px solid transparent",
+                        background: active ? "var(--color-primary)" : "transparent",
+                        color: active ? "#fff" : "var(--color-text)",
+                        font: "inherit",
                         fontWeight: 850,
+                        cursor: "pointer",
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      بلندمدت
-                    </div>
-                  )}
+                      {category.name}
+                      <span style={{ opacity: .72, marginInlineStart: 6, fontSize: 11 }}>({count})</span>
+                    </button>
+                  );
+                })}
+              </div>
 
-                  {hasDiscount && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 16,
-                        right: 16,
-                        padding:
-                          "5px 10px",
-                        borderRadius: 999,
-                        background:
-                          "rgba(34,197,94,.1)",
-                        color: "#16a34a",
-                        fontSize: 11,
-                        fontWeight: 850,
-                      }}
-                    >
-                      {plan.discountPct}% تخفیف
-                    </div>
-                  )}
-
-                  <div
-                    style={{
-                      width: 48,
-                      height: 48,
-                      display: "grid",
-                      placeItems: "center",
-                      marginBottom: 16,
-                      borderRadius: 15,
-                      background:
-                        "var(--surface-2, #f4f4f4)",
-                      color:
-                        "var(--color-primary)",
-                      fontWeight: 900,
-                    }}
-                  >
-                    {index + 1}
-                  </div>
-
-                  <div
-                    style={{
-                      color:
-                        "var(--color-primary)",
-                      fontSize: 12,
-                      fontWeight: 850,
-                      marginBottom: 7,
-                    }}
-                  >
-                    {durationLabel(
-                      plan.durationDays
-                    )}
-                  </div>
-
-                  <h2
-                    style={{
-                      margin: "0 0 14px",
-                      fontSize: "1.25rem",
-                      lineHeight: 1.5,
-                      fontWeight: 850,
-                    }}
-                  >
-                    {plan.name}
-                  </h2>
-
-                  <div
-                    style={{
-                      marginBottom: 24,
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize:
-                          "clamp(1.45rem, 5vw, 1.8rem)",
-                        lineHeight: 1.3,
-                        fontWeight: 950,
-                        letterSpacing:
-                          "-0.02em",
-                      }}
-                    >
-                      {formatPrice(plan.price)}
-                    </div>
-
-                    <div
-                      style={{
-                        marginTop: 5,
-                        color:
-                          "var(--color-text-muted, #777)",
-                        fontSize: 11,
-                      }}
-                    >
-                      برای مدت{" "}
-                      {durationLabel(
-                        plan.durationDays
+              {categories.map((category) => {
+                if (category.id !== selectedCategoryId) return null;
+                const categoryPlans = plans
+                  .filter((plan) => category.id === "__uncategorized" ? !plan.categoryId : (plan.categoryId === category.id || (category.id === "general" && !plan.categoryId)))
+                  .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.durationDays - b.durationDays);
+                return (
+                  <div key={category.id}>
+                    <div style={{ marginBottom: 16, textAlign: "center" }}>
+                      <h2 style={{ margin: 0, fontSize: "clamp(1.3rem, 4vw, 1.65rem)", fontWeight: 900 }}>{category.name}</h2>
+                      {category.description && (
+                        <p style={{ margin: "6px auto 0", maxWidth: 650, color: "var(--color-text-muted, #777)", fontSize: 13, lineHeight: 1.9 }}>
+                          {category.description}
+                        </p>
                       )}
                     </div>
+
+                    {categoryPlans.length === 0 ? (
+                      <div className="card" style={{ textAlign: "center", padding: 28, color: "var(--color-text-muted, #777)" }}>
+                        هنوز پلنی در این دسته قرار نگرفته است.
+                      </div>
+                    ) : (
+                      <div
+                        className="plans-single-column"
+                        style={{ maxWidth: 1100, margin: "0 auto", alignItems: "stretch" }}
+                      >
+                        {categoryPlans.map((plan, index) => {
+                          const isLongTerm = plan.durationDays >= 365;
+                          const hasDiscount = Boolean(plan.discountPct);
+                          return (
+                            <article key={plan.id} className="card" style={{ padding: "clamp(20px, 4vw, 26px)", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden", border: isLongTerm ? "1px solid rgba(99,91,255,.28)" : undefined, boxShadow: isLongTerm ? "0 12px 35px rgba(99,91,255,.09)" : undefined }}>
+                              {isLongTerm && <div style={{ position: "absolute", top: 16, left: 16, padding: "5px 10px", borderRadius: 999, background: "rgba(99,91,255,.1)", color: "var(--color-primary)", fontSize: 11, fontWeight: 850 }}>بلندمدت</div>}
+                              {hasDiscount && <div style={{ position: "absolute", top: 16, right: 16, padding: "5px 10px", borderRadius: 999, background: "rgba(34,197,94,.1)", color: "#16a34a", fontSize: 11, fontWeight: 850 }}>{plan.discountPct}% تخفیف</div>}
+                              <div style={{ width: 48, height: 48, display: "grid", placeItems: "center", marginBottom: 16, borderRadius: 15, background: "var(--surface-2, #f4f4f4)", color: "var(--color-primary)", fontWeight: 900 }}>{index + 1}</div>
+                              <div style={{ color: "var(--color-primary)", fontSize: 12, fontWeight: 850, marginBottom: 7 }}>{durationLabel(plan.durationDays)}</div>
+                              <h2 style={{ margin: "0 0 14px", fontSize: "1.25rem", lineHeight: 1.5, fontWeight: 850 }}>{plan.name}</h2>
+                              <div style={{ marginBottom: 24 }}><div style={{ fontSize: "clamp(1.45rem, 5vw, 1.8rem)", lineHeight: 1.3, fontWeight: 950, letterSpacing: "-0.02em" }}>{formatPrice(plan.price)}</div><div style={{ marginTop: 5, color: "var(--color-text-muted, #777)", fontSize: 11 }}>برای مدت {durationLabel(plan.durationDays)}</div></div>
+                              <div style={{ display: "grid", gap: 12, flex: 1 }}>
+                                {plan.productLimit ? <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>تا {plan.productLimit.toLocaleString("fa-IR")} محصول</span></div> : null}
+                                {plan.storageLimitMb ? <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>فضای {storageLabel(plan.storageLimitMb)}</span></div> : null}
+                                {hasDiscount ? <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>{plan.discountPct}% تخفیف</span></div> : null}
+                                <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>نمایش سه‌بعدی و AR</span></div>
+                                <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>فعال‌سازی دستی توسط پشتیبانی</span></div>
+                              </div>
+                              <a href={`tel:${phone}`} className="btn btn-primary" style={{ marginTop: 24, minHeight: 46, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>درخواست فعال‌سازی<ArrowIcon /></a>
+                            </article>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
+                );
+              })}
+            </section>
+          )}
 
-                  <div
-                    style={{
-                      display: "grid",
-                      gap: 12,
-                      flex: 1,
-                    }}
-                  >
-                    {plan.productLimit ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 9,
-                          fontSize: 13,
-                        }}
-                      >
-                        <CheckIcon />
-                        <span>
-                          تا {plan.productLimit} محصول
-                        </span>
-                      </div>
-                    ) : null}
-
-                    {plan.storageLimitMb ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 9,
-                          fontSize: 13,
-                        }}
-                      >
-                        <CheckIcon />
-                        <span>
-                          فضای{" "}
-                          {storageLabel(
-                            plan.storageLimitMb
-                          )}
-                        </span>
-                      </div>
-                    ) : null}
-
-                    {hasDiscount ? (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 9,
-                          fontSize: 13,
-                        }}
-                      >
-                        <CheckIcon />
-                        <span>
-                          {plan.discountPct}% تخفیف
-                        </span>
-                      </div>
-                    ) : null}
-
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 9,
-                        fontSize: 13,
-                      }}
-                    >
-                      <CheckIcon />
-                      <span>
-                        نمایش سه‌بعدی و AR
-                      </span>
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 9,
-                        fontSize: 13,
-                      }}
-                    >
-                      <CheckIcon />
-                      <span>
-                        فعال‌سازی دستی توسط
-                        پشتیبانی
-                      </span>
-                    </div>
-                  </div>
-
-                  <a
-                    href={`tel:${phone}`}
-                    className="btn btn-primary"
-                    style={{
-                      marginTop: 24,
-                      minHeight: 46,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 8,
-                    }}
-                  >
-                    درخواست فعال‌سازی
-                    <ArrowIcon />
-                  </a>
+          {categories.length === 0 && (
+            <section className="plans-single-column" style={{ maxWidth: 1100, margin: "0 auto", alignItems: "stretch" }}>
+              {plans.map((plan, index) => (
+                <article key={plan.id} className="card" style={{ padding: 24 }}>
+                  <strong>{index + 1}. {plan.name}</strong>
+                  <div style={{ marginTop: 8, fontWeight: 900 }}>{formatPrice(plan.price)}</div>
+                  <div style={{ marginTop: 8, color: "var(--color-text-muted, #777)" }}>{durationLabel(plan.durationDays)}</div>
+                  <a href={`tel:${phone}`} className="btn btn-primary" style={{ marginTop: 18 }}>درخواست فعال‌سازی</a>
                 </article>
-              );
-            })}
-          </section>
+              ))}
+            </section>
+          )}
 
           {/* FOOTNOTE */}
           <div

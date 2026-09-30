@@ -127,7 +127,9 @@
       "discountPct": 0,
       "productLimit": 20,
       "storageLimitMb": 2048,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 0
     },
     {
       "id": "seed-90",
@@ -137,7 +139,9 @@
       "discountPct": 10,
       "productLimit": 60,
       "storageLimitMb": 4096,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 1
     },
     {
       "id": "seed-180",
@@ -147,7 +151,9 @@
       "discountPct": 15,
       "productLimit": 120,
       "storageLimitMb": 8192,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 2
     },
     {
       "id": "seed-365",
@@ -157,7 +163,19 @@
       "discountPct": 25,
       "productLimit": 300,
       "storageLimitMb": 16384,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 3
+    }
+  ],
+  "planCategories": [
+    {
+      "id": "general",
+      "name": "پلن‌های فروشندگان",
+      "slug": "general",
+      "description": "پلن‌های فعلی فروشندگان",
+      "sortOrder": 0,
+      "isActive": true
     }
   ]
 }

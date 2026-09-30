@@ -66,7 +66,18 @@ export interface PublicPlan {
   discountPct?: number | null;
   productLimit?: number | null;
   storageLimitMb?: number | null;
+  categoryId?: string | null;
+  sortOrder?: number;
   features?: Record<string, unknown> | null;
+}
+
+export interface PublicPlanCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  sortOrder?: number;
+  isActive?: boolean;
 }
 
 export interface PlatformSettings {
@@ -93,4 +104,5 @@ export interface PublicCatalog {
   sellers: PublicSeller[];
   settings: PlatformSettings;
   plans: PublicPlan[];
+  planCategories?: PublicPlanCategory[];
 }

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import type { PlatformSettings, PublicPlan, PublicProduct, PublicSeller } from "../types";
+import type { PlatformSettings, PublicPlan, PublicPlanCategory, PublicProduct, PublicSeller } from "../types";
 import bundledCatalog from "../../public-data/catalog.json";
 import { API_URL, PUBLIC_CATALOG_API } from "./config";
 
@@ -11,6 +11,7 @@ export interface PublicCatalog {
   sellers: PublicSeller[];
   settings: PlatformSettings;
   plans: PublicPlan[];
+  planCategories: PublicPlanCategory[];
 }
 
 interface DataState {
@@ -18,6 +19,7 @@ interface DataState {
   sellers: PublicSeller[];
   settings: PlatformSettings | null;
   plans: PublicPlan[];
+  planCategories: PublicPlanCategory[];
   loading: boolean;
   error: string | null;
 }
@@ -28,6 +30,7 @@ const initialState: DataState = {
   sellers: initialCatalog.sellers,
   settings: initialCatalog.settings,
   plans: initialCatalog.plans,
+  planCategories: initialCatalog.planCategories || [],
   loading: false,
   error: null,
 };
@@ -54,7 +57,7 @@ function validateCatalog(value: unknown): PublicCatalog {
   if (!Array.isArray(catalog.products) || !Array.isArray(catalog.sellers) || !catalog.settings) {
     throw new Error("ساختار کاتالوگ عمومی ناقص است.");
   }
-  return normalizeCatalog({ ...catalog, plans: Array.isArray(catalog.plans) ? catalog.plans : [] } as PublicCatalog);
+  return normalizeCatalog({ ...catalog, plans: Array.isArray(catalog.plans) ? catalog.plans : [], planCategories: Array.isArray(catalog.planCategories) ? catalog.planCategories : [] } as PublicCatalog);
 }
 
 async function fetchCatalog(signal: AbortSignal): Promise<PublicCatalog> {
@@ -91,8 +94,20 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 function normalizeCatalog(catalog: PublicCatalog): PublicCatalog {
+  const planCategories = catalog.planCategories && catalog.planCategories.length > 0
+    ? catalog.planCategories
+    : catalog.plans.length > 0
+      ? [{ id: "general", name: "پلن‌های فروشندگان", slug: "general", description: "پلن‌های فعلی فروشندگان", sortOrder: 0, isActive: true }]
+      : [];
+  const plans = catalog.plans.map((plan, index) => ({
+    ...plan,
+    categoryId: plan.categoryId || (planCategories[0]?.id ?? null),
+    sortOrder: plan.sortOrder ?? index,
+  }));
   return {
     ...catalog,
+    plans,
+    planCategories,
     products: catalog.products.map((product) => ({
       ...product,
       images: product.images.map((image) => ({
@@ -152,7 +167,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     fetchCatalog(controller.signal)
       .then((catalog) => {
         if (!mounted) return;
-        setState({ products: catalog.products, sellers: catalog.sellers, settings: catalog.settings, plans: catalog.plans, loading: false, error: null });
+        setState({ products: catalog.products, sellers: catalog.sellers, settings: catalog.settings, plans: catalog.plans, planCategories: catalog.planCategories || [], loading: false, error: null });
       })
       .catch((error) => {
         if (!mounted || (error instanceof DOMException && error.name === "AbortError")) return;
