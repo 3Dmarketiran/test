@@ -170,7 +170,7 @@ export default function Layout() {
               }}
             >
               <img
-                src={`${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.webp`}
+                src={`${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`}
                 alt=""
                 width={42}
                 height={42}

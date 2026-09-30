@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const LOGO_SRC = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.webp`;
+const LOGO_SRC = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`;
 
 export default function SitePreloader() {
   const [visible, setVisible] = useState(true);

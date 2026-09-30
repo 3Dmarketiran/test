@@ -219,15 +219,16 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
   .featured-store-card .featured-store-logo{width:92px!important;height:92px!important;padding:8px!important;border-radius:18px!important;}
 }
 
-/* V47 — mobile hamburger: open the menu from the same LEFT edge as the hamburger. */
+/* V48 — mobile hamburger: keep the drawer anchored to the LEFT hamburger. */
 @media(max-width:800px){
-  .site-header{--mobile-nav-top:76px!important;}
+  .site-header{overflow:visible!important;z-index:1200!important;}
+  .site-header__inner{position:relative!important;overflow:visible!important;}
   .nav-links.open{
-    position:fixed!important;
-    top:var(--mobile-nav-top)!important;
-    left:12px!important;
+    position:absolute!important;
+    top:calc(100% + 8px)!important;
+    left:0!important;
     right:auto!important;
-    width:min(280px,calc(100vw - 24px))!important;
+    width:min(280px,calc(100vw - 44px))!important;
     max-width:280px!important;
     min-width:0!important;
     margin:0!important;
@@ -238,8 +239,9 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
     border:1px solid var(--neo-border)!important;
     border-radius:16px!important;
     box-shadow:0 18px 45px rgba(16,24,40,.18)!important;
-    z-index:1001!important;
+    z-index:1202!important;
     direction:rtl!important;
+    transform:none!important;
   }
   .nav-links.open .nav-links__inner{
     display:grid!important;
@@ -247,7 +249,7 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
     gap:3px!important;
     width:100%!important;
   }
-  .nav-links.open a{
+  .nav-links.open .nav-links__inner > a{
     display:flex!important;
     width:100%!important;
     align-items:center!important;
@@ -263,8 +265,16 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
     padding-top:8px!important;
     border-top:1px solid var(--neo-border)!important;
   }
-  .mobile-nav-backdrop{z-index:1000!important;}
+  .mobile-nav-backdrop{
+    z-index:1201!important;
+    background:rgba(0,0,0,.24)!important;
+  }
 }
-@media(max-width:480px){
-  .site-header{--mobile-nav-top:66px!important;}
+
+/* V48 — use the corrected transparent logo consistently in the header/preloader. */
+.brand__logo img,
+.site-preloader__logo{
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
 }
