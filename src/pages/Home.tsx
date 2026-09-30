@@ -89,22 +89,16 @@ function Hero3DScene() {
     const scene = sceneRef.current;
     if (!scene) return;
     let raf = 0;
-    let scrollY = window.scrollY;
     let targetX = 0;
     let targetY = 0;
 
     const render = () => {
-      const progress = Math.min(scrollY / Math.max(window.innerHeight, 1), 1);
-      const rotateY = targetX + progress * 34;
-      const rotateX = targetY - progress * 10;
-      scene.style.setProperty("--hero-rx", `${rotateX}deg`);
-      scene.style.setProperty("--hero-ry", `${rotateY}deg`);
-      scene.style.setProperty("--hero-scroll", `${progress}`);
+      scene.style.setProperty("--hero-rx", `${targetY}deg`);
+      scene.style.setProperty("--hero-ry", `${targetX}deg`);
       raf = 0;
     };
 
     const schedule = () => {
-      scrollY = window.scrollY;
       if (!raf) raf = requestAnimationFrame(render);
     };
 
@@ -112,24 +106,22 @@ function Hero3DScene() {
       const rect = scene.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - 0.5;
       const y = (event.clientY - rect.top) / rect.height - 0.5;
-      targetX = x * 18;
-      targetY = -y * 12;
-      if (!raf) raf = requestAnimationFrame(render);
+      targetX = x * 12;
+      targetY = -y * 8;
+      schedule();
     };
 
     const leave = () => {
       targetX = 0;
       targetY = 0;
-      if (!raf) raf = requestAnimationFrame(render);
+      schedule();
     };
 
-    window.addEventListener("scroll", schedule, { passive: true });
     scene.addEventListener("mousemove", move);
     scene.addEventListener("mouseleave", leave);
     render();
 
     return () => {
-      window.removeEventListener("scroll", schedule);
       scene.removeEventListener("mousemove", move);
       scene.removeEventListener("mouseleave", leave);
       if (raf) cancelAnimationFrame(raf);
@@ -137,7 +129,7 @@ function Hero3DScene() {
   }, []);
 
   return (
-    <div className="hero-3d-stage" ref={sceneRef} aria-label="نمایش سه‌بعدی تعاملی 3DMarketIran">
+    <div className="hero-3d-stage" ref={sceneRef} aria-label="نمایش سه‌بعدی لوگوی 3D AR در 3DMarketIran">
       <div className="hero-3d-stage__stars" aria-hidden="true" />
       <div className="hero-3d-stage__halo hero-3d-stage__halo--a" aria-hidden="true" />
       <div className="hero-3d-stage__halo hero-3d-stage__halo--b" aria-hidden="true" />
@@ -146,19 +138,16 @@ function Hero3DScene() {
       <div className="hero-3d-object">
         <div className="hero-3d-object__shadow" aria-hidden="true" />
         <div className="hero-3d-object__core">
-          <span className="hero-3d-face hero-3d-face--front">3D</span>
-          <span className="hero-3d-face hero-3d-face--back">AR</span>
+          <span className="hero-3d-face hero-3d-face--front"><b>3D</b><i>AR</i></span>
+          <span className="hero-3d-face hero-3d-face--back"><b>AR</b><i>3D</i></span>
           <span className="hero-3d-face hero-3d-face--top" />
           <span className="hero-3d-face hero-3d-face--bottom" />
           <span className="hero-3d-face hero-3d-face--left" />
           <span className="hero-3d-face hero-3d-face--right" />
         </div>
-        <div className="hero-3d-object__wire hero-3d-object__wire--one" />
-        <div className="hero-3d-object__wire hero-3d-object__wire--two" />
       </div>
-      <div className="hero-3d-label hero-3d-label--one"><b>01</b><span>Interactive 3D</span></div>
-      <div className="hero-3d-label hero-3d-label--two"><b>02</b><span>AR Ready</span></div>
-      <div className="hero-3d-scroll" aria-hidden="true"><span /> SCROLL</div>
+      <div className="hero-3d-label hero-3d-label--one"><b>3D</b><span>Interactive</span></div>
+      <div className="hero-3d-label hero-3d-label--two"><b>AR</b><span>Ready</span></div>
     </div>
   );
 }
