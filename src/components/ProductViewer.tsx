@@ -64,7 +64,7 @@ export default function ProductViewer({ product }: Props) {
       if (loaded) {
         setStatus("ready");
         const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
-        if (typeof canAr === "boolean") setArSupported(canAr);
+        if (canAr === true) setArSupported(true);
         setArReady(true);
       }
     };
@@ -73,7 +73,7 @@ export default function ProductViewer({ product }: Props) {
       modelReadyRef.current = true;
       setStatus("ready");
       const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
-      if (typeof canAr === "boolean") setArSupported(canAr);
+      if (canAr === true) setArSupported(true);
       setArReady(true);
     };
     const onError = () => {
@@ -93,12 +93,12 @@ export default function ProductViewer({ product }: Props) {
         // can leave the next click without a valid user-gesture target.
         arSessionStartedRef.current = false;
         const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
-        if (typeof canAr === "boolean") setArSupported(canAr);
+        if (canAr === true) setArSupported(true);
         if (modelReadyRef.current) setArReady(true);
       } else if (detail?.status === "failed") {
         // A failed launch must not permanently disable the AR control.
         const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
-        if (typeof canAr === "boolean") setArSupported(canAr);
+        if (canAr === true) setArSupported(true);
         if (modelReadyRef.current) setArReady(true);
       }
     };
@@ -108,7 +108,7 @@ export default function ProductViewer({ product }: Props) {
     const timer = window.setTimeout(() => {
       syncLoaded();
       const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
-      if (typeof canAr === "boolean") setArSupported(canAr);
+      if (canAr === true) setArSupported(true);
       if (modelReadyRef.current) setArReady(true);
     }, 500);
     return () => {
@@ -132,7 +132,7 @@ export default function ProductViewer({ product }: Props) {
       modelReadyRef.current = true;
       setStatus("ready");
       const canAr = (el as unknown as { canActivateAR?: boolean }).canActivateAR;
-      if (typeof canAr === "boolean") setArSupported(canAr);
+      if (canAr === true) setArSupported(true);
       setArReady(true);
     } else {
       setStatus("ready");
@@ -201,7 +201,7 @@ export default function ProductViewer({ product }: Props) {
       </div>
     </div>
     {dims?.realWorldScale && (dims.widthM || dims.heightM || dims.depthM) && <span className="product-scale-badge">✓ مقیاس واقعی</span>}
-    {arSupported === false && viewMode === "3d" && <span className="product-ar-note">AR روی این دستگاه پشتیبانی نمی‌شود.</span>}
+    
     {lightboxOpen && activeImage && <div className="product-lightbox" role="dialog" aria-modal="true" aria-label={`تصویر بزرگ ${product.name}`} onClick={() => setLightboxOpen(false)} onKeyDown={onLightboxKey} tabIndex={-1}><div className="product-lightbox__frame" onClick={(event) => event.stopPropagation()}><button className="product-lightbox__close" type="button" onClick={() => setLightboxOpen(false)} aria-label="بستن"><Icon name="close" size={22} /></button>{images.length > 1 && <><button className="product-lightbox__arrow product-lightbox__arrow--right" type="button" onClick={nextImage} aria-label="تصویر بعدی"><Icon name="chevron-right" size={28} /></button><button className="product-lightbox__arrow product-lightbox__arrow--left" type="button" onClick={previousImage} aria-label="تصویر قبلی"><Icon name="chevron-left" size={28} /></button></>}<img className="product-lightbox__image" src={activeImage} alt={product.name} /><div className="product-lightbox__actions"><button type="button" className="product-lightbox__action" onClick={saveImage}><Icon name="download" size={18} /> ذخیره تصویر</button><button type="button" className="product-lightbox__action" onClick={shareImage}><Icon name="share" size={18} /> اشتراک‌گذاری</button></div></div></div>}
   </div>;
 }
