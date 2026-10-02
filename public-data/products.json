@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "id": "cmuram7uq000110i7hu1dqpk4",
+    "slug": "صندل-تک-نفره-e8_asi",
+    "name": "صندل تک نفره",
+    "shortDescription": "مناسب خانه های لوکس",
+    "fullDescription": "در رنگ های مختلف برای شما ساخته میشود و میتوانید با تماس گرفتن با شماره فروشگاه سفارش بدهید",
+    "price": 45000000,
+    "isPinned": false,
+    "pinOrder": null,
+    "viewCount": 0,
+    "tags": [],
+    "material": "چوب گردو و پارچه ابریشم",
+    "colors": [],
+    "seller": {
+      "id": "cmur9nu1k0013zmxss9ieedbj",
+      "slug": "3dmobl-3mvknt",
+      "storeName": "3Dmobl"
+    },
+    "images": [
+      {
+        "url": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/products/cmuram7uq000110i7hu1dqpk4/images/-LvxbmwBO0RBjMMJ.webp",
+        "isPrimary": true
+      }
+    ],
+    "models": [],
+    "dimensions": {
+      "widthM": 0.4,
+      "heightM": 1.3,
+      "depthM": 0.4,
+      "realWorldScale": true
+    },
+    "publishedAt": null
+  }
+]
