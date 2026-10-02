@@ -11,7 +11,16 @@
     "viewCount": 0,
     "tags": [],
     "material": "چوب گردو و پارچه ابریشم",
-    "colors": [],
+    "colors": [
+      {
+        "name": "زرشکی",
+        "value": "#861818"
+      },
+      {
+        "name": "طوسی",
+        "value": "#808080"
+      }
+    ],
     "seller": {
       "id": "cmur9nu1k0013zmxss9ieedbj",
       "slug": "3dmobl-3mvknt",
@@ -30,6 +39,6 @@
       "depthM": 0.4,
       "realWorldScale": true
     },
-    "publishedAt": null
+    "publishedAt": "2026-10-02T19:05:34.467Z"
   }
 ]
