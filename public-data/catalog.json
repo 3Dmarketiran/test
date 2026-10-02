@@ -1,8 +1,57 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-02T16:30:46.280Z",
-  "version": "89872490",
+  "generatedAt": "2026-10-02T16:42:46.255Z",
+  "version": "9d039b5e",
   "products": [
+    {
+      "id": "cmuayu5fg000nznuyxalg8q9h",
+      "slug": "test-7olbw_",
+      "name": "sandal",
+      "shortDescription": "tak nafare",
+      "fullDescription": "avalin mahsul",
+      "price": 15000000,
+      "isPinned": true,
+      "pinOrder": 1,
+      "viewCount": 0,
+      "tags": [
+        "test"
+      ],
+      "material": "پارچه مرغوب",
+      "colors": [
+        {
+          "name": "طوسی",
+          "value": "#808080"
+        }
+      ],
+      "seller": {
+        "id": "cmuays6st0007znuyvxh6ud5u",
+        "slug": "test-qa20kn",
+        "storeName": "test"
+      },
+      "images": [
+        {
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/images/o0vTxFCHz1pWAaZN.jpeg",
+          "isPrimary": true
+        }
+      ],
+      "models": [
+        {
+          "kind": "GLB",
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/models/ATIrq0-9Zjw7fuDg.glb"
+        },
+        {
+          "kind": "USDZ",
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/models/ItQH_WaP3kl5t85w.usdz"
+        }
+      ],
+      "dimensions": {
+        "widthM": 0.1,
+        "heightM": 0.1,
+        "depthM": 0.1,
+        "realWorldScale": true
+      },
+      "publishedAt": "2026-09-29T11:40:09.719Z"
+    },
     {
       "id": "cmub0obpk0013pqapa6n9vma7",
       "slug": "test-2-rfpxkd",
@@ -39,6 +88,18 @@
   ],
   "sellers": [
     {
+      "id": "cmuays6st0007znuyvxh6ud5u",
+      "slug": "test-qa20kn",
+      "storeName": "test",
+      "description": "avalin forushgah",
+      "logoUrl": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/sellers/cmuays6st0007znuyvxh6ud5u/logo/NAObwTMreNpXps8u.jpeg",
+      "themeColor": "#ff0000",
+      "contactEmail": "seller@gmail.com",
+      "contactPhone": "09144142898",
+      "address": "tabriz valiasr",
+      "socialLinks": {}
+    },
+    {
       "id": "cmub0nf7u000npqapdrhv35iw",
       "slug": "test-2-vn5xio",
       "storeName": "test 2",
@@ -72,18 +133,6 @@
   },
   "plans": [
     {
-      "id": "cmuadju210001todkytojgnjv",
-      "name": "یک ماهه",
-      "durationDays": 30,
-      "price": 4600000,
-      "discountPct": null,
-      "productLimit": 10,
-      "storageLimitMb": 1000,
-      "categoryId": "subscription-category-general",
-      "sortOrder": 0,
-      "features": {}
-    },
-    {
       "id": "plan-campaign-trial-30",
       "name": "کمپین رایگان",
       "durationDays": 30,
@@ -96,10 +145,34 @@
       "features": {}
     },
     {
+      "id": "cmuadju210001todkytojgnjv",
+      "name": "یک ماهه",
+      "durationDays": 30,
+      "price": 4600000,
+      "discountPct": null,
+      "productLimit": 10,
+      "storageLimitMb": 1000,
+      "categoryId": "subscription-category-general",
+      "sortOrder": 0,
+      "features": {}
+    },
+    {
+      "id": "plan-pro-90",
+      "name": "حرفه‌ای",
+      "durationDays": 90,
+      "price": 35970000,
+      "discountPct": 0,
+      "productLimit": 100,
+      "storageLimitMb": 5120,
+      "categoryId": "plan-cat-professional",
+      "sortOrder": 0,
+      "features": {}
+    },
+    {
       "id": "plan-semi-90",
       "name": "نیمه‌حرفه‌ای",
       "durationDays": 90,
-      "price": 2000000,
+      "price": 17970000,
       "discountPct": 0,
       "productLimit": 30,
       "storageLimitMb": 1536,
@@ -111,7 +184,7 @@
       "id": "plan-starter-90",
       "name": "Starter",
       "durationDays": 90,
-      "price": 1100000,
+      "price": 8970000,
       "discountPct": 0,
       "productLimit": 10,
       "storageLimitMb": 500,
@@ -120,34 +193,10 @@
       "features": {}
     },
     {
-      "id": "plan-pro-90",
-      "name": "حرفه‌ای",
-      "durationDays": 90,
-      "price": 4200000,
-      "discountPct": 0,
-      "productLimit": 100,
-      "storageLimitMb": 5120,
-      "categoryId": "plan-cat-professional",
-      "sortOrder": 0,
-      "features": {}
-    },
-    {
       "id": "cmucli0fw000657v6qm7khmbd",
       "name": "یک ساله + نامحدود",
       "durationDays": 365,
       "price": 149000000,
-      "discountPct": null,
-      "productLimit": null,
-      "storageLimitMb": null,
-      "categoryId": "subscription-category-general",
-      "sortOrder": 0,
-      "features": {}
-    },
-    {
-      "id": "cmuclkhhy000757v6e14e614j",
-      "name": "سه ساله + نامحدود",
-      "durationDays": 1095,
-      "price": 411000000,
       "discountPct": null,
       "productLimit": null,
       "storageLimitMb": null,
@@ -168,26 +217,26 @@
       "features": {}
     },
     {
+      "id": "cmuclkhhy000757v6e14e614j",
+      "name": "سه ساله + نامحدود",
+      "durationDays": 1095,
+      "price": 411000000,
+      "discountPct": null,
+      "productLimit": null,
+      "storageLimitMb": null,
+      "categoryId": "subscription-category-general",
+      "sortOrder": 0,
+      "features": {}
+    },
+    {
       "id": "plan-semi-180",
       "name": "نیمه‌حرفه‌ای",
       "durationDays": 180,
-      "price": 4000000,
+      "price": 35940000,
       "discountPct": 0,
       "productLimit": 30,
       "storageLimitMb": 1536,
       "categoryId": "plan-cat-semi",
-      "sortOrder": 1,
-      "features": {}
-    },
-    {
-      "id": "plan-starter-180",
-      "name": "Starter",
-      "durationDays": 180,
-      "price": 2200000,
-      "discountPct": 0,
-      "productLimit": 10,
-      "storageLimitMb": 500,
-      "categoryId": "plan-cat-starter",
       "sortOrder": 1,
       "features": {}
     },
@@ -195,7 +244,7 @@
       "id": "plan-pro-180",
       "name": "حرفه‌ای",
       "durationDays": 180,
-      "price": 8400000,
+      "price": 71940000,
       "discountPct": 0,
       "productLimit": 100,
       "storageLimitMb": 5120,
@@ -204,14 +253,26 @@
       "features": {}
     },
     {
-      "id": "plan-semi-365",
-      "name": "نیمه‌حرفه‌ای",
-      "durationDays": 365,
-      "price": 8000000,
+      "id": "plan-starter-180",
+      "name": "Starter",
+      "durationDays": 180,
+      "price": 17940000,
       "discountPct": 0,
-      "productLimit": 30,
-      "storageLimitMb": 1536,
-      "categoryId": "plan-cat-semi",
+      "productLimit": 10,
+      "storageLimitMb": 500,
+      "categoryId": "plan-cat-starter",
+      "sortOrder": 1,
+      "features": {}
+    },
+    {
+      "id": "plan-starter-365",
+      "name": "Starter",
+      "durationDays": 365,
+      "price": 35880000,
+      "discountPct": 0,
+      "productLimit": 10,
+      "storageLimitMb": 500,
+      "categoryId": "plan-cat-starter",
       "sortOrder": 2,
       "features": {}
     },
@@ -219,7 +280,7 @@
       "id": "plan-pro-365",
       "name": "حرفه‌ای",
       "durationDays": 365,
-      "price": 16800000,
+      "price": 143880000,
       "discountPct": 0,
       "productLimit": 100,
       "storageLimitMb": 5120,
@@ -228,30 +289,22 @@
       "features": {}
     },
     {
-      "id": "plan-starter-365",
-      "name": "Starter",
+      "id": "plan-semi-365",
+      "name": "نیمه‌حرفه‌ای",
       "durationDays": 365,
-      "price": 4400000,
+      "price": 71880000,
       "discountPct": 0,
-      "productLimit": 10,
-      "storageLimitMb": 500,
-      "categoryId": "plan-cat-starter",
+      "productLimit": 30,
+      "storageLimitMb": 1536,
+      "categoryId": "plan-cat-semi",
       "sortOrder": 2,
       "features": {}
     }
   ],
   "planCategories": [
     {
-      "id": "subscription-category-general",
-      "name": "پلن‌های عمومی",
-      "slug": "general",
-      "description": "پلن‌های starter برای فروشگاه های کوچک",
-      "sortOrder": 0,
-      "isActive": true
-    },
-    {
       "id": "plan-cat-starter",
-      "name": "Starter",
+      "name": "مبتدی",
       "slug": "starter",
       "description": "پلن پایه فروشندگان",
       "sortOrder": 0,
