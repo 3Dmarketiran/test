@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-02T19:08:46.054Z",
-  "version": "3eeebda2",
+  "generatedAt": "2026-10-02T19:12:08.031Z",
+  "version": "4a1837f1",
   "products": [
     {
       "id": "cmuram7uq000110i7hu1dqpk4",
@@ -43,7 +43,7 @@
         "depthM": 0.4,
         "realWorldScale": true
       },
-      "publishedAt": "2026-10-02T19:05:34.467Z"
+      "publishedAt": "2026-10-02T19:08:47.520Z"
     }
   ],
   "sellers": [
@@ -52,7 +52,7 @@
       "slug": "3dmobl-3mvknt",
       "storeName": "3Dmobl",
       "description": null,
-      "logoUrl": null,
+      "logoUrl": "/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/3kre030Qpeh-I-cM.jpeg",
       "themeColor": null,
       "contactEmail": "3dmobl@gmail.com",
       "contactPhone": "",
