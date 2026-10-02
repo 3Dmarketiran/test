@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-02T19:12:08.031Z",
-  "version": "4a1837f1",
+  "generatedAt": "2026-10-02T19:12:50.538Z",
+  "version": "7a94a649",
   "products": [
     {
       "id": "cmuram7uq000110i7hu1dqpk4",
@@ -53,10 +53,10 @@
       "storeName": "3Dmobl",
       "description": null,
       "logoUrl": "/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/3kre030Qpeh-I-cM.jpeg",
-      "themeColor": null,
+      "themeColor": "#2e6fce",
       "contactEmail": "3dmobl@gmail.com",
       "contactPhone": "",
-      "address": null,
+      "address": "تهران ولیعصر",
       "socialLinks": {}
     }
   ],
