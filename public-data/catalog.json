@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-02T19:13:57.029Z",
-  "version": "781a9ba2",
+  "generatedAt": "2026-10-02T19:15:06.753Z",
+  "version": "e295bc32",
   "products": [
     {
       "id": "cmuram7uq000110i7hu1dqpk4",
@@ -51,11 +51,11 @@
       "id": "cmur9nu1k0013zmxss9ieedbj",
       "slug": "3dmobl-3mvknt",
       "storeName": "3Dmobl",
-      "description": null,
+      "description": "تست",
       "logoUrl": "/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/ei2cXTLHNAGNnNon.jpeg",
-      "themeColor": "#2e6fce",
+      "themeColor": "#832020",
       "contactEmail": "3dmobl@gmail.com",
-      "contactPhone": "",
+      "contactPhone": "09123456789",
       "address": "تهران ولیعصر",
       "socialLinks": {}
     }
