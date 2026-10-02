@@ -5,6 +5,7 @@ import { track } from "../lib/analytics";
 interface Props { product: PublicProduct; }
 type ViewMode = "image" | "3d";
 type ViewerStatus = "loading" | "ready" | "error";
+type ARPreparation = "idle" | "preparing" | "prepared" | "failed";
 
 function Icon({ name, size = 20 }: { name: "cube" | "ar" | "zoom" | "close" | "download" | "share" | "image" | "chevron-left" | "chevron-right"; size?: number }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
@@ -32,6 +33,9 @@ export default function ProductViewer({ product }: Props) {
   const [arSupported, setArSupported] = useState<boolean | null>(null);
   const [isIOSBrowser] = useState(() => typeof navigator !== "undefined" && /iPhone|iPad|iPod/i.test(navigator.userAgent));
   const [arReady, setArReady] = useState(false);
+  const [arPreparation, setArPreparation] = useState<ARPreparation>("idle");
+  const [arMessage, setArMessage] = useState("");
+  const arWaitRef = useRef<number | null>(null);
   const modelReadyRef = useRef(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -40,7 +44,7 @@ export default function ProductViewer({ product }: Props) {
   const viewerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setImageRatio(1.12); setStatus("ready"); setArSupported(null); setArReady(false); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
+    setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setImageRatio(1.12); setStatus("ready"); setArSupported(null); setArReady(false); setArPreparation("idle"); setArMessage(""); if (arWaitRef.current) window.clearTimeout(arWaitRef.current); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
   }, [product.id, poster, initialIndex]);
 
   // Start the primary product photo immediately, and warm the next photos in the background.
@@ -142,28 +146,69 @@ export default function ProductViewer({ product }: Props) {
 
 
 
-  // The click must stay a synchronous user-gesture bridge. Never await model
-  // readiness here and never permanently disable the button after a failed
-  // launch; model-viewer handles the platform-specific Quick Look / Scene
-  // Viewer handoff itself.
-  const openAR = () => {
+  // Preparation is deliberately separate from launch: browsers may revoke the
+  // transient user gesture after an async wait. A second explicit tap launches AR.
+  const prepareAR = () => {
     if (!glb) return;
-    const el = viewerRef.current as (HTMLElement & {
-      activateAR?: () => Promise<void> | void;
-      loaded?: boolean;
-    }) | null;
-    if (!el || typeof el.activateAR !== "function" || !modelReadyRef.current) return;
+    setViewMode("3d");
+    setArPreparation("preparing");
+    setArMessage("در حال آماده‌سازی مدل برای واقعیت افزوده؛ لطفاً صفحه را باز نگه دارید…");
+    const el = viewerRef.current as (HTMLElement & { loaded?: boolean; activateAR?: () => Promise<void> | void }) | null;
+    if (!el) {
+      setArPreparation("failed");
+      setArMessage("نمایشگر سه‌بعدی در دسترس نیست. دوباره تلاش کنید.");
+      return;
+    }
+    if (Boolean(el.loaded) || modelReadyRef.current) {
+      modelReadyRef.current = true;
+      setArReady(true);
+      setArPreparation("prepared");
+      setArMessage("مدل آماده است. برای ورود به AR دوباره روی دکمه بزنید.");
+      return;
+    }
+    const onLoad = () => {
+      cleanup();
+      modelReadyRef.current = true;
+      setArReady(true);
+      setArPreparation("prepared");
+      setArMessage("مدل آماده است. برای ورود به AR دوباره روی دکمه بزنید.");
+    };
+    const onError = () => {
+      cleanup();
+      setArPreparation("failed");
+      setArMessage("دریافت یا آماده‌سازی مدل ناموفق بود. اتصال اینترنت را بررسی و دوباره تلاش کنید.");
+    };
+    const cleanup = () => {
+      el.removeEventListener("load", onLoad);
+      el.removeEventListener("error", onError);
+      if (arWaitRef.current) window.clearTimeout(arWaitRef.current);
+      arWaitRef.current = null;
+    };
+    el.addEventListener("load", onLoad, { once: true });
+    el.addEventListener("error", onError, { once: true });
+    arWaitRef.current = window.setTimeout(() => {
+      cleanup();
+      if (Boolean(el.loaded)) onLoad();
+      else {
+        setArPreparation("failed");
+        setArMessage("آماده‌سازی بیش از ۲۵ ثانیه طول کشید. اینترنت یا دسترسی به فایل مدل را بررسی کنید.");
+      }
+    }, 25000);
+  };
+
+  const openAR = () => {
+    const el = viewerRef.current as (HTMLElement & { activateAR?: () => Promise<void> | void }) | null;
+    if (!el || !modelReadyRef.current || arPreparation !== "prepared") return;
     try {
-      const result = el.activateAR();
+      const result = el.activateAR?.();
       if (result && typeof (result as Promise<void>).catch === "function") {
         void (result as Promise<void>).catch(() => {
-          // Keep the control usable for the next direct user gesture.
-          setArReady(true);
+          setArMessage("اجرای AR انجام نشد. سازگاری مرورگر و مجوزهای دستگاه را بررسی کنید و دوباره بزنید.");
+          setArPreparation("prepared");
         });
       }
     } catch {
-      // Keep the control usable for the next direct user gesture.
-      setArReady(true);
+      setArMessage("اجرای AR انجام نشد. دوباره تلاش کنید یا مدل سه‌بعدی را مشاهده کنید.");
     }
   };
 
@@ -189,15 +234,18 @@ export default function ProductViewer({ product }: Props) {
       {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} loading="eager" decoding="async" fetchPriority="high" onLoad={(event) => { const image = event.currentTarget; if (image.naturalWidth && image.naturalHeight) setImageRatio(image.naturalWidth / image.naturalHeight); }} onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
       {glb ? <div className={`product-main-3d ${viewMode === "3d" ? "is-visible" : "is-preloaded"}`}>
         <model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="scene-viewer webxr quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} scale="1 1 1" touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); setArReady(true); }} onError={() => { modelReadyRef.current = false; setStatus("error"); setArReady(false); }}>
-          {viewMode === "3d" && !isIOSBrowser ? <button slot="ar-button" type="button" className="viewer-ar-button" aria-label="نمایش در واقعیت افزوده"><Icon name="ar" size={15} />AR</button> : null}
+          
         </model-viewer>
-        {viewMode === "3d" && isIOSBrowser && usdz?.url ? (
-          <a className="viewer-ar-button viewer-ar-button--direct viewer-ar-button--quicklook" rel="ar" href={usdz.url} aria-label="باز کردن واقعیت افزوده در iPhone"><img src={poster || "/favicon.ico"} alt="" /><Icon name="ar" size={15} />AR</a>
+        {viewMode === "3d" && arPreparation !== "prepared" ? (
+          <button type="button" className="viewer-ar-button viewer-ar-button--direct" onClick={prepareAR} disabled={arPreparation === "preparing"} aria-live="polite">
+            <Icon name="ar" size={15} />{arPreparation === "preparing" ? "در حال آماده‌سازی…" : arPreparation === "failed" ? "تلاش دوباره برای AR" : "آماده‌سازی AR"}
+          </button>
         ) : null}
-        {viewMode === "3d" && isIOSBrowser && !usdz?.url ? (
-          <button type="button" className="viewer-ar-button viewer-ar-button--direct" onClick={openAR} aria-label="تلاش برای اجرای واقعیت افزوده"><Icon name="ar" size={15} />AR</button>
+        {viewMode === "3d" && arPreparation === "prepared" ? (isIOSBrowser && usdz?.url ?
+          <a className="viewer-ar-button viewer-ar-button--direct viewer-ar-button--quicklook" rel="ar" href={usdz.url} aria-label="باز کردن واقعیت افزوده در iPhone"><img src={poster || "/favicon.ico"} alt="" /><Icon name="ar" size={15} />ورود به AR</a> :
+          <button type="button" className="viewer-ar-button viewer-ar-button--direct" onClick={openAR} aria-label="ورود به واقعیت افزوده"><Icon name="ar" size={15} />ورود به AR</button>
         ) : null}
-        
+        {viewMode === "3d" && arMessage ? <div className="ar-preparation-status" role="status" aria-live="polite">{arMessage}{arPreparation === "failed" && <button type="button" onClick={prepareAR}>تلاش مجدد</button>}</div> : null}
         {viewMode === "3d" && status === "error" && <div className="product-viewer-error"><strong>بارگذاری مدل سه‌بعدی ناموفق بود.</strong>{poster && <button type="button" className="viewer-action" onClick={() => { setViewMode("image"); setImageError(false); }}>نمایش تصاویر محصول</button>}</div>}
       </div> : viewMode !== "image" ? <div className="product-viewer-error"><Icon name="image" size={38} /><strong>تصویر محصول در دسترس نیست.</strong></div> : null}
       <div className="product-viewer-controls">

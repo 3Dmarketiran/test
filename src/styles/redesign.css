@@ -919,3 +919,8 @@
 
 /* V54: AR is enabled only after model-viewer reports a real AR-ready state. */
 .viewer-ar-button--direct:disabled{opacity:.55!important;cursor:wait!important;transform:none!important;box-shadow:none!important;pointer-events:auto!important;}
+
+/* V63 AR preparation status and explicit launch handoff */
+.ar-preparation-status{position:absolute;left:12px;right:12px;bottom:58px;z-index:42;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;padding:12px 14px;border:1px solid rgba(23,58,99,.14);border-radius:13px;background:rgba(255,255,255,.97);color:#173a63;font-size:12px;font-weight:700;line-height:1.8;text-align:center;box-shadow:0 8px 24px rgba(15,35,60,.12);}
+.ar-preparation-status button{border:1px solid #173a63;border-radius:9px;background:#173a63;color:#fff;padding:6px 10px;font:inherit;cursor:pointer;}
+.viewer-ar-button:disabled{opacity:.72!important;cursor:progress!important;}
