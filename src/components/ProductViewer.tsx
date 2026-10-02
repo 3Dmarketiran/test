@@ -30,6 +30,7 @@ export default function ProductViewer({ product }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>("image");
   const [status, setStatus] = useState<ViewerStatus>(glb ? "ready" : "ready");
   const [arSupported, setArSupported] = useState<boolean | null>(null);
+  const [isIOSBrowser] = useState(() => typeof navigator !== "undefined" && /iPhone|iPad|iPod/i.test(navigator.userAgent));
   const [arReady, setArReady] = useState(false);
   const modelReadyRef = useRef(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -151,12 +152,7 @@ export default function ProductViewer({ product }: Props) {
       activateAR?: () => Promise<void> | void;
       loaded?: boolean;
     }) | null;
-    if (!el || typeof el.activateAR !== "function") return;
-    // The custom element can finish loading before React effects reattach after
-    // a refresh or product-route transition. Trust its live `loaded` flag too.
-    if (!modelReadyRef.current && !el.loaded) return;
-    modelReadyRef.current = true;
-    setArReady(true);
+    if (!el || typeof el.activateAR !== "function" || !modelReadyRef.current) return;
     try {
       const result = el.activateAR();
       if (result && typeof (result as Promise<void>).catch === "function") {
@@ -192,11 +188,14 @@ export default function ProductViewer({ product }: Props) {
     <div className="product-viewer-ref__main" style={{ aspectRatio: `${imageRatio}` }}>
       {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} loading="eager" decoding="async" fetchPriority="high" onLoad={(event) => { const image = event.currentTarget; if (image.naturalWidth && image.naturalHeight) setImageRatio(image.naturalWidth / image.naturalHeight); }} onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
       {glb ? <div className={`product-main-3d ${viewMode === "3d" ? "is-visible" : "is-preloaded"}`}>
-        <model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="scene-viewer webxr quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} scale="1 1 1" touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); setArReady(true); }} onError={() => { modelReadyRef.current = false; setStatus("error"); setArReady(false); }} />
-        {viewMode === "3d" ? (
-          <button type="button" className="viewer-ar-button viewer-ar-button--direct" onClick={openAR} disabled={!arReady} aria-disabled={!arReady} aria-label={arReady ? "نمایش در واقعیت افزوده" : "در حال آماده‌سازی واقعیت افزوده"}>
-            <Icon name="ar" size={15} />AR
-          </button>
+        <model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="scene-viewer webxr quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} scale="1 1 1" touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); setArReady(true); }} onError={() => { modelReadyRef.current = false; setStatus("error"); setArReady(false); }}>
+          {viewMode === "3d" && !isIOSBrowser ? <button slot="ar-button" type="button" className="viewer-ar-button" aria-label="نمایش در واقعیت افزوده"><Icon name="ar" size={15} />AR</button> : null}
+        </model-viewer>
+        {viewMode === "3d" && isIOSBrowser && usdz?.url ? (
+          <a className="viewer-ar-button viewer-ar-button--direct viewer-ar-button--quicklook" rel="ar" href={usdz.url} aria-label="باز کردن واقعیت افزوده در iPhone"><img src={poster || "/favicon.ico"} alt="" /><Icon name="ar" size={15} />AR</a>
+        ) : null}
+        {viewMode === "3d" && isIOSBrowser && !usdz?.url ? (
+          <button type="button" className="viewer-ar-button viewer-ar-button--direct" onClick={openAR} aria-label="تلاش برای اجرای واقعیت افزوده"><Icon name="ar" size={15} />AR</button>
         ) : null}
         
         {viewMode === "3d" && status === "error" && <div className="product-viewer-error"><strong>بارگذاری مدل سه‌بعدی ناموفق بود.</strong>{poster && <button type="button" className="viewer-action" onClick={() => { setViewMode("image"); setImageError(false); }}>نمایش تصاویر محصول</button>}</div>}
