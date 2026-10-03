@@ -1,7 +1,7 @@
 import React from "react";
 import { useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
-import { ADMIN_URL, SUPPORT_PHONE } from "../lib/config";
+import { ADMIN_URL, SUPPORT_PHONE, API_URL } from "../lib/config";
 
 type Plan = {
   id: string;
@@ -118,6 +118,8 @@ function ArrowIcon() {
 
 export default function Plans() {
   const { settings, plans: catalogPlans, planCategories: catalogCategories, loading: catalogLoading, error: catalogError } = useData();
+  const [trafficBundles, setTrafficBundles] = React.useState<Array<{id:string;name:string;gigabytes:number;priceToman:number}>>([]);
+  React.useEffect(() => { const controller = new AbortController(); fetch(`${API_URL}/api/traffic/bundles`, { signal: controller.signal, headers: { Accept: "application/json" } }).then(r => r.ok ? r.json() : Promise.reject(new Error("traffic fetch failed"))).then(data => setTrafficBundles(Array.isArray(data.bundles) ? data.bundles : [])).catch(() => setTrafficBundles([])); return () => controller.abort(); }, []);
 
   const plans = catalogPlans as Plan[];
   const baseCategories = catalogCategories || [];
@@ -579,6 +581,11 @@ export default function Plans() {
               ))}
             </section>
           )}
+
+          <section style={{ maxWidth: 1100, margin: "38px auto 0" }} aria-labelledby="traffic-bundles-title">
+            <div style={{ textAlign: "center", marginBottom: 18 }}><h2 id="traffic-bundles-title" style={{ marginBottom: 6 }}>بسته‌های ترافیک اضافه</h2><p style={{ color: "var(--color-text-muted, #777)", fontSize: 13 }}>برای مصرف بیشتر از ترافیک همراه پلن، بسته جداگانه درخواست کنید.</p></div>
+            {trafficBundles.length ? <div className="plans-single-column" style={{ alignItems: "stretch" }}>{trafficBundles.map(bundle => <article className="card" key={bundle.id} style={{ padding: 22, textAlign: "center" }}><h3 style={{ margin: 0 }}>{bundle.name}</h3><div style={{ margin: "12px 0 4px", fontSize: 28, fontWeight: 900 }}>{bundle.gigabytes} GB</div><div style={{ fontWeight: 750 }}>{formatPrice(bundle.priceToman)}</div><a href={`tel:${phone}`} className="btn btn-primary" style={{ marginTop: 16 }}>درخواست خرید</a></article>)}</div> : <p style={{ textAlign: "center", color: "var(--color-text-muted, #777)", fontSize: 13 }}>در حال حاضر بسته ترافیک اضافه‌ای برای نمایش ثبت نشده است.</p>}
+          </section>
 
           {/* FOOTNOTE */}
           <div
