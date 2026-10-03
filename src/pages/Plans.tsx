@@ -118,23 +118,47 @@ function ArrowIcon() {
 
 export default function Plans() {
   const { settings, plans: catalogPlans, planCategories: catalogCategories, loading: catalogLoading, error: catalogError } = useData();
+  const [livePlans, setLivePlans] = React.useState<Plan[] | null>(null);
+  const [liveCategories, setLiveCategories] = React.useState<typeof catalogCategories | null>(null);
   const [trafficBundles, setTrafficBundles] = React.useState<Array<{id:string;name:string;gigabytes:number;priceToman:number}>>([]);
-  React.useEffect(() => { const controller = new AbortController(); fetch(`${API_URL}/api/traffic/bundles`, { signal: controller.signal, headers: { Accept: "application/json" } }).then(r => r.ok ? r.json() : Promise.reject(new Error("traffic fetch failed"))).then(data => setTrafficBundles(Array.isArray(data.bundles) ? data.bundles : [])).catch(() => setTrafficBundles([])); return () => controller.abort(); }, []);
+  const [plansLoading, setPlansLoading] = React.useState(true);
 
-  const plans = catalogPlans as Plan[];
-  const baseCategories = catalogCategories || [];
+  React.useEffect(() => {
+    const controller = new AbortController();
+    Promise.all([
+      fetch(`${API_URL}/api/subscriptions/plans`, { signal: controller.signal, headers: { Accept: "application/json" }, cache: "no-store" }),
+      fetch(`${API_URL}/api/traffic/bundles`, { signal: controller.signal, headers: { Accept: "application/json" }, cache: "no-store" }),
+    ]).then(async ([plansResponse, trafficResponse]) => {
+      if (plansResponse.ok) {
+        const data = await plansResponse.json();
+        if (Array.isArray(data?.plans)) {
+          setLivePlans(data.plans as Plan[]);
+          setLiveCategories(Array.isArray(data?.categories) ? data.categories : []);
+        }
+      }
+      if (trafficResponse.ok) {
+        const data = await trafficResponse.json();
+        setTrafficBundles(Array.isArray(data?.bundles) ? data.bundles : []);
+      }
+    }).catch(() => undefined).finally(() => setPlansLoading(false));
+    return () => controller.abort();
+  }, []);
+
+  const plans = (livePlans ?? catalogPlans) as Plan[];
+  const baseCategories = liveCategories ?? catalogCategories ?? [];
   const hasUncategorized = plans.some((plan) => !plan.categoryId);
   const categories = baseCategories.length > 0
     ? [...baseCategories, ...(hasUncategorized ? [{ id: "__uncategorized", name: "سایر پلن‌ها", slug: "uncategorized", description: "پلن‌هایی که هنوز دسته‌بندی نشده‌اند", sortOrder: 999, isActive: true }] : [])]
     : (plans.length > 0 ? [{ id: "general", name: "پلن‌های فروشندگان", slug: "general", description: "پلن‌های فعلی فروشندگان", sortOrder: 0, isActive: true }] : []);
+  const loading = plansLoading || catalogLoading;
+  const error = Boolean(catalogError);
+
   const [selectedCategoryId, setSelectedCategoryId] = React.useState<string>(categories[0]?.id || "");
 
   React.useEffect(() => {
     if (!selectedCategoryId && categories[0]?.id) setSelectedCategoryId(categories[0].id);
     if (selectedCategoryId && !categories.some((category) => category.id === selectedCategoryId)) setSelectedCategoryId(categories[0]?.id || "");
   }, [categories, selectedCategoryId]);
-  const loading = catalogLoading;
-  const error = Boolean(catalogError);
 
   const phone =
     settings?.contactPhone || SUPPORT_PHONE;

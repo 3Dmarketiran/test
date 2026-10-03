@@ -140,6 +140,7 @@ export default function Home() {
   const {
     sellers,
     settings,
+    plans,
     loading,
   } = useData();
 
@@ -444,6 +445,34 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* SELLER PLANS */}
+      {plans.length > 0 && (
+        <section className="section section-alt">
+          <div className="container">
+            <div className="section-head">
+              <div>
+                <h2>پلن‌های اشتراک فروشندگان</h2>
+                <p>پلن‌های فعال را ببینید و برای فعال‌سازی با پشتیبانی تماس بگیرید.</p>
+              </div>
+              <Link to="/plans" className="btn btn-outline">مشاهده همه پلن‌ها</Link>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14 }}>
+              {plans.slice(0, 6).map((plan) => (
+                <article key={plan.id} className="card" style={{ padding: 20 }}>
+                  <div style={{ color: "var(--color-primary)", fontSize: 12, fontWeight: 850 }}>{plan.durationDays === 30 ? "ماهانه" : `${plan.durationDays} روزه`}</div>
+                  <h3 style={{ margin: "8px 0 10px" }}>{plan.name}</h3>
+                  <div style={{ fontSize: 20, fontWeight: 900 }}>{plan.price.toLocaleString("fa-IR")} تومان</div>
+                  <div style={{ marginTop: 10, color: "var(--color-text-muted)", fontSize: 12 }}>
+                    {plan.productLimit ? `${plan.productLimit} محصول` : "محصول نامحدود"}
+                    {plan.trafficLimitGb ? ` · ${plan.trafficLimitGb} GB ترافیک ماهانه` : ""}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* SELLER CTA */}
       <section className="section">
