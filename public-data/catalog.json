@@ -1,8 +1,51 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-03T18:38:32.948Z",
-  "version": "e9bccb42",
-  "products": [],
+  "generatedAt": "2026-10-03T18:58:01.188Z",
+  "version": "203ed309",
+  "products": [
+    {
+      "id": "cmusqnm23003j12vj1i7ikqy7",
+      "slug": "sandal-inrici",
+      "name": "sandal",
+      "shortDescription": "toozih",
+      "fullDescription": "toozih kamel",
+      "price": 12500000,
+      "isPinned": false,
+      "pinOrder": null,
+      "viewCount": 0,
+      "tags": [],
+      "material": "choob",
+      "colors": [],
+      "seller": {
+        "id": "cmur9nu1k0013zmxss9ieedbj",
+        "slug": "3dmobl-3mvknt",
+        "storeName": "3Dmobl"
+      },
+      "images": [
+        {
+          "url": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/products/cmusqnm23003j12vj1i7ikqy7/images/3neufjuMtP3mcn3L.webp",
+          "isPrimary": true
+        }
+      ],
+      "models": [
+        {
+          "kind": "GLB",
+          "url": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/products/cmusqnm23003j12vj1i7ikqy7/models/CSKz-dtTUGvSdMpO.glb"
+        },
+        {
+          "kind": "USDZ",
+          "url": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/products/cmusqnm23003j12vj1i7ikqy7/models/Nc9-ZLoyx3u0uhjq.usdz"
+        }
+      ],
+      "dimensions": {
+        "widthM": 0.4,
+        "heightM": 1.3,
+        "depthM": 0.4,
+        "realWorldScale": true
+      },
+      "publishedAt": null
+    }
+  ],
   "sellers": [
     {
       "id": "cmur9nu1k0013zmxss9ieedbj",
