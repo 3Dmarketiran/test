@@ -11,8 +11,10 @@ type Plan = {
   discountPct?: number | null;
   productLimit?: number | null;
   storageLimitMb?: number | null;
+  trafficLimitGb?: number | null;
   categoryId?: string | null;
   sortOrder?: number;
+  isPublic?: boolean;
   features?: Record<string, unknown> | null;
 };
 
@@ -548,6 +550,7 @@ export default function Plans() {
                               <div style={{ display: "grid", gap: 12, flex: 1 }}>
                                 {plan.productLimit ? <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>تا {plan.productLimit.toLocaleString("fa-IR")} محصول</span></div> : null}
                                 {plan.storageLimitMb ? <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>فضای {storageLabel(plan.storageLimitMb)}</span></div> : null}
+                                {plan.trafficLimitGb ? <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>ترافیک ماهانه {plan.trafficLimitGb} GB</span></div> : null}
                                 {hasDiscount ? <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>{plan.discountPct}% تخفیف</span></div> : null}
                                 <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>نمایش سه‌بعدی و AR</span></div>
                                 <div style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13 }}><CheckIcon /><span>فعال‌سازی دستی توسط پشتیبانی</span></div>

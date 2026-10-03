@@ -66,6 +66,7 @@ export interface PublicPlan {
   discountPct?: number | null;
   productLimit?: number | null;
   storageLimitMb?: number | null;
+  trafficLimitGb?: number | null;
   categoryId?: string | null;
   sortOrder?: number;
   features?: Record<string, unknown> | null;

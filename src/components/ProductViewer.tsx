@@ -47,18 +47,9 @@ export default function ProductViewer({ product }: Props) {
     setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setImageRatio(1.12); setStatus("ready"); setArSupported(null); setArReady(false); setArPreparation("idle"); setArMessage(""); if (arWaitRef.current) window.clearTimeout(arWaitRef.current); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
   }, [product.id, poster, initialIndex]);
 
-  // Start the primary product photo immediately, and warm the next photos in the background.
-  // This keeps the first image fast without downloading every asset before it is needed.
-  useEffect(() => {
-    const urls = images.slice(0, 4).map((image) => image.url).filter(Boolean);
-    const warm = (url: string, priority: boolean) => {
-      const image = new Image();
-      image.decoding = "async";
-      if ("fetchPriority" in image) (image as HTMLImageElement & { fetchPriority?: string }).fetchPriority = priority ? "high" : "low";
-      image.src = url;
-    };
-    urls.forEach((url, index) => warm(url, index === 0));
-  }, [product.id, images]);
+  // Do not prefetch additional product photos: only the visible image and
+  // near-viewport thumbnails should transfer bytes. This is intentionally
+  // conservative for mobile data plans and egress-sensitive deployments.
 
   useEffect(() => {
     const el = viewerRef.current as (HTMLElement & { loaded?: boolean; updateComplete?: Promise<unknown> }) | null;
@@ -230,10 +221,14 @@ export default function ProductViewer({ product }: Props) {
       {glb && <button type="button" className={`product-media-thumb product-media-thumb--tool ${viewMode === "3d" ? "is-active" : ""}`} onClick={open3D} aria-label="نمایش سه‌بعدی"><Icon name="cube" size={27} /><span>3D</span></button>}
       
     </div>
+    {(usdz?.url || glb) && <div className="product-platform-choice" role="group" aria-label="انتخاب روش مشاهده محصول" style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:12}}>
+      {usdz?.url && <a className="btn btn-outline" href={usdz.url} rel="ar" aria-label="باز کردن مدل در واقعیت افزوده iOS" style={{display:"inline-flex",alignItems:"center",gap:8}}><img src={poster || "/favicon.ico"} alt="" width="22" height="22" style={{objectFit:"cover",borderRadius:5}} /> iOS · مشاهده در AR</a>}
+      {glb && <button type="button" className={`btn ${viewMode === "3d" ? "btn-primary" : "btn-outline"}`} onClick={open3D} aria-label="بارگذاری مدل سه‌بعدی GLB برای Android" style={{display:"inline-flex",alignItems:"center",gap:8}}><Icon name="cube" size={18}/> Android · نمایش 3D</button>}
+    </div>}
     <div className="product-viewer-ref__main" style={{ aspectRatio: `${imageRatio}` }}>
       {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} loading="eager" decoding="async" fetchPriority="high" onLoad={(event) => { const image = event.currentTarget; if (image.naturalWidth && image.naturalHeight) setImageRatio(image.naturalWidth / image.naturalHeight); }} onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
       {glb ? <div className={`product-main-3d ${viewMode === "3d" ? "is-visible" : "is-preloaded"}`}>
-        <model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={glb.url} crossorigin="anonymous" ios-src={usdz?.url} alt={product.name} poster={poster} camera-controls auto-rotate loading="eager" shadow-intensity="1" exposure="1" ar ar-modes="scene-viewer webxr quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} scale="1 1 1" touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); setArReady(true); }} onError={() => { modelReadyRef.current = false; setStatus("error"); setArReady(false); }}>
+        <model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={viewMode === "3d" ? glb.url : undefined} crossorigin="anonymous" ios-src={viewMode === "3d" ? usdz?.url : undefined} alt={product.name} poster={poster} camera-controls auto-rotate loading="lazy" shadow-intensity="1" exposure="1" ar ar-modes="scene-viewer webxr quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} scale="1 1 1" touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); setArReady(true); }} onError={() => { modelReadyRef.current = false; setStatus("error"); setArReady(false); }}>
           
         </model-viewer>
         {viewMode === "3d" && arPreparation !== "prepared" ? (
