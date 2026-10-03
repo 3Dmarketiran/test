@@ -1,3 +1,4 @@
+import logo3d from "../assets/3dmarket-logo-3d.png";
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useData } from "../lib/data";
@@ -170,19 +171,13 @@ export default function Layout() {
               }}
             >
               <img
-                src={`${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`}
+                src={logo3d}
                 alt=""
                 width={42}
                 height={42}
                 decoding="async"
                 fetchPriority="high"
                 style={{ width: "100%", height: "100%", objectFit: "contain" }}
-                onError={(event) => {
-                  const target = event.currentTarget;
-                  if (!target.src.endsWith(".png")) {
-                    target.src = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`;
-                  }
-                }}
               />
             </span>
 

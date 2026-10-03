@@ -338,8 +338,6 @@ export default function SellerStore() {
               <span>محصول</span>
             </div>
             <div className="seller-profile-stat seller-profile-stat--metric">
-            </div>
-            <div className="seller-profile-stat seller-profile-stat--metric">
               <strong>{sellerProducts.filter((product) => product.models.length > 0).length}</strong>
               <span>مدل سه‌بعدی</span>
             </div>
