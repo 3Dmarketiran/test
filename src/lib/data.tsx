@@ -61,46 +61,24 @@ function validateCatalog(value: unknown): PublicCatalog {
 }
 
 async function fetchCatalog(signal: AbortSignal): Promise<PublicCatalog> {
-  // Prefer the live API. If Render is waking up, temporarily unavailable, or
-  // blocked on a visitor network, fall back to the newest static snapshot that
-  // the same deployment serves. This prevents a successful publication from
-  // appearing to have vanished merely because the live API is unavailable.
-  const liveController = new AbortController();
-  const liveTimeout = window.setTimeout(() => liveController.abort(), 9000);
-  const abortLiveFromParent = () => liveController.abort();
-  signal.addEventListener("abort", abortLiveFromParent, { once: true });
+  // Live backend is the source of truth. The GitHub snapshot is only the
+  // instant first-paint/offline fallback so the site never opens blank.
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 9000);
+  const abortFromParent = () => controller.abort();
+  signal.addEventListener("abort", abortFromParent, { once: true });
 
   try {
     const response = await fetch(PUBLIC_CATALOG_API, {
-      signal: liveController.signal,
+      signal: controller.signal,
       cache: "no-store",
       headers: { Accept: "application/json" },
     });
     if (!response.ok) throw new Error(`Live catalog failed (${response.status}).`);
     return validateCatalog(await response.json());
-  } catch (liveError) {
-    if (signal.aborted) throw liveError;
-
-    const snapshotController = new AbortController();
-    const snapshotTimeout = window.setTimeout(() => snapshotController.abort(), 3500);
-    const abortSnapshotFromParent = () => snapshotController.abort();
-    signal.addEventListener("abort", abortSnapshotFromParent, { once: true });
-
-    try {
-      const response = await fetch(catalogUrl(), {
-        signal: snapshotController.signal,
-        cache: "no-store",
-        headers: { Accept: "application/json" },
-      });
-      if (!response.ok) throw new Error(`Static catalog failed (${response.status}).`);
-      return validateCatalog(await response.json());
-    } finally {
-      window.clearTimeout(snapshotTimeout);
-      signal.removeEventListener("abort", abortSnapshotFromParent);
-    }
   } finally {
-    window.clearTimeout(liveTimeout);
-    signal.removeEventListener("abort", abortLiveFromParent);
+    window.clearTimeout(timeout);
+    signal.removeEventListener("abort", abortFromParent);
   }
 }
 

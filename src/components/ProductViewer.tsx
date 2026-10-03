@@ -39,12 +39,11 @@ export default function ProductViewer({ product }: Props) {
   const modelReadyRef = useRef(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [imageRatio, setImageRatio] = useState(1.12);
   const arSessionStartedRef = useRef(false);
   const viewerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setImageRatio(1.12); setStatus("ready"); setArSupported(null); setArReady(false); setArPreparation("idle"); setArMessage(""); if (arWaitRef.current) window.clearTimeout(arWaitRef.current); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
+    setActiveImage(poster); setActiveIndex(initialIndex); setViewMode("image"); setStatus("ready"); setArSupported(null); setArReady(false); setArPreparation("idle"); setArMessage(""); if (arWaitRef.current) window.clearTimeout(arWaitRef.current); setImageError(false); setLightboxOpen(false); modelReadyRef.current = false;
   }, [product.id, poster, initialIndex]);
 
   // Do not prefetch additional product photos: only the visible image and
@@ -225,8 +224,9 @@ export default function ProductViewer({ product }: Props) {
       {usdz?.url && <a className="btn btn-outline" href={usdz.url} rel="ar" aria-label="باز کردن مدل در واقعیت افزوده iOS" style={{display:"inline-flex",alignItems:"center",gap:8}}><img src={poster || "/favicon.ico"} alt="" width="22" height="22" style={{objectFit:"cover",borderRadius:5}} /> iOS · مشاهده در AR</a>}
       {glb && <button type="button" className={`btn ${viewMode === "3d" ? "btn-primary" : "btn-outline"}`} onClick={open3D} aria-label="بارگذاری مدل سه‌بعدی GLB برای Android" style={{display:"inline-flex",alignItems:"center",gap:8}}><Icon name="cube" size={18}/> Android · نمایش 3D</button>}
     </div>}
-    <div className="product-viewer-ref__main" style={{ aspectRatio: `${imageRatio}` }}>
-      {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} loading="eager" decoding="async" fetchPriority="high" onLoad={(event) => { const image = event.currentTarget; if (image.naturalWidth && image.naturalHeight) setImageRatio(image.naturalWidth / image.naturalHeight); }} onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
+    <div className="product-viewer-ref__main">
+      {viewMode === "image" && activeImage && !imageError ? <button className="product-main-media" type="button" onClick={() => setLightboxOpen(true)} aria-label="بزرگ‌نمایی تصویر محصول"><img src={activeImage} alt={product.name} loading="eager" decoding="async" fetchPriority="high" onError={() => setImageError(true)} /><span className="product-main-media__zoom"><Icon name="zoom" size={18} /></span></button> : null}
+      {viewMode === "image" && imageError ? <div className="product-viewer-error"><Icon name="image" size={38} /><strong>تصویر انتخاب‌شده بارگذاری نشد.</strong><button type="button" className="viewer-action" onClick={() => { setImageError(false); if (images.length > 1) nextImage(); }}>تصویر بعدی</button></div> : null}
       {glb ? <div className={`product-main-3d ${viewMode === "3d" ? "is-visible" : "is-preloaded"}`}>
         <model-viewer ref={viewerRef as React.RefObject<HTMLElement>} src={viewMode === "3d" ? glb.url : undefined} crossorigin="anonymous" ios-src={viewMode === "3d" ? usdz?.url : undefined} alt={product.name} poster={poster} camera-controls auto-rotate loading="lazy" shadow-intensity="1" exposure="1" ar ar-modes="scene-viewer webxr quick-look" reveal="auto" interaction-prompt="none" ar-scale={arScaleAttr} scale="1 1 1" touch-action="pan-y" className="product-model-viewer" onLoad={() => { modelReadyRef.current = true; setStatus("ready"); setArReady(true); }} onError={() => { modelReadyRef.current = false; setStatus("error"); setArReady(false); }}>
           

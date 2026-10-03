@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import logo3d from "../assets/3dmarket-logo-3d.png";
 
-const LOGO_SRC = logo3d;
+const LOGO_SRC = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`;
 
 export default function SitePreloader() {
   const [visible, setVisible] = useState(true);
@@ -60,6 +59,10 @@ export default function SitePreloader() {
             height={212}
             decoding="async"
             fetchPriority="high"
+            onError={(event) => {
+              const target = event.currentTarget;
+              if (!target.src.endsWith(".png")) target.src = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`;
+            }}
           />
         </div>
         <div className="site-preloader__line" aria-hidden="true"><span /></div>

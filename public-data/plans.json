@@ -8,9 +8,9 @@
     "productLimit": 10,
     "storageLimitMb": 500,
     "trafficLimitGb": 5,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 10,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 10
   },
   {
     "id": "final-starter-90",
@@ -21,9 +21,9 @@
     "productLimit": 10,
     "storageLimitMb": 500,
     "trafficLimitGb": 5,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 11,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 11
   },
   {
     "id": "final-starter-180",
@@ -34,9 +34,9 @@
     "productLimit": 10,
     "storageLimitMb": 500,
     "trafficLimitGb": 5,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 12,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 12
   },
   {
     "id": "final-starter-365",
@@ -47,12 +47,12 @@
     "productLimit": 10,
     "storageLimitMb": 500,
     "trafficLimitGb": 5,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 13,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 13
   },
   {
-    "id": "final-semi-professional-30",
+    "id": "final-semi-30",
     "name": "Semi-Professional",
     "durationDays": 30,
     "price": 2490000,
@@ -60,12 +60,12 @@
     "productLimit": 30,
     "storageLimitMb": 1536,
     "trafficLimitGb": 12,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 20,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 20
   },
   {
-    "id": "final-semi-professional-90",
+    "id": "final-semi-90",
     "name": "Semi-Professional · ۳ ماهه",
     "durationDays": 90,
     "price": 7096500,
@@ -73,12 +73,12 @@
     "productLimit": 30,
     "storageLimitMb": 1536,
     "trafficLimitGb": 12,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 21,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 21
   },
   {
-    "id": "final-semi-professional-180",
+    "id": "final-semi-180",
     "name": "Semi-Professional · ۶ ماهه",
     "durationDays": 180,
     "price": 13446000,
@@ -86,12 +86,12 @@
     "productLimit": 30,
     "storageLimitMb": 1536,
     "trafficLimitGb": 12,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 22,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 22
   },
   {
-    "id": "final-semi-professional-365",
+    "id": "final-semi-365",
     "name": "Semi-Professional · ۱۲ ماهه",
     "durationDays": 365,
     "price": 25398000,
@@ -99,12 +99,12 @@
     "productLimit": 30,
     "storageLimitMb": 1536,
     "trafficLimitGb": 12,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 23,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 23
   },
   {
-    "id": "final-professional-30",
+    "id": "final-pro-30",
     "name": "Professional",
     "durationDays": 30,
     "price": 4490000,
@@ -112,12 +112,12 @@
     "productLimit": 100,
     "storageLimitMb": 5120,
     "trafficLimitGb": 25,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 30,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 30
   },
   {
-    "id": "final-professional-90",
+    "id": "final-pro-90",
     "name": "Professional · ۳ ماهه",
     "durationDays": 90,
     "price": 12796500,
@@ -125,12 +125,12 @@
     "productLimit": 100,
     "storageLimitMb": 5120,
     "trafficLimitGb": 25,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 31,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 31
   },
   {
-    "id": "final-professional-180",
+    "id": "final-pro-180",
     "name": "Professional · ۶ ماهه",
     "durationDays": 180,
     "price": 24246000,
@@ -138,12 +138,12 @@
     "productLimit": 100,
     "storageLimitMb": 5120,
     "trafficLimitGb": 25,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 32,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 32
   },
   {
-    "id": "final-professional-365",
+    "id": "final-pro-365",
     "name": "Professional · ۱۲ ماهه",
     "durationDays": 365,
     "price": 45798000,
@@ -151,8 +151,8 @@
     "productLimit": 100,
     "storageLimitMb": 5120,
     "trafficLimitGb": 25,
-    "categoryId": "subscription-category-general",
-    "sortOrder": 33,
-    "features": {}
+    "features": {},
+    "categoryId": "general",
+    "sortOrder": 33
   }
 ]
