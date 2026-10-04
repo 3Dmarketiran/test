@@ -69,13 +69,30 @@ async function fetchCatalog(signal: AbortSignal): Promise<PublicCatalog> {
   signal.addEventListener("abort", abortFromParent, { once: true });
 
   try {
-    const response = await fetch(PUBLIC_CATALOG_API, {
-      signal: controller.signal,
-      cache: "no-store",
-      headers: { Accept: "application/json" },
-    });
-    if (!response.ok) throw new Error(`Live catalog failed (${response.status}).`);
-    return validateCatalog(await response.json());
+    let lastError: unknown;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      if (signal.aborted) throw new DOMException("Aborted", "AbortError");
+      try {
+        const response = await fetch(PUBLIC_CATALOG_API, {
+          signal: controller.signal,
+          cache: "no-store",
+          headers: { Accept: "application/json" },
+        });
+        if (!response.ok) {
+          if (![408, 429, 500, 502, 503, 504].includes(response.status) || attempt === 2) {
+            throw new Error(`Live catalog failed (${response.status}).`);
+          }
+        } else {
+          return validateCatalog(await response.json());
+        }
+      } catch (error) {
+        lastError = error;
+        if (error instanceof DOMException && error.name === "AbortError") throw error;
+        if (attempt === 2) throw error;
+      }
+      await new Promise((resolve) => window.setTimeout(resolve, 700 * (attempt + 1)));
+    }
+    throw lastError instanceof Error ? lastError : new Error("Live catalog temporarily unavailable.");
   } finally {
     window.clearTimeout(timeout);
     signal.removeEventListener("abort", abortFromParent);
