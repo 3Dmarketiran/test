@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-04T17:37:30.217Z",
-  "version": "df2f275d",
+  "generatedAt": "2026-10-04T17:39:06.311Z",
+  "version": "349afffd",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -12,7 +12,7 @@
       "price": 125000000,
       "isPinned": true,
       "pinOrder": 1,
-      "viewCount": 6,
+      "viewCount": 7,
       "tags": [],
       "material": "choob va parche",
       "colors": [
@@ -48,7 +48,7 @@
         "depthM": 0.4,
         "realWorldScale": true
       },
-      "publishedAt": "2026-10-04T17:09:53.163Z"
+      "publishedAt": "2026-10-04T17:38:17.224Z"
     }
   ],
   "sellers": [
@@ -58,7 +58,7 @@
       "storeName": "فروشگاه پیکسل",
       "description": "تست",
       "logoUrl": "https://threedmarketiran-backend.onrender.com/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/MSUuJoHgTwwJhoNG.jpeg",
-      "themeColor": "#2e6fce",
+      "themeColor": "#103152",
       "contactEmail": "3dmobl@gmail.com",
       "contactPhone": "09123456789",
       "address": "تهران ولیعصر",
