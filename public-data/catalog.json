@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-04T17:31:10.516Z",
-  "version": "d039ad56",
+  "generatedAt": "2026-10-04T17:32:03.523Z",
+  "version": "c54553f4",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -27,8 +27,8 @@
       ],
       "seller": {
         "id": "cmur9nu1k0013zmxss9ieedbj",
-        "slug": "3dmobl-3mvknt",
-        "storeName": "3Dmobl"
+        "slug": "فروشگاه-پیکسل-2zkgny",
+        "storeName": "فروشگاه پیکسل"
       },
       "images": [
         {
@@ -54,11 +54,11 @@
   "sellers": [
     {
       "id": "cmur9nu1k0013zmxss9ieedbj",
-      "slug": "3dmobl-3mvknt",
-      "storeName": "3Dmobl",
+      "slug": "فروشگاه-پیکسل-2zkgny",
+      "storeName": "فروشگاه پیکسل",
       "description": "تست",
       "logoUrl": "https://threedmarketiran-backend.onrender.com/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/MSUuJoHgTwwJhoNG.jpeg",
-      "themeColor": "#832020",
+      "themeColor": "#2e6fce",
       "contactEmail": "3dmobl@gmail.com",
       "contactPhone": "09123456789",
       "address": "تهران ولیعصر",
