@@ -1,24 +1,105 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-10-04T14:18:08.510Z",
-  "version": "874315d4",
-  "products": [],
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-25T17:07:25.290323Z",
+  "version": "848f03f287a4ee25",
+  "products": [
+    {
+      "id": "cmub0obpk0013pqapa6n9vma7",
+      "slug": "test-2-rfpxkd",
+      "name": "test 2",
+      "shortDescription": null,
+      "fullDescription": null,
+      "tags": [],
+      "category": null,
+      "seller": {
+        "slug": "test-2-vn5xio",
+        "storeName": "test 2",
+        "id": "static-0"
+      },
+      "images": [
+        {
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/images/2-qutEi6gb2rJKGj.jpg",
+          "isPrimary": true
+        }
+      ],
+      "models": [
+        {
+          "kind": "GLB",
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmub0obpk0013pqapa6n9vma7/models/DdVyLqhsN6Lr9OFm.glb"
+        }
+      ],
+      "dimensions": null,
+      "publishedAt": "2026-09-21T09:04:32.587Z"
+    },
+    {
+      "id": "cmuayu5fg000nznuyxalg8q9h",
+      "slug": "test-7olbw_",
+      "name": "test",
+      "shortDescription": "test",
+      "fullDescription": null,
+      "tags": [],
+      "category": null,
+      "seller": {
+        "slug": "test-qa20kn",
+        "storeName": "test",
+        "id": "static-1"
+      },
+      "images": [
+        {
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/images/o0vTxFCHz1pWAaZN.jpeg",
+          "isPrimary": false
+        },
+        {
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/images/IHU-we7pVtEKdork.jpg",
+          "isPrimary": true
+        }
+      ],
+      "models": [
+        {
+          "kind": "GLB",
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/models/ATIrq0-9Zjw7fuDg.glb"
+        },
+        {
+          "kind": "USDZ",
+          "url": "https://sbmdpgkrjzbegcafdgbd.supabase.co/storage/v1/object/public/3Dmarketiran/products/cmuayu5fg000nznuyxalg8q9h/models/ItQH_WaP3kl5t85w.usdz"
+        }
+      ],
+      "dimensions": {
+        "widthM": 0.1,
+        "heightM": 0.1,
+        "depthM": 0.1,
+        "realWorldScale": true
+      },
+      "publishedAt": "2026-09-22T15:23:56.365Z"
+    }
+  ],
   "sellers": [
     {
-      "id": "cmur9nu1k0013zmxss9ieedbj",
-      "slug": "3dmobl-3mvknt",
-      "storeName": "3Dmobl",
-      "description": "تست",
-      "logoUrl": "https://threedmarketiran-backend.onrender.com/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/ei2cXTLHNAGNnNon.jpeg",
-      "themeColor": "#832020",
-      "contactEmail": "3dmobl@gmail.com",
-      "contactPhone": "09123456789",
-      "address": "تهران ولیعصر",
-      "socialLinks": {}
+      "slug": "test-2-vn5xio",
+      "storeName": "test 2",
+      "description": null,
+      "logoUrl": null,
+      "contactEmail": "seller2@gmail.com",
+      "contactPhone": "",
+      "socialLinks": {},
+      "address": null,
+      "category": null,
+      "id": "static-0"
+    },
+    {
+      "slug": "test-qa20kn",
+      "storeName": "test",
+      "description": null,
+      "logoUrl": null,
+      "contactEmail": "seller@gmail.com",
+      "contactPhone": "",
+      "socialLinks": {},
+      "address": null,
+      "category": null,
+      "id": "static-1"
     }
   ],
   "settings": {
-    "id": "singleton",
     "platformName": "3Dmarketiran",
     "logoUrl": null,
     "faviconUrl": null,
@@ -30,13 +111,22 @@
     "fontFamily": "Vazirmatn",
     "socialLinks": null,
     "contactEmail": null,
-    "contactPhone": null,
-    "githubOwner": null,
-    "githubRepository": null,
-    "githubBranch": "main",
-    "updatedAt": "2026-09-22T05:29:38.179Z"
+    "contactPhone": null
   },
   "plans": [
+    {
+      "id": "final-starter-30",
+      "name": "Starter",
+      "durationDays": 30,
+      "price": 1290000,
+      "discountPct": 0,
+      "productLimit": 10,
+      "storageLimitMb": 500,
+      "trafficLimitGb": 5,
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 10
+    },
     {
       "id": "final-starter-90",
       "name": "Starter · ۳ ماهه",
@@ -46,9 +136,9 @@
       "productLimit": 10,
       "storageLimitMb": 500,
       "trafficLimitGb": 5,
-      "categoryId": "plan-cat-starter",
-      "sortOrder": 0,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 11
     },
     {
       "id": "final-starter-180",
@@ -59,9 +149,9 @@
       "productLimit": 10,
       "storageLimitMb": 500,
       "trafficLimitGb": 5,
-      "categoryId": "plan-cat-starter",
-      "sortOrder": 1,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 12
     },
     {
       "id": "final-starter-365",
@@ -72,25 +162,12 @@
       "productLimit": 10,
       "storageLimitMb": 500,
       "trafficLimitGb": 5,
-      "categoryId": "plan-cat-starter",
-      "sortOrder": 2,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 13
     },
     {
-      "id": "final-starter-30",
-      "name": "Starter",
-      "durationDays": 30,
-      "price": 1290000,
-      "discountPct": 0,
-      "productLimit": 10,
-      "storageLimitMb": 500,
-      "trafficLimitGb": 5,
-      "categoryId": "subscription-category-general",
-      "sortOrder": 10,
-      "features": {}
-    },
-    {
-      "id": "final-semi-professional-30",
+      "id": "final-semi-30",
       "name": "Semi-Professional",
       "durationDays": 30,
       "price": 2490000,
@@ -98,12 +175,12 @@
       "productLimit": 30,
       "storageLimitMb": 1536,
       "trafficLimitGb": 12,
-      "categoryId": "subscription-category-general",
-      "sortOrder": 20,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 20
     },
     {
-      "id": "final-semi-professional-90",
+      "id": "final-semi-90",
       "name": "Semi-Professional · ۳ ماهه",
       "durationDays": 90,
       "price": 7096500,
@@ -111,12 +188,12 @@
       "productLimit": 30,
       "storageLimitMb": 1536,
       "trafficLimitGb": 12,
-      "categoryId": "plan-cat-semi",
-      "sortOrder": 21,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 21
     },
     {
-      "id": "final-semi-professional-180",
+      "id": "final-semi-180",
       "name": "Semi-Professional · ۶ ماهه",
       "durationDays": 180,
       "price": 13446000,
@@ -124,12 +201,12 @@
       "productLimit": 30,
       "storageLimitMb": 1536,
       "trafficLimitGb": 12,
-      "categoryId": "plan-cat-semi",
-      "sortOrder": 22,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 22
     },
     {
-      "id": "final-semi-professional-365",
+      "id": "final-semi-365",
       "name": "Semi-Professional · ۱۲ ماهه",
       "durationDays": 365,
       "price": 25398000,
@@ -137,12 +214,12 @@
       "productLimit": 30,
       "storageLimitMb": 1536,
       "trafficLimitGb": 12,
-      "categoryId": "plan-cat-semi",
-      "sortOrder": 23,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 23
     },
     {
-      "id": "final-professional-30",
+      "id": "final-pro-30",
       "name": "Professional",
       "durationDays": 30,
       "price": 4490000,
@@ -150,12 +227,12 @@
       "productLimit": 100,
       "storageLimitMb": 5120,
       "trafficLimitGb": 25,
-      "categoryId": "subscription-category-general",
-      "sortOrder": 30,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 30
     },
     {
-      "id": "final-professional-90",
+      "id": "final-pro-90",
       "name": "Professional · ۳ ماهه",
       "durationDays": 90,
       "price": 12796500,
@@ -163,12 +240,12 @@
       "productLimit": 100,
       "storageLimitMb": 5120,
       "trafficLimitGb": 25,
-      "categoryId": "plan-cat-professional",
-      "sortOrder": 31,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 31
     },
     {
-      "id": "final-professional-180",
+      "id": "final-pro-180",
       "name": "Professional · ۶ ماهه",
       "durationDays": 180,
       "price": 24246000,
@@ -176,12 +253,12 @@
       "productLimit": 100,
       "storageLimitMb": 5120,
       "trafficLimitGb": 25,
-      "categoryId": "plan-cat-professional",
-      "sortOrder": 32,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 32
     },
     {
-      "id": "final-professional-365",
+      "id": "final-pro-365",
       "name": "Professional · ۱۲ ماهه",
       "durationDays": 365,
       "price": 45798000,
@@ -189,42 +266,18 @@
       "productLimit": 100,
       "storageLimitMb": 5120,
       "trafficLimitGb": 25,
-      "categoryId": "plan-cat-professional",
-      "sortOrder": 33,
-      "features": {}
+      "features": {},
+      "categoryId": "general",
+      "sortOrder": 33
     }
   ],
   "planCategories": [
     {
-      "id": "subscription-category-general",
-      "name": "پلن‌های عمومی",
+      "id": "general",
+      "name": "پلن‌های فروشندگان",
       "slug": "general",
-      "description": "پلن‌های starter برای فروشگاه های کوچک",
+      "description": "پلن‌های فعلی فروشندگان",
       "sortOrder": 0,
-      "isActive": true
-    },
-    {
-      "id": "plan-cat-starter",
-      "name": "مبتدی",
-      "slug": "starter",
-      "description": "پلن پایه فروشندگان",
-      "sortOrder": 0,
-      "isActive": true
-    },
-    {
-      "id": "plan-cat-semi",
-      "name": "نیمه‌حرفه‌ای",
-      "slug": "semi-professional",
-      "description": "پلن نیمه‌حرفه‌ای فروشندگان",
-      "sortOrder": 1,
-      "isActive": true
-    },
-    {
-      "id": "plan-cat-professional",
-      "name": "حرفه‌ای",
-      "slug": "professional",
-      "description": "پلن حرفه‌ای فروشندگان",
-      "sortOrder": 2,
       "isActive": true
     }
   ]

@@ -71,7 +71,8 @@ function validateCatalog(data) {
   if (!Array.isArray(data.products) || !Array.isArray(data.sellers)) throw new Error("catalog.json arrays are missing");
   if (!data.settings || typeof data.settings !== "object") throw new Error("catalog.json settings are missing");
   if (!Array.isArray(data.plans)) throw new Error("catalog.json plans are missing");
-  if (!data.version || !data.generatedAt) throw new Error("catalog.json version metadata is missing");
+  if (data.schemaVersion !== 2) throw new Error("catalog.json schemaVersion must be 2");
+  if (!data.version || !data.generatedAt || Number.isNaN(Date.parse(data.generatedAt))) throw new Error("catalog.json version metadata is invalid");
 }
 
 function validatePlans(data) { validateArray(data, "plans.json"); for (const plan of data) { if (!plan.id || !plan.name || !Number.isFinite(plan.durationDays) || !Number.isFinite(plan.price)) throw new Error(`invalid plan: ${JSON.stringify(plan).slice(0,120)}`); } }

@@ -31,29 +31,16 @@ const initialState: DataState = {
   settings: initialCatalog.settings,
   plans: initialCatalog.plans,
   planCategories: initialCatalog.planCategories || [],
-  loading: false,
+  loading: true,
   error: null,
 };
 const DataContext = createContext<DataState>(initialState);
 
-function catalogUrl() {
-  const base = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
-  return `${base}/public-data/catalog.json`;
-}
-
-async function fetchJson(path: string, signal: AbortSignal) {
-  const response = await fetch(path, {
-    signal,
-    cache: "default",
-    headers: { Accept: "application/json" },
-  });
-  if (!response.ok) throw new Error(`بارگذاری اطلاعات ناموفق بود (${response.status}).`);
-  return response.json();
-}
 
 function validateCatalog(value: unknown): PublicCatalog {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("کاتالوگ عمومی معتبر نیست.");
   const catalog = value as Partial<PublicCatalog>;
+  if (catalog.schemaVersion !== 2) throw new Error("نسخه ساختار کاتالوگ عمومی پشتیبانی نمی‌شود.");
   if (!Array.isArray(catalog.products) || !Array.isArray(catalog.sellers) || !catalog.settings) {
     throw new Error("ساختار کاتالوگ عمومی ناقص است.");
   }
@@ -185,27 +172,15 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       .then((catalog) => {
         if (!mounted) return;
 
-        // GitHub Pages may publish a product before the live API projection is
-        // refreshed. Preserve snapshot records missing from the API response,
-        // while allowing live records to update matching IDs/slugs.
-        const mergePublished = <T extends { id?: string; slug?: string }>(live: T[], snapshot: T[]): T[] => {
-          const key = (item: T) => item.id || item.slug || "";
-          const merged = new Map<string, T>();
-          for (const item of snapshot) if (key(item)) merged.set(key(item), item);
-          for (const item of live) {
-            const itemKey = key(item);
-            if (!itemKey) continue;
-            merged.set(itemKey, { ...merged.get(itemKey), ...item });
-          }
-          return [...merged.values()];
-        };
-
+        // The live catalog is authoritative. Never merge bundled records into
+        // it, otherwise an unpublished/deleted item can be resurrected in the
+        // browser from a stale build artifact.
         setState({
-          products: mergePublished(catalog.products, initialCatalog.products),
-          sellers: mergePublished(catalog.sellers, initialCatalog.sellers),
+          products: catalog.products,
+          sellers: catalog.sellers,
           settings: catalog.settings,
-          plans: catalog.plans.length ? catalog.plans : initialCatalog.plans,
-          planCategories: catalog.planCategories.length ? catalog.planCategories : initialCatalog.planCategories || [],
+          plans: catalog.plans,
+          planCategories: catalog.planCategories,
           loading: false,
           error: null,
         });

@@ -1,5 +1,4 @@
 {
-  "id": "singleton",
   "platformName": "3Dmarketiran",
   "logoUrl": null,
   "faviconUrl": null,
@@ -11,9 +10,5 @@
   "fontFamily": "Vazirmatn",
   "socialLinks": null,
   "contactEmail": null,
-  "contactPhone": null,
-  "githubOwner": null,
-  "githubRepository": null,
-  "githubBranch": "main",
-  "updatedAt": "2026-09-22T05:29:38.179Z"
+  "contactPhone": null
 }
