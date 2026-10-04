@@ -9,10 +9,6 @@ async function read(name) {
 
 function assertAbsoluteUrl(value, label) {
   if (!value) return;
-  // Older generated snapshots may contain backend-proxy paths. The public
-  // runtime resolves these against VITE_API_URL; accept only this exact safe
-  // route family, never arbitrary relative paths.
-  if (typeof value === "string" && /^\/api\/public\/assets\/(products|sellers)\//.test(value)) return;
   let url;
   try { url = new URL(value); } catch { throw new Error(`${label} URL is invalid: ${value}`); }
   if (!["http:", "https:"].includes(url.protocol)) {

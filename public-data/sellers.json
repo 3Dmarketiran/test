@@ -1,14 +1,26 @@
 [
   {
-    "id": "cmur9nu1k0013zmxss9ieedbj",
-    "slug": "3dmobl-3mvknt",
-    "storeName": "3Dmobl",
-    "description": "تست",
-    "logoUrl": "https://threedmarketiran-backend.onrender.com/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/ei2cXTLHNAGNnNon.jpeg",
-    "themeColor": "#832020",
-    "contactEmail": "3dmobl@gmail.com",
-    "contactPhone": "09123456789",
-    "address": "تهران ولیعصر",
-    "socialLinks": {}
+    "slug": "test-2-vn5xio",
+    "storeName": "test 2",
+    "description": null,
+    "logoUrl": null,
+    "contactEmail": "seller2@gmail.com",
+    "contactPhone": "",
+    "socialLinks": {},
+    "address": null,
+    "category": null,
+    "id": "static-0"
+  },
+  {
+    "slug": "test-qa20kn",
+    "storeName": "test",
+    "description": null,
+    "logoUrl": null,
+    "contactEmail": "seller@gmail.com",
+    "contactPhone": "",
+    "socialLinks": {},
+    "address": null,
+    "category": null,
+    "id": "static-1"
   }
 ]

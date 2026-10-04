@@ -184,7 +184,31 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     fetchCatalog(controller.signal)
       .then((catalog) => {
         if (!mounted) return;
-        setState({ products: catalog.products, sellers: catalog.sellers, settings: catalog.settings, plans: catalog.plans, planCategories: catalog.planCategories || [], loading: false, error: null });
+
+        // GitHub Pages may publish a product before the live API projection is
+        // refreshed. Preserve snapshot records missing from the API response,
+        // while allowing live records to update matching IDs/slugs.
+        const mergePublished = <T extends { id?: string; slug?: string }>(live: T[], snapshot: T[]): T[] => {
+          const key = (item: T) => item.id || item.slug || "";
+          const merged = new Map<string, T>();
+          for (const item of snapshot) if (key(item)) merged.set(key(item), item);
+          for (const item of live) {
+            const itemKey = key(item);
+            if (!itemKey) continue;
+            merged.set(itemKey, { ...merged.get(itemKey), ...item });
+          }
+          return [...merged.values()];
+        };
+
+        setState({
+          products: mergePublished(catalog.products, initialCatalog.products),
+          sellers: mergePublished(catalog.sellers, initialCatalog.sellers),
+          settings: catalog.settings,
+          plans: catalog.plans.length ? catalog.plans : initialCatalog.plans,
+          planCategories: catalog.planCategories.length ? catalog.planCategories : initialCatalog.planCategories || [],
+          loading: false,
+          error: null,
+        });
       })
       .catch((error) => {
         if (!mounted || (error instanceof DOMException && error.name === "AbortError")) return;
