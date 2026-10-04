@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-04T16:28:16.823Z",
-  "version": "c98218a8",
+  "generatedAt": "2026-10-04T17:09:05.887Z",
+  "version": "bf0014a8",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -12,10 +12,19 @@
       "price": 125000000,
       "isPinned": true,
       "pinOrder": 1,
-      "viewCount": 3,
+      "viewCount": 4,
       "tags": [],
       "material": "choob va parche",
-      "colors": [],
+      "colors": [
+        {
+          "name": "toosi",
+          "value": "#808080"
+        },
+        {
+          "name": "zereshki",
+          "value": "#691111"
+        }
+      ],
       "seller": {
         "id": "cmur9nu1k0013zmxss9ieedbj",
         "slug": "3dmobl-3mvknt",
@@ -23,7 +32,7 @@
       },
       "images": [
         {
-          "url": "https://threedmarketiran-backend.onrender.com/api/public/assets/products/cmutrd35r003h9bc3g9bakt16/images/w2Rd4JkjbfIX7lWh.webp",
+          "url": "https://threedmarketiran-backend.onrender.com/api/public/assets/products/cmutrd35r003h9bc3g9bakt16/images/L2AZEienvC0NzoTt.webp",
           "isPrimary": true
         }
       ],
@@ -39,7 +48,7 @@
         "depthM": 0.4,
         "realWorldScale": true
       },
-      "publishedAt": "2026-10-04T12:10:49.153Z"
+      "publishedAt": "2026-10-04T16:28:57.517Z"
     }
   ],
   "sellers": [
