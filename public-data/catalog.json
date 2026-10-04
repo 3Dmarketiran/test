@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-04T17:09:05.887Z",
-  "version": "bf0014a8",
+  "generatedAt": "2026-10-04T17:31:10.516Z",
+  "version": "d039ad56",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -12,7 +12,7 @@
       "price": 125000000,
       "isPinned": true,
       "pinOrder": 1,
-      "viewCount": 4,
+      "viewCount": 5,
       "tags": [],
       "material": "choob va parche",
       "colors": [
@@ -48,7 +48,7 @@
         "depthM": 0.4,
         "realWorldScale": true
       },
-      "publishedAt": "2026-10-04T16:28:57.517Z"
+      "publishedAt": "2026-10-04T17:09:53.163Z"
     }
   ],
   "sellers": [
@@ -57,7 +57,7 @@
       "slug": "3dmobl-3mvknt",
       "storeName": "3Dmobl",
       "description": "تست",
-      "logoUrl": "https://threedmarketiran-backend.onrender.com/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/ei2cXTLHNAGNnNon.jpeg",
+      "logoUrl": "https://threedmarketiran-backend.onrender.com/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/MSUuJoHgTwwJhoNG.jpeg",
       "themeColor": "#832020",
       "contactEmail": "3dmobl@gmail.com",
       "contactPhone": "09123456789",
