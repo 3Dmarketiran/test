@@ -1,54 +1,15 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-04T14:05:09.568Z",
-  "version": "5755c013",
-  "products": [
-    {
-      "id": "cmutrd35r003h9bc3g9bakt16",
-      "slug": "sandal-hjrhqi",
-      "name": "sandal",
-      "shortDescription": "test",
-      "fullDescription": "toozih kamel",
-      "price": 125000000,
-      "isPinned": true,
-      "pinOrder": 1,
-      "viewCount": 3,
-      "tags": [],
-      "material": "choob va parche",
-      "colors": [],
-      "seller": {
-        "id": "cmur9nu1k0013zmxss9ieedbj",
-        "slug": "3dmobl-3mvknt",
-        "storeName": "3Dmobl"
-      },
-      "images": [
-        {
-          "url": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/products/cmutrd35r003h9bc3g9bakt16/images/w2Rd4JkjbfIX7lWh.webp",
-          "isPrimary": true
-        }
-      ],
-      "models": [
-        {
-          "kind": "USDZ",
-          "url": "https://sbmdpgkrjzbegcafdgbd.storage.supabase.co/storage/v1/s3/products/cmutrd35r003h9bc3g9bakt16/models/whc7-Ynhlk07nlA7.usdz"
-        }
-      ],
-      "dimensions": {
-        "widthM": 0.4,
-        "heightM": 1.3,
-        "depthM": 0.4,
-        "realWorldScale": true
-      },
-      "publishedAt": "2026-10-04T12:10:49.153Z"
-    }
-  ],
+  "generatedAt": "2026-10-04T14:18:00.944Z",
+  "version": "874315d4",
+  "products": [],
   "sellers": [
     {
       "id": "cmur9nu1k0013zmxss9ieedbj",
       "slug": "3dmobl-3mvknt",
       "storeName": "3Dmobl",
       "description": "تست",
-      "logoUrl": "/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/ei2cXTLHNAGNnNon.jpeg",
+      "logoUrl": "https://threedmarketiran-backend.onrender.com/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/ei2cXTLHNAGNnNon.jpeg",
       "themeColor": "#832020",
       "contactEmail": "3dmobl@gmail.com",
       "contactPhone": "09123456789",
