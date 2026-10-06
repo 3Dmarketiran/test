@@ -8,7 +8,7 @@
   "colorBackground": "#F8FAFC",
   "colorText": "#1E293B",
   "fontFamily": "Vazirmatn",
-  "socialLinks": {},
+  "socialLinks": null,
   "contactEmail": null,
   "contactPhone": null
 }
