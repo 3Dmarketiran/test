@@ -15,7 +15,7 @@ const dataDir = path.join(root, "public-data");
 
 cpSync(dataDir, path.join(dist, "public-data"), { recursive: true });
 
-const siteUrl = process.env.PUBLIC_SITE_URL || "https://example.com";
+const siteUrl = process.env.PUBLIC_SITE_URL || "https://3dmarketiran.ir";
 const catalog = JSON.parse(readFileSync(path.join(dataDir, "catalog.json"), "utf-8"));
 const products = catalog.products;
 const sellers = catalog.sellers;

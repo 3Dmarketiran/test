@@ -974,3 +974,24 @@
  .product-detail-ref-grid{grid-template-columns:minmax(0,1fr)!important;}
  .product-detail-sidebar{width:100%;}
 }
+
+
+/* V90 — final product detail media sizing / mobile badge isolation. */
+.product-viewer-ref{align-items:start;}
+.product-viewer-ref__main{position:relative;}
+.product-scale-badge{pointer-events:none;z-index:12;}
+@media(min-width:801px){
+  .product-viewer-ref__main.is-image-mode{
+    aspect-ratio: 16 / 11 !important;
+    min-height: clamp(460px, 43vw, 680px) !important;
+  }
+  .product-viewer-ref__main.is-image-mode .product-main-media img{
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+}
+@media(max-width:800px){
+  .product-scale-badge{top:10px !important;right:10px !important;max-width:calc(100% - 20px);}
+  .product-viewer-ref__main.is-image-mode{aspect-ratio: 4 / 3 !important;}
+  .product-viewer-ref__main.is-image-mode .product-main-media img{object-fit:contain !important;}
+}

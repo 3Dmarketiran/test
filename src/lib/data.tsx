@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { PlatformSettings, PublicPlan, PublicPlanCategory, PublicProduct, PublicSeller } from "../types";
 import bundledCatalog from "../../public-data/catalog.json";
-import { API_URL, PUBLIC_CATALOG_API } from "./config";
+import { API_URL, PUBLIC_ASSET_BASE_URL, PUBLIC_CATALOG_API } from "./config";
 
 export interface PublicCatalog {
   schemaVersion: number;
@@ -131,32 +131,35 @@ function normalizeCatalog(catalog: PublicCatalog): PublicCatalog {
 }
 
 /**
- * Keeps old GitHub/static snapshots compatible after a storage or domain
- * migration. Provider URLs are converted to the Backend public asset proxy;
- * the live catalog already returns proxy URLs directly.
+ * Normalize legacy catalog URLs to the Cloudflare R2 delivery domain.
+ * New live catalogs already contain direct R2 URLs.
  */
 function normalizePublicAssetUrl(value: string): string {
   if (!value) return value;
-  if (value.startsWith(`${API_URL}/api/public/assets/`)) return value;
 
   try {
     const url = new URL(value);
-    const marker = "/storage/v1/object/public/";
-    const markerIndex = url.pathname.indexOf(marker);
-    if (markerIndex < 0) return value;
+    const legacyStorageMarker = "/storage/v1/object/public/";
+    const legacyStorageIndex = url.pathname.indexOf(legacyStorageMarker);
+    const backendMarker = "/api/public/assets/";
+    const backendIndex = url.pathname.indexOf(backendMarker);
 
-    const remainder = url.pathname.slice(markerIndex + marker.length);
-    const slash = remainder.indexOf("/");
-    if (slash < 0) return value;
+    if (PUBLIC_ASSET_BASE_URL) {
+      if (legacyStorageIndex >= 0) {
+        const remainder = url.pathname.slice(legacyStorageIndex + legacyStorageMarker.length);
+        const slash = remainder.indexOf("/");
+        if (slash >= 0) {
+          const key = remainder.slice(slash + 1);
+          return `${PUBLIC_ASSET_BASE_URL}/${key.split("/").map((segment) => encodeURIComponent(decodeURIComponent(segment))).join("/")}`;
+        }
+      }
+      if (backendIndex >= 0) {
+        const key = url.pathname.slice(backendIndex + backendMarker.length);
+        return `${PUBLIC_ASSET_BASE_URL}/${key.split("/").filter(Boolean).map((segment) => encodeURIComponent(decodeURIComponent(segment))).join("/")}`;
+      }
+    }
 
-    // First path segment is the storage bucket; the rest is the storage key.
-    const key = remainder.slice(slash + 1);
-    if (!/^(products|sellers)\//.test(key)) return value;
-
-    return `${API_URL}/api/public/assets/${key
-      .split("/")
-      .map((segment) => encodeURIComponent(decodeURIComponent(segment)))
-      .join("/")}`;
+    return value;
   } catch {
     return value;
   }
@@ -199,30 +202,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
 export function getSellerLogoUrl(logoUrl: string | null | undefined) {
   if (!logoUrl) return null;
-  const backendBase = PUBLIC_CATALOG_API.replace(/\/api\/public\/catalog$/, "");
-
-  if (/^\/api\/public\/assets\//i.test(logoUrl)) return `${backendBase}${logoUrl}`;
-
-  try {
-    const url = new URL(logoUrl, window.location.origin);
-    const marker = "/storage/v1/object/public/";
-    const markerIndex = url.pathname.indexOf(marker);
-    if (markerIndex >= 0) {
-      const remainder = url.pathname.slice(markerIndex + marker.length);
-      const slash = remainder.indexOf("/");
-      const key = slash >= 0 ? remainder.slice(slash + 1) : "";
-      if (/^sellers\//.test(key)) {
-        return `${backendBase}/api/public/assets/${key.split("/").map((segment) => encodeURIComponent(decodeURIComponent(segment))).join("/")}`;
-      }
-    }
-  } catch {
-    // Fall through to the static/base-path resolver below.
-  }
-
-  if (/^(https?:|data:|blob:)/i.test(logoUrl)) return logoUrl;
-  if (/^\/api\//i.test(logoUrl)) return `${backendBase}${logoUrl}`;
-  const base = (import.meta.env.BASE_URL || "/").replace(/\/+$/, "");
-  return `${base}/${logoUrl.replace(/^\/+/, "")}`;
+  return normalizePublicAssetUrl(logoUrl);
 }
 
 export function sellerInitials(name: string | null | undefined) {
