@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-07T18:23:28.586Z",
-  "version": "9ffa18e7",
+  "generatedAt": "2026-10-07T18:28:34.601Z",
+  "version": "f72f503b",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -12,7 +12,7 @@
       "price": 125000000,
       "isPinned": true,
       "pinOrder": 1,
-      "viewCount": 17,
+      "viewCount": 18,
       "tags": [],
       "material": "choob va parche",
       "colors": [
@@ -48,7 +48,7 @@
         "depthM": 0.4,
         "realWorldScale": true
       },
-      "publishedAt": "2026-10-04T17:38:17.224Z"
+      "publishedAt": "2026-10-07T18:26:29.747Z"
     }
   ],
   "sellers": [
@@ -57,7 +57,7 @@
       "slug": "فروشگاه-پیکسل-2zkgny",
       "storeName": "فروشگاه پیکسل",
       "description": "تست",
-      "logoUrl": "https://34d24febf502c99578b281f79efec028.r2.cloudflarestorage.com/sellers/cmur9nu1k0013zmxss9ieedbj/logo/MSUuJoHgTwwJhoNG.jpeg",
+      "logoUrl": "https://34d24febf502c99578b281f79efec028.r2.cloudflarestorage.com/sellers/cmur9nu1k0013zmxss9ieedbj/logo/IeA-UEXzl83wQWGp.jpeg",
       "themeColor": "#103152",
       "contactEmail": "3dmobl@gmail.com",
       "contactPhone": "09123456789",
