@@ -1,70 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-08T07:05:30.584Z",
-  "version": "557a65cc",
-  "products": [
-    {
-      "id": "cmutrd35r003h9bc3g9bakt16",
-      "slug": "sandal-hjrhqi",
-      "name": "sandal",
-      "shortDescription": "test",
-      "fullDescription": "toozih kamel",
-      "price": 125000000,
-      "isPinned": true,
-      "pinOrder": 1,
-      "viewCount": 31,
-      "tags": [],
-      "material": "choob va parche",
-      "colors": [
-        {
-          "name": "toosi",
-          "value": "#808080"
-        },
-        {
-          "name": "zereshki",
-          "value": "#691111"
-        }
-      ],
-      "seller": {
-        "id": "cmur9nu1k0013zmxss9ieedbj",
-        "slug": "فروشگاه-پیکسل-2zkgny",
-        "storeName": "فروشگاه پیکسل"
-      },
-      "images": [
-        {
-          "url": "https://34d24febf502c99578b281f79efec028.r2.cloudflarestorage.com/products/cmutrd35r003h9bc3g9bakt16/images/F7x4xmn1rRDhaVu7.webp",
-          "isPrimary": true
-        }
-      ],
-      "models": [
-        {
-          "kind": "USDZ",
-          "url": "https://34d24febf502c99578b281f79efec028.r2.cloudflarestorage.com/products/cmutrd35r003h9bc3g9bakt16/models/whc7-Ynhlk07nlA7.usdz"
-        }
-      ],
-      "dimensions": {
-        "widthM": 0.4,
-        "heightM": 1.3,
-        "depthM": 0.4,
-        "realWorldScale": true
-      },
-      "publishedAt": "2026-10-08T06:48:23.182Z"
-    }
-  ],
-  "sellers": [
-    {
-      "id": "cmur9nu1k0013zmxss9ieedbj",
-      "slug": "فروشگاه-پیکسل-2zkgny",
-      "storeName": "فروشگاه پیکسل",
-      "description": "تست",
-      "logoUrl": "https://34d24febf502c99578b281f79efec028.r2.cloudflarestorage.com/sellers/cmur9nu1k0013zmxss9ieedbj/logo/1TVFtINNUP7D0PDb.jpeg",
-      "themeColor": "#12376d",
-      "contactEmail": "3dmobl@gmail.com",
-      "contactPhone": "09123456789",
-      "address": "تهران ولیعصر",
-      "socialLinks": {}
-    }
-  ],
+  "generatedAt": "2026-10-08T20:10:32.492Z",
+  "version": "6ab900e3",
+  "products": [],
+  "sellers": [],
   "settings": {
     "platformName": "3Dmarketiran",
     "logoUrl": null,
@@ -84,8 +23,8 @@
       "id": "final-starter-90",
       "name": "Starter · ۳ ماهه",
       "durationDays": 90,
-      "price": 3676500,
-      "discountPct": 5,
+      "price": 1950000,
+      "discountPct": 0,
       "productLimit": 10,
       "storageLimitMb": 500,
       "trafficLimitGb": 5,
@@ -97,8 +36,8 @@
       "id": "final-starter-180",
       "name": "Starter · ۶ ماهه",
       "durationDays": 180,
-      "price": 6966000,
-      "discountPct": 10,
+      "price": 3900000,
+      "discountPct": 0,
       "productLimit": 10,
       "storageLimitMb": 500,
       "trafficLimitGb": 5,
@@ -110,8 +49,8 @@
       "id": "final-starter-365",
       "name": "Starter · ۱۲ ماهه",
       "durationDays": 365,
-      "price": 13158000,
-      "discountPct": 15,
+      "price": 7800000,
+      "discountPct": 0,
       "productLimit": 10,
       "storageLimitMb": 500,
       "trafficLimitGb": 5,
@@ -149,11 +88,11 @@
       "id": "final-semi-professional-90",
       "name": "Semi-Professional · ۳ ماهه",
       "durationDays": 90,
-      "price": 7096500,
-      "discountPct": 5,
+      "price": 7900000,
+      "discountPct": 0,
       "productLimit": 30,
       "storageLimitMb": 1536,
-      "trafficLimitGb": 12,
+      "trafficLimitGb": 150,
       "categoryId": "plan-cat-semi",
       "sortOrder": 21,
       "features": {}
@@ -162,11 +101,11 @@
       "id": "final-semi-professional-180",
       "name": "Semi-Professional · ۶ ماهه",
       "durationDays": 180,
-      "price": 13446000,
-      "discountPct": 10,
+      "price": 14700000,
+      "discountPct": 0,
       "productLimit": 30,
       "storageLimitMb": 1536,
-      "trafficLimitGb": 12,
+      "trafficLimitGb": 150,
       "categoryId": "plan-cat-semi",
       "sortOrder": 22,
       "features": {}
@@ -175,11 +114,11 @@
       "id": "final-semi-professional-365",
       "name": "Semi-Professional · ۱۲ ماهه",
       "durationDays": 365,
-      "price": 25398000,
-      "discountPct": 15,
+      "price": 26200000,
+      "discountPct": 0,
       "productLimit": 30,
       "storageLimitMb": 1536,
-      "trafficLimitGb": 12,
+      "trafficLimitGb": 150,
       "categoryId": "plan-cat-semi",
       "sortOrder": 23,
       "features": {}
@@ -201,11 +140,11 @@
       "id": "final-professional-90",
       "name": "Professional · ۳ ماهه",
       "durationDays": 90,
-      "price": 12796500,
-      "discountPct": 5,
+      "price": 11500000,
+      "discountPct": 0,
       "productLimit": 100,
       "storageLimitMb": 5120,
-      "trafficLimitGb": 25,
+      "trafficLimitGb": 300,
       "categoryId": "plan-cat-professional",
       "sortOrder": 31,
       "features": {}
@@ -214,11 +153,11 @@
       "id": "final-professional-180",
       "name": "Professional · ۶ ماهه",
       "durationDays": 180,
-      "price": 24246000,
-      "discountPct": 10,
+      "price": 19800000,
+      "discountPct": 0,
       "productLimit": 100,
       "storageLimitMb": 5120,
-      "trafficLimitGb": 25,
+      "trafficLimitGb": 300,
       "categoryId": "plan-cat-professional",
       "sortOrder": 32,
       "features": {}
@@ -227,25 +166,17 @@
       "id": "final-professional-365",
       "name": "Professional · ۱۲ ماهه",
       "durationDays": 365,
-      "price": 45798000,
-      "discountPct": 15,
+      "price": 33000000,
+      "discountPct": 0,
       "productLimit": 100,
       "storageLimitMb": 5120,
-      "trafficLimitGb": 25,
+      "trafficLimitGb": 300,
       "categoryId": "plan-cat-professional",
       "sortOrder": 33,
       "features": {}
     }
   ],
   "planCategories": [
-    {
-      "id": "plan-cat-starter",
-      "name": "مبتدی",
-      "slug": "starter",
-      "description": "پلن پایه فروشندگان",
-      "sortOrder": 0,
-      "isActive": true
-    },
     {
       "id": "plan-cat-semi",
       "name": "نیمه‌حرفه‌ای",
