@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-08T06:44:07.882Z",
-  "version": "3572dfaf",
+  "generatedAt": "2026-10-08T06:45:01.259Z",
+  "version": "812fa083",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -48,7 +48,7 @@
         "depthM": 0.4,
         "realWorldScale": true
       },
-      "publishedAt": "2026-10-07T18:26:29.747Z"
+      "publishedAt": "2026-10-08T06:44:56.270Z"
     }
   ],
   "sellers": [
@@ -58,7 +58,7 @@
       "storeName": "فروشگاه پیکسل",
       "description": "تست",
       "logoUrl": "https://34d24febf502c99578b281f79efec028.r2.cloudflarestorage.com/sellers/cmur9nu1k0013zmxss9ieedbj/logo/IeA-UEXzl83wQWGp.jpeg",
-      "themeColor": "#16376a",
+      "themeColor": "#12376d",
       "contactEmail": "3dmobl@gmail.com",
       "contactPhone": "09123456789",
       "address": "تهران ولیعصر",
