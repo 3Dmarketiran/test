@@ -976,17 +976,19 @@
 }
 
 
-/* V90 — final product detail media sizing / mobile badge isolation. */
+/* V93 — desktop product media follows the source image ratio; never crop. */
 .product-viewer-ref{align-items:start;}
 .product-viewer-ref__main{position:relative;}
 .product-scale-badge{pointer-events:none;z-index:12;}
 @media(min-width:801px){
   .product-viewer-ref__main.is-image-mode{
-    aspect-ratio: 16 / 11 !important;
-    min-height: clamp(460px, 43vw, 680px) !important;
+    aspect-ratio: var(--product-image-ratio, 4 / 3) !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
   }
   .product-viewer-ref__main.is-image-mode .product-main-media img{
-    object-fit: cover !important;
+    object-fit: contain !important;
     object-position: center !important;
   }
 }
