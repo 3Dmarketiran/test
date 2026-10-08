@@ -997,3 +997,19 @@
   .product-viewer-ref__main.is-image-mode{aspect-ratio: 4 / 3 !important;}
   .product-viewer-ref__main.is-image-mode .product-main-media img{object-fit:contain !important;}
 }
+
+
+/* V94 — desktop product image delivery: natural aspect ratio, no crop. */
+@media(min-width:801px){
+  .product-viewer-ref__main.is-image-mode{
+    aspect-ratio:var(--product-image-ratio, 4 / 3)!important;
+    min-height:0!important; height:auto!important; max-height:none!important;
+  }
+  .product-viewer-ref__main.is-image-mode .product-main-media,
+  .product-viewer-ref__main.is-image-mode .product-main-media img{
+    width:100%!important; height:100%!important;
+  }
+  .product-viewer-ref__main.is-image-mode .product-main-media img{
+    object-fit:contain!important; object-position:center!important;
+  }
+}
