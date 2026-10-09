@@ -105,7 +105,7 @@ function StoreIcon() {
 }
 
 export default function Categories() {
-  const { categories, sellers, loading } = useData();
+  const { products, sellers, loading } = useData();
 
   useSeo({
     title: "دسته‌بندی‌ها",
@@ -113,26 +113,39 @@ export default function Categories() {
       "دسته‌بندی‌ها را ببینید و فروشگاه‌های مرتبط با هر دسته را پیدا کنید.",
   });
 
-  // Public site must never expose inactive categories.
-  // The backend publisher already exports active categories only,
-  // but this extra guard keeps the frontend safe if stale public data exists.
-  const activeCategories = categories.filter(
-    (category) => category.isActive !== false
+  // The public catalog contract does not expose store categories. Build this
+  // directory from published product tags instead, which are part of the
+  // typed public product schema and can be used as real product filters.
+  const categoryMap = new Map<string, { id: string; slug: string; name: string }>();
+  for (const product of products) {
+    for (const rawTag of product.tags ?? []) {
+      const name = rawTag.trim();
+      if (!name) continue;
+      const slug = name
+        .toLocaleLowerCase("fa")
+        .normalize("NFKC")
+        .replace(/\\s+/g, "-");
+      if (!categoryMap.has(slug)) {
+        categoryMap.set(slug, { id: slug, slug, name });
+      }
+    }
+  }
+  const activeCategories = Array.from(categoryMap.values()).sort((a, b) =>
+    a.name.localeCompare(b.name, "fa")
   );
 
-   const storeCounts = new Map<string, number>();
-
-  for (const seller of sellers) {
-    const categorySlug = seller.category?.slug;
-
-    if (!categorySlug) {
-      continue;
-    }
-
-    storeCounts.set(
-      categorySlug,
-      (storeCounts.get(categorySlug) ?? 0) + 1
+  const storeCounts = new Map<string, number>();
+  const sellersById = new Map(sellers.map((seller) => [seller.id, seller]));
+  for (const category of activeCategories) {
+    const sellerIds = new Set(
+      products
+        .filter((product) => (product.tags ?? []).some((tag) =>
+          tag.trim().toLocaleLowerCase("fa").normalize("NFKC").replace(/\\s+/g, "-") === category.slug
+        ))
+        .map((product) => product.seller.id)
+        .filter((sellerId) => sellersById.has(sellerId))
     );
+    storeCounts.set(category.slug, sellerIds.size);
   }
 
  return (
@@ -164,7 +177,7 @@ export default function Categories() {
               }}
             >
               <CategoryIcon />
-              دسته‌بندی فروشگاه‌ها
+              دسته‌بندی محصولات
             </div>
 
             <h1
@@ -272,7 +285,7 @@ export default function Categories() {
                 lineHeight: 1.8,
               }}
             >
-              دسته‌بندی‌های فعال پس از ایجاد در این بخش نمایش داده می‌شوند.
+              دسته‌بندی‌ها از برچسب محصولات منتشرشده ساخته می‌شوند و با انتشار محصولات جدید به‌روز می‌شوند.
             </p>
           </div>
         ) : (

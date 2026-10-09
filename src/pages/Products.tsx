@@ -66,9 +66,20 @@ export default function Products() {
 
   const filteredSellers = useMemo(() => {
     const q = (params.get("q") ?? "").trim().toLocaleLowerCase("fa");
-    if (!q) return indexableSellers;
-    return indexableSellers.filter((seller) => (seller.storeName ?? "").toLocaleLowerCase("fa").includes(q) || (seller.slug ?? "").toLocaleLowerCase("fa").includes(q));
-  }, [indexableSellers, params]);
+    const category = (params.get("category") ?? "").trim();
+    return indexableSellers.filter((seller) => {
+      const matchesQuery = !q
+        || (seller.storeName ?? "").toLocaleLowerCase("fa").includes(q)
+        || (seller.slug ?? "").toLocaleLowerCase("fa").includes(q);
+      const matchesCategory = !category || products.some((product) =>
+        product.seller.id === seller.id
+        && (product.tags ?? []).some((tag) =>
+          tag.trim().toLocaleLowerCase("fa").normalize("NFKC").replace(/\\s+/g, "-") === category
+        )
+      );
+      return matchesQuery && matchesCategory;
+    });
+  }, [indexableSellers, params, products]);
 
   const clearSearch = () => { setQuery(""); const next = new URLSearchParams(params); next.delete("q"); setParams(next, { replace: true }); };
   const hasSearch = Boolean(query.trim());
