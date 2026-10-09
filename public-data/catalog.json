@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-09T04:36:26.996Z",
-  "version": "87179a54",
+  "generatedAt": "2026-10-09T04:45:10.468Z",
+  "version": "31191fd8",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -12,7 +12,7 @@
       "price": 125000000,
       "isPinned": true,
       "pinOrder": 1,
-      "viewCount": 39,
+      "viewCount": 42,
       "tags": [],
       "material": "choob va parche",
       "colors": [
@@ -32,14 +32,14 @@
       },
       "images": [
         {
-          "url": "https://api.3dmarketiran.ir/api/public/assets/products/cmutrd35r003h9bc3g9bakt16/images/F7x4xmn1rRDhaVu7.webp",
+          "url": "https://api.3dmarketiran.ir/api/public/assets/products/cmutrd35r003h9bc3g9bakt16/images/GWjptn4XoBOYD5Fq.webp",
           "isPrimary": true
         }
       ],
       "models": [
         {
           "kind": "USDZ",
-          "url": "https://api.3dmarketiran.ir/api/public/assets/products/cmutrd35r003h9bc3g9bakt16/models/whc7-Ynhlk07nlA7.usdz"
+          "url": "https://api.3dmarketiran.ir/api/public/assets/products/cmutrd35r003h9bc3g9bakt16/models/7d6NfrrPWJ16-yAR.usdz"
         }
       ],
       "dimensions": {
