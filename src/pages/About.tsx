@@ -80,8 +80,9 @@ export default function About() {
     settings?.platformName ?? "3Dmarketiran";
 
   useSeo({
-    title: "درباره ما",
-    description: `درباره ${platformName}`,
+    title: "درباره 3DMarketIran | نمایش محصول با 3D و AR",
+    description: "با 3DMarketIran آشنا شوید؛ بستری برای معرفی بهتر محصولات و فروشگاه‌ها با نمایش سه‌بعدی تعاملی و واقعیت افزوده.",
+    canonicalPath: "/about/",
   });
 
   return (

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
+import { isIndexableSeller } from "../lib/contentQuality";
 import { track } from "../lib/analytics";
 
 function SearchIcon() { return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/><path d="M21 21l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>; }
@@ -10,10 +11,45 @@ function StoreIcon() { return <svg width="24" height="24" viewBox="0 0 24 24" fi
 function ArrowIcon() { return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/><path d="m13 6 6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>; }
 
 export default function Products() {
-  const { sellers, loading } = useData();
+  const { sellers, products, loading } = useData();
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState(params.get("q") ?? "");
-  useSeo({ title: "فروشگاه‌ها", description: "فروشگاه‌های فعال را پیدا کنید و برای مشاهده محصولات وارد فروشگاه موردنظر شوید." });
+  const indexableSellers = useMemo(
+    () => sellers.filter((seller) => isIndexableSeller(seller, products)),
+    [sellers, products],
+  );
+  const sellerDirectoryStructuredData = useMemo(() => ({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": "https://3dmarketiran.ir/products/#webpage",
+          name: "فروشگاه‌های سه‌بعدی ایران | 3DMarketIran",
+          description: "فهرست ویترین فروشگاه‌هایی که محصولات سه‌بعدی و واقعیت افزوده را در 3DMarketIran معرفی می‌کنند.",
+          url: "https://3dmarketiran.ir/products/",
+          inLanguage: "fa-IR",
+          isPartOf: { "@id": "https://3dmarketiran.ir/#website" },
+        },
+        ...(indexableSellers.length ? [{
+          "@type": "ItemList",
+          name: "فروشگاه‌های 3DMarketIran",
+          itemListElement: indexableSellers.slice(0, 30).map((seller, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: seller.storeName,
+            url: `https://3dmarketiran.ir/sellers/${encodeURIComponent(seller.slug)}/`,
+          })),
+        }] : []),
+      ],
+    }), [indexableSellers]);
+
+  useSeo({
+    title: "فروشگاه‌های سه‌بعدی ایران | 3DMarketIran",
+    description: "فروشگاه‌های فعال 3DMarketIran را پیدا کنید، محصولات آن‌ها را با نمایش سه‌بعدی و واقعیت افزوده بررسی کنید و مستقیم با فروشنده در ارتباط باشید.",
+    canonicalPath: "/products/",
+    noIndex: indexableSellers.length === 0,
+    structuredData: sellerDirectoryStructuredData,
+  });
 
   useEffect(() => setQuery(params.get("q") ?? ""), [params]);
   useEffect(() => {
@@ -30,9 +66,9 @@ export default function Products() {
 
   const filteredSellers = useMemo(() => {
     const q = (params.get("q") ?? "").trim().toLocaleLowerCase("fa");
-    if (!q) return sellers;
-    return sellers.filter((seller) => (seller.storeName ?? "").toLocaleLowerCase("fa").includes(q) || (seller.slug ?? "").toLocaleLowerCase("fa").includes(q));
-  }, [sellers, params]);
+    if (!q) return indexableSellers;
+    return indexableSellers.filter((seller) => (seller.storeName ?? "").toLocaleLowerCase("fa").includes(q) || (seller.slug ?? "").toLocaleLowerCase("fa").includes(q));
+  }, [indexableSellers, params]);
 
   const clearSearch = () => { setQuery(""); const next = new URLSearchParams(params); next.delete("q"); setParams(next, { replace: true }); };
   const hasSearch = Boolean(query.trim());
@@ -56,12 +92,12 @@ export default function Products() {
       </div>
     </div>
 
-    {loading ? <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 18 }}>{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton" style={{ minHeight: 270, borderRadius: 20 }} />)}</div>
+    {loading && indexableSellers.length === 0 ? <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 18 }}>{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton" style={{ minHeight: 270, borderRadius: 20 }} />)}</div>
       : filteredSellers.length === 0 ? <div className="empty-state" style={{ minHeight: 320, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}><div style={{ width: 64, height: 64, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 18, marginBottom: 16, background: "var(--surface-2, #f4f4f4)", color: "var(--text-muted, #777)" }}><SearchIcon /></div><h2 style={{ margin: "0 0 8px", fontSize: "1.15rem", fontWeight: 850 }}>فروشگاهی پیدا نشد</h2><p style={{ margin: "0 0 20px", maxWidth: 480, color: "var(--text-muted, #777)", fontSize: 14, lineHeight: 1.9 }}>نام فروشگاه را بررسی کنید یا عبارت جستجو را تغییر دهید.</p>{hasSearch && <button type="button" className="btn btn-outline" onClick={clearSearch}>حذف جستجو</button>}</div>
       : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 18 }}>
         {filteredSellers.map((seller, sellerIndex) => {
           const logoUrl = getSellerLogoUrl(seller.logoUrl) || ""; const storeName = seller.storeName || "فروشگاه بدون نام";
-          return <Link key={seller.slug} to={`/sellers/${seller.slug}`} style={{ display: "flex", flexDirection: "column", minHeight: 270, overflow: "hidden", textDecoration: "none", color: "inherit", borderRadius: 20, border: "1px solid var(--border, #e8e8e8)", background: "var(--surface, #fff)", transition: "transform .2s ease, box-shadow .2s ease, border-color .2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 14px 34px rgba(0,0,0,.08)"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}>
+          return <Link key={seller.slug} to={`/sellers/${encodeURIComponent(seller.slug)}/`} style={{ display: "flex", flexDirection: "column", minHeight: 270, overflow: "hidden", textDecoration: "none", color: "inherit", borderRadius: 20, border: "1px solid var(--border, #e8e8e8)", background: "var(--surface, #fff)", transition: "transform .2s ease, box-shadow .2s ease, border-color .2s ease" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 14px 34px rgba(0,0,0,.08)"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}>
             <div className="seller-directory-logo-wrap" style={{ minHeight: 175, display: "flex", alignItems: "center", justifyContent: "center", padding: 28, background: "#fff" }}>
               {logoUrl ? (
                 <>

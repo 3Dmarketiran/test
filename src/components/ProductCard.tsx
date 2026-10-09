@@ -10,7 +10,7 @@ export default function ProductCard({ product, priority = false }: { product: Pu
   const hasAr = product.models.some((model) => model.kind === "USDZ");
 
   return (
-    <Link to={`/products/${product.slug}`} className="card premium-product-card screenshot-product-card" aria-label={`مشاهده ${product.name}`}>
+    <Link to={`/products/${encodeURIComponent(product.slug)}/`} className="card premium-product-card screenshot-product-card" aria-label={`مشاهده ${product.name}`}>
       <div className="product-card__media">
         {primary?.url && !imageError ? (
           <>

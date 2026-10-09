@@ -3,6 +3,7 @@ import logo3d from "../assets/3dmarketiran-logo.svg";
 import { Link } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
+import { isIndexableSeller } from "../lib/contentQuality";
 import { ADMIN_URL } from "../lib/config";
 
 function ArrowIcon() {
@@ -139,6 +140,7 @@ function Hero3DScene() {
 export default function Home() {
   const {
     sellers,
+    products,
     settings,
     plans,
     loading,
@@ -148,12 +150,42 @@ export default function Home() {
     settings?.platformName ?? "3Dmarketiran";
 
   useSeo({
-    title: platformName,
+    title: "3DMarketIran | نمایش سه‌بعدی و واقعیت افزوده محصولات",
     description:
-      "فروشگاه‌های مختلف را مشاهده کنید، وارد فروشگاه شوید و محصولات سه‌بعدی و واقعیت افزوده آن را ببینید.",
+      "در 3DMarketIran فروشگاه‌ها و محصولات را به‌صورت سه‌بعدی و واقعیت افزوده ببینید؛ ویترینی آنلاین برای معرفی بهتر محصول و ارتباط مستقیم مشتری با فروشنده.",
+    canonicalPath: "/",
+    structuredData: {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://3dmarketiran.ir/#organization",
+          name: "3DMarketIran",
+          url: "https://3dmarketiran.ir/",
+          logo: "https://3dmarketiran.ir/3dmarketiran-logo.svg",
+          description: "بازارگاه آنلاین برای معرفی فروشگاه‌ها و محصولات با نمایش سه‌بعدی و واقعیت افزوده.",
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://3dmarketiran.ir/#website",
+          name: "3DMarketIran",
+          url: "https://3dmarketiran.ir/",
+          inLanguage: "fa-IR",
+          publisher: { "@id": "https://3dmarketiran.ir/#organization" },
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://3dmarketiran.ir/#webpage",
+          name: "3DMarketIran | نمایش سه‌بعدی و واقعیت افزوده محصولات",
+          url: "https://3dmarketiran.ir/",
+          inLanguage: "fa-IR",
+          isPartOf: { "@id": "https://3dmarketiran.ir/#website" },
+        },
+      ],
+    },
   });
 
-  const featuredSellers = sellers.slice(0, 8);
+  const featuredSellers = sellers.filter((seller) => isIndexableSeller(seller, products)).slice(0, 8);
 
   return (
     <>
@@ -204,7 +236,7 @@ export default function Home() {
 
             <div className="hero__cta">
               <Link
-                to="/products"
+                to="/products/"
                 className="btn btn-primary"
               >
                 مشاهده فروشگاه‌ها
@@ -275,7 +307,7 @@ export default function Home() {
             </div>
 
             <Link
-              to="/products"
+              to="/products/"
               className="btn btn-outline btn-sm"
             >
               مشاهده همه فروشگاه‌ها
@@ -283,7 +315,7 @@ export default function Home() {
             </Link>
           </div>
 
-          {loading ? (
+          {loading && featuredSellers.length === 0 ? (
             <div className="grid grid-4">
               {Array.from({ length: 8 }).map(
                 (_, index) => (
@@ -332,7 +364,7 @@ export default function Home() {
               {featuredSellers.map((seller) => (
                 <Link
                   key={seller.slug}
-                  to={`/sellers/${seller.slug}`}
+                  to={`/sellers/${encodeURIComponent(seller.slug)}/`}
                   className="card featured-store-card"
                   style={{
                     padding: 18,
@@ -455,7 +487,7 @@ export default function Home() {
                 <h2>پلن‌های اشتراک فروشندگان</h2>
                 <p>پلن‌های فعال را ببینید و برای فعال‌سازی با پشتیبانی تماس بگیرید.</p>
               </div>
-              <Link to="/plans" className="btn btn-outline">مشاهده همه پلن‌ها</Link>
+              <Link to="/plans/" className="btn btn-outline">مشاهده همه پلن‌ها</Link>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 14 }}>
               {plans.slice(0, 6).map((plan) => (
@@ -540,7 +572,7 @@ export default function Home() {
               }}
             >
               <Link
-                to="/plans"
+                to="/plans/"
                 className="btn btn-primary"
               >
                 مشاهده پلن‌ها

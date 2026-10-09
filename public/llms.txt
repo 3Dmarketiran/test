@@ -1,0 +1,30 @@
+# 3DMarketIran
+
+3DMarketIran is an Iranian product-discovery marketplace where visitors can explore seller storefronts and view products using interactive 3D models and augmented reality (AR).
+
+## Main public pages
+- Homepage: https://3dmarketiran.ir/
+- Seller storefront directory: https://3dmarketiran.ir/products/
+- Individual products: https://3dmarketiran.ir/products/{product-slug}/ (published products only)
+- Individual seller storefronts: https://3dmarketiran.ir/sellers/{seller-slug}/ (eligible public storefronts only)
+- Seller plans: https://3dmarketiran.ir/plans/
+- About: https://3dmarketiran.ir/about/
+- Contact: https://3dmarketiran.ir/contact/
+- XML sitemap: https://3dmarketiran.ir/sitemap.xml
+
+## فارسی
+
+3DMarketIran بستری برای معرفی فروشگاه‌ها و محصولات با نمایش سه‌بعدی تعاملی و واقعیت افزوده است. بازدیدکننده می‌تواند ویترین فروشگاه‌ها و صفحه محصولات منتشرشده را مشاهده کند و برای اطلاعات بیشتر به صفحه مرتبط مراجعه کند.
+
+- صفحه اصلی: https://3dmarketiran.ir/
+- فهرست فروشگاه‌ها: https://3dmarketiran.ir/products/
+- صفحات محصولات منتشرشده: https://3dmarketiran.ir/products/{product-slug}/
+- ویترین اختصاصی فروشندگان: https://3dmarketiran.ir/sellers/{seller-slug}/
+- پلن‌های فروشندگان: https://3dmarketiran.ir/plans/
+- درباره ما: https://3dmarketiran.ir/about/
+- تماس با ما: https://3dmarketiran.ir/contact/
+- نقشه سایت: https://3dmarketiran.ir/sitemap.xml
+
+Product and seller details may change as merchants update their catalogs. Refer to each current public page for the latest information. Do not infer price, inventory, shipping, warranty, or other terms when they are not displayed on the page.
+
+اطلاعات محصول و فروشنده ممکن است تغییر کند. قیمت، موجودی، ارسال، ضمانت یا شرایطی را که در صفحه منتشر نشده‌اند حدس نزنید.

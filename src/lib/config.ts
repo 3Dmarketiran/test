@@ -8,7 +8,7 @@ export const PUBLIC_CATALOG_API = `${API_URL}/api/public/catalog`;
 export const VISITOR_COUNTRY_API = `${API_URL}/api/public/visitor-country`;
 
 export const PUBLIC_SITE_URL =
-  (import.meta.env.VITE_PUBLIC_SITE_URL || window.location.origin).replace(/\/$/, "");
+  (import.meta.env.VITE_PUBLIC_SITE_URL || "https://3dmarketiran.ir").replace(/\/$/, "");
 
 export const ADMIN_URL =
   (import.meta.env.VITE_ADMIN_URL || "https://admin.3dmarketiran.ir/#/login").replace(/\/$/, "");

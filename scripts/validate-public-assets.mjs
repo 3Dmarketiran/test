@@ -16,8 +16,9 @@ function assertAbsoluteUrl(value, label) {
   }
 }
 
-const products = await read("products.json");
-const sellers = await read("sellers.json");
+const catalog = await read("catalog.json");
+const products = Array.isArray(catalog.products) ? catalog.products : await read("products.json");
+const sellers = Array.isArray(catalog.sellers) ? catalog.sellers : await read("sellers.json");
 
 let refs = 0;
 for (const seller of sellers) {

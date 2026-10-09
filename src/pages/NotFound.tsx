@@ -58,7 +58,9 @@ function HomeIcon() {
 export default function NotFound() {
   useSeo({
     title: "صفحه پیدا نشد",
-    description: "صفحه‌ای که به دنبال آن هستید پیدا نشد.",
+    description: "صفحه‌ای که به دنبال آن هستید پیدا نشد یا دیگر منتشر نشده است؛ می‌توانید از صفحه اصلی یا فهرست فروشگاه‌ها ادامه دهید.",
+    canonicalPath: window.location.pathname,
+    noIndex: true,
   });
 
   return (

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
+import { isIndexableSeller } from "../lib/contentQuality";
 import { track } from "../lib/analytics";
 
 function readableThemeInk(hex: string | null | undefined) {
@@ -179,14 +180,49 @@ export default function SellerStore() {
       )
     : [];
 
+  const sellerDescription = seller
+    ? (seller.description?.trim() || `مشاهده محصولات و ویترین ${seller.storeName} در 3DMarketIran؛ محصولات را به‌صورت سه‌بعدی بررسی کنید و برای اطلاعات بیشتر با فروشنده ارتباط بگیرید.`)
+    : "فروشگاه موردنظر در 3DMarketIran پیدا نشد.";
+  const indexableSeller = Boolean(seller && isIndexableSeller(seller, products));
+  const sellerStructuredData = useMemo(() => seller ? {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfilePage",
+        "@id": `https://3dmarketiran.ir/sellers/${encodeURIComponent(seller.slug)}/#profile`,
+        url: `https://3dmarketiran.ir/sellers/${encodeURIComponent(seller.slug)}/`,
+        name: `${seller.storeName} | فروشگاه سه‌بعدی | 3DMarketIran`,
+        description: sellerDescription,
+        inLanguage: "fa-IR",
+        mainEntity: {
+          "@type": "Organization",
+          name: seller.storeName,
+          url: `https://3dmarketiran.ir/sellers/${encodeURIComponent(seller.slug)}/`,
+          ...(seller.description ? { description: seller.description } : {}),
+          ...(getSellerLogoUrl(seller.logoUrl) ? { logo: getSellerLogoUrl(seller.logoUrl) } : {}),
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "خانه", item: "https://3dmarketiran.ir/" },
+          { "@type": "ListItem", position: 2, name: "فروشگاه‌ها", item: "https://3dmarketiran.ir/products/" },
+          { "@type": "ListItem", position: 3, name: seller.storeName, item: `https://3dmarketiran.ir/sellers/${encodeURIComponent(seller.slug)}/` },
+        ],
+      },
+    ],
+  } : null, [seller, sellerDescription]);
+
   useSeo({
     title: seller
-      ? `${seller.storeName} | فروشگاه`
-      : "فروشگاه پیدا نشد",
-    description:
-      seller?.description ??
-      "مشاهده فروشگاه و محصولات منتشرشده فروشنده",
-    canonicalPath: `/sellers/${slug}`,
+      ? `${seller.storeName} | فروشگاه سه‌بعدی | 3DMarketIran`
+      : "فروشگاه پیدا نشد | 3DMarketIran",
+    description: sellerDescription,
+    enabled: !loading,
+    image: seller ? getSellerLogoUrl(seller.logoUrl) : undefined,
+    canonicalPath: `/sellers/${encodeURIComponent(slug || "")}/`,
+    noIndex: !loading && (!seller || !indexableSeller),
+    structuredData: seller && indexableSeller ? sellerStructuredData : null,
   });
 
   useEffect(() => {
@@ -200,7 +236,7 @@ export default function SellerStore() {
     });
   }, [seller]);
 
-  if (loading) {
+  if (loading && (!seller || !indexableSeller)) {
     return <StoreSkeleton />;
   }
 
@@ -257,7 +293,7 @@ export default function SellerStore() {
           </p>
 
           <Link
-            to="/products"
+            to="/products/"
             className="btn btn-primary"
             style={{
               marginTop: 20,
@@ -361,10 +397,7 @@ export default function SellerStore() {
               href={`#${item.id}`}
               className={index === 0 ? "active" : undefined}
               onClick={(event) => {
-                // The app uses HashRouter, which treats a plain
-                // "#id" href as a route change (to a nonexistent
-                // "/id" route) instead of an in-page scroll. Scroll
-                // to the section manually and keep the URL as-is.
+                // Keep this interaction as an in-page scroll without changing route state.
                 event.preventDefault();
                 document
                   .getElementById(item.id)
@@ -401,7 +434,7 @@ export default function SellerStore() {
       <section id="all-products" className="section seller-products-section" aria-labelledby="seller-products-title">
         <div className="section-head">
           <div><div className="page-eyebrow">کاتالوگ</div><h2 id="seller-products-title">همه محصولات</h2><p>{sellerProducts.length} محصول منتشرشده برای مشاهده و بررسی</p></div>
-          <Link to="/products" className="btn btn-outline btn-sm">مشاهده کاتالوگ</Link>
+          <Link to="/products/" className="btn btn-outline btn-sm">مشاهده کاتالوگ</Link>
         </div>
 
         {sellerProducts.length === 0 ? (

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import {
-  HashRouter,
+  BrowserRouter,
   Routes,
   Route,
   useLocation,
@@ -115,11 +115,11 @@ export default function App() {
     <>
       <SitePreloader />
       <IranVpnNotice />
-      <HashRouter>
+      <BrowserRouter>
         <DataProvider>
         <BrandedApp />
         </DataProvider>
-      </HashRouter>
+      </BrowserRouter>
     </>
   );
 }

@@ -8,7 +8,7 @@ export default function StoreGridTile({ product }: { product: PublicProduct }) {
   const isAr = product.models.some((model) => model.kind === "USDZ");
 
   return (
-    <Link to={`/products/${product.slug}`} className="ig-tile" aria-label={product.name}>
+    <Link to={`/products/${encodeURIComponent(product.slug)}/`} className="ig-tile" aria-label={product.name}>
       {(is3d || isAr) && <span className="ig-tile__tag">{is3d ? "3D" : "AR"}</span>}
       {primary?.url ? (
         <img src={primary.url} alt={product.name} loading="lazy" decoding="async" />

@@ -31,6 +31,9 @@ const initialState: DataState = {
   settings: initialCatalog.settings,
   plans: initialCatalog.plans,
   planCategories: initialCatalog.planCategories || [],
+  // The bundled snapshot is available immediately, but keep the refresh flag
+  // until the live catalog confirms it. Pages can render indexable snapshot
+  // records while withholding placeholder/missing routes during the refresh.
   loading: true,
   error: null,
 };

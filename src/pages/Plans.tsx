@@ -167,9 +167,9 @@ export default function Plans() {
     settings?.platformName || "3D Market";
 
   useSeo({
-    title: "اشتراک فروشندگان",
-    description:
-      "پلن‌های اشتراک فروشندگان برای ساخت ویترین سه‌بعدی و واقعیت افزوده.",
+    title: "پلن‌های فروشندگان | 3DMarketIran",
+    description: "پلن‌های اشتراک فروشندگان 3DMarketIran را بررسی کنید و برای ساخت ویترین اختصاصی، معرفی محصولات سه‌بعدی و نمایش واقعیت افزوده برنامه مناسب را انتخاب کنید.",
+    canonicalPath: "/plans/",
   });
 
 

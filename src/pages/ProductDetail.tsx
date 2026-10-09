@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import ProductViewer from "../components/ProductViewer";
 import ProductCard from "../components/ProductCard";
 import { useSeo } from "../lib/seo";
+import { isIndexableProduct } from "../lib/contentQuality";
 
 export default function ProductDetail() {
   const { slug } = useParams();
@@ -25,19 +26,56 @@ export default function ProductDetail() {
     });
   }, [slug]);
 
+  const productDescription = product
+    ? (product.shortDescription || product.fullDescription || `${product.name}؛ مشاهده مدل سه‌بعدی و جزئیات محصول در فروشگاه ${product.seller.storeName} در 3DMarketIran.`)
+    : "جزئیات و مدل سه‌بعدی محصولات در 3DMarketIran.";
+  const indexableProduct = Boolean(product && isIndexableProduct(product));
+  const productStructuredData = useMemo(() => product ? {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": `https://3dmarketiran.ir/products/${encodeURIComponent(product.slug)}/#product`,
+        name: product.name,
+        description: productDescription,
+        sku: product.id,
+        url: `https://3dmarketiran.ir/products/${encodeURIComponent(product.slug)}/`,
+        ...((product.images.map((item) => item.url).filter(Boolean).length > 0) ? { image: product.images.map((item) => item.url).filter(Boolean) } : {}),
+        ...(product.price != null && Number.isFinite(Number(product.price)) && Number(product.price) >= 0 ? {
+          offers: {
+            "@type": "Offer",
+            price: String(Math.round(Number(product.price)) * 10),
+            priceCurrency: "IRR",
+            url: `https://3dmarketiran.ir/products/${encodeURIComponent(product.slug)}/`,
+            seller: { "@type": "Organization", name: product.seller.storeName },
+          },
+        } : {}),
+        inLanguage: "fa-IR",
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "خانه", item: "https://3dmarketiran.ir/" },
+          { "@type": "ListItem", position: 2, name: "فروشگاه‌ها", item: "https://3dmarketiran.ir/products/" },
+          { "@type": "ListItem", position: 3, name: product.name, item: `https://3dmarketiran.ir/products/${encodeURIComponent(product.slug)}/` },
+        ],
+      },
+    ],
+  } : null, [product, productDescription]);
+
   useSeo({
+    enabled: !loading,
     title: product
-      ? `${product.name} | ${product.seller.storeName}`
-      : "محصول",
-    description:
-      product?.shortDescription ??
-      product?.fullDescription ??
-      undefined,
-    image: product?.images[0]?.url,
-    canonicalPath: `/products/${slug}`,
+      ? `${product.name} | ${product.seller.storeName} | 3DMarketIran`
+      : "محصول پیدا نشد | 3DMarketIran",
+    description: productDescription,
+    image: product?.images.find((item) => item.isPrimary)?.url || product?.images[0]?.url,
+    canonicalPath: `/products/${encodeURIComponent(slug || "")}/`,
+    noIndex: !loading && (!product || !indexableProduct),
+    structuredData: product && indexableProduct ? productStructuredData : null,
   });
 
-  if (loading) {
+  if (loading && (!product || !indexableProduct)) {
     return (
       <main className="container section">
         <div className="product-detail" aria-busy="true" aria-label="در حال بارگذاری محصول">
@@ -60,7 +98,7 @@ export default function ProductDetail() {
         <div className="empty-state">
           <div className="icon" aria-hidden="true" style={{ fontSize: 40 }}>❓</div>
           <p>این محصول یافت نشد یا دیگر در دسترس نیست.</p>
-          <Link to="/products" className="btn btn-primary" style={{ marginTop: 12 }}>بازگشت به محصولات</Link>
+          <Link to="/products/" className="btn btn-primary" style={{ marginTop: 12 }}>بازگشت به محصولات</Link>
         </div>
       </main>
     );
@@ -136,7 +174,7 @@ export default function ProductDetail() {
         <section className="section related-products-ref" aria-labelledby="related-products-title">
           <div className="section-head">
             <div><h2 id="related-products-title">محصولات دیگر این فروشگاه</h2><p>محصولات دیگری که این فروشگاه منتشر کرده است</p></div>
-            <Link to={`/sellers/${encodeURIComponent(product.seller.slug)}`} className="btn btn-outline btn-sm">مشاهده فروشگاه</Link>
+            <Link to={`/sellers/${encodeURIComponent(product.seller.slug)}/`} className="btn btn-outline btn-sm">مشاهده فروشگاه</Link>
           </div>
           <div className="grid grid-4">{related.map((relatedProduct) => <ProductCard key={relatedProduct.id} product={relatedProduct} />)}</div>
         </section>
@@ -182,7 +220,7 @@ function SellerCard({ seller, sellerSlug }: { seller: { slug: string; storeName:
         {seller.contactPhone && <a href={`tel:${seller.contactPhone}`}><span className="seller-box__contact-icon">⌕</span><span><small>شماره تماس</small><strong>{seller.contactPhone}</strong></span></a>}
         {seller.address && <div><span className="seller-box__contact-icon">⌖</span><span><small>آدرس</small><strong>{seller.address}</strong></span></div>}
       </div>
-      <Link to={`/sellers/${encodeURIComponent(sellerSlug)}`} className="btn btn-primary seller-box__button">مشاهده فروشگاه</Link>
+      <Link to={`/sellers/${encodeURIComponent(sellerSlug)}/`} className="btn btn-primary seller-box__button">مشاهده فروشگاه</Link>
     </section>
   );
 }

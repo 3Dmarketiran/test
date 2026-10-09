@@ -76,3 +76,29 @@ function validateCatalog(data) {
 }
 
 function validatePlans(data) { validateArray(data, "plans.json"); for (const plan of data) { if (!plan.id || !plan.name || !Number.isFinite(plan.durationDays) || !Number.isFinite(plan.price)) throw new Error(`invalid plan: ${JSON.stringify(plan).slice(0,120)}`); } }
+
+// The atomic catalog.json snapshot drives static route generation. Ensure the
+// split compatibility files describe the same publication snapshot, so the
+// frontend and sitemap cannot silently diverge.
+try {
+  const catalog = JSON.parse(readFileSync(path.join(dataDir, "catalog.json"), "utf8"));
+  const products = JSON.parse(readFileSync(path.join(dataDir, "products.json"), "utf8"));
+  const sellers = JSON.parse(readFileSync(path.join(dataDir, "sellers.json"), "utf8"));
+  const plans = JSON.parse(readFileSync(path.join(dataDir, "plans.json"), "utf8"));
+  const sameIds = (left, right, kind) => {
+    if (!Array.isArray(left) || !Array.isArray(right)) throw new Error(`${kind} values must be arrays`);
+    const key = (item) => `${String(item?.id ?? "")}|${String(item?.slug ?? "")}`;
+    if (left.map(key).join("\n") !== right.map(key).join("\n")) {
+      throw new Error(`${kind} IDs/slugs or order differ between catalog.json and split public JSON`);
+    }
+  };
+  sameIds(catalog.products, products, "products");
+  sameIds(catalog.sellers, sellers, "sellers");
+  if (catalog.plans.length !== plans.length || catalog.plans.some((item, index) => item.id !== plans[index]?.id)) {
+    throw new Error("plans IDs/order differ between catalog.json and plans.json");
+  }
+  console.log("✅ catalog.json matches product/seller/plan snapshots by IDs and order");
+} catch (err) {
+  console.error(`❌ catalog snapshot consistency check failed: ${err.message}`);
+  process.exitCode = 1;
+}

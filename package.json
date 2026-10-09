@@ -6,9 +6,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/validate-public-data.mjs && node scripts/validate-public-assets.mjs && vite build && node scripts/postbuild.mjs",
+    "build": "node scripts/test-seo-generation.mjs && node scripts/validate-public-data.mjs && node scripts/validate-public-assets.mjs && tsc -p tsconfig.json --noEmit && vite build && node scripts/postbuild.mjs && node scripts/verify-seo-build.mjs",
     "preview": "vite preview",
-    "validate": "node scripts/validate-public-data.mjs"
+    "validate": "node scripts/validate-public-data.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "verify:seo": "node scripts/verify-seo-build.mjs",
+    "test:seo-generation": "node scripts/test-seo-generation.mjs"
   },
   "dependencies": {
     "@google/model-viewer": "^4.3.1",

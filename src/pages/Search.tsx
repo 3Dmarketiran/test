@@ -8,8 +8,8 @@ export default function Search() {
   const q = params.get("q")?.trim() ?? "";
 
   const destination = q
-    ? `/products?q=${encodeURIComponent(q)}`
-    : "/products";
+    ? `/products/?q=${encodeURIComponent(q)}`
+    : "/products/";
 
   return <Navigate to={destination} replace />;
 }

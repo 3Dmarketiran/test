@@ -90,8 +90,9 @@ export default function Contact() {
   ).filter(([, value]) => Boolean(value));
 
   useSeo({
-    title: "تماس با ما",
-    description: `اطلاعات تماس ${platformName}`,
+    title: "تماس با 3DMarketIran",
+    description: `راه‌های ارتباط با ${platformName} برای پشتیبانی، همکاری و پرسش‌های مربوط به نمایش سه‌بعدی و واقعیت افزوده محصولات.`,
+    canonicalPath: "/contact/",
   });
 
   return (

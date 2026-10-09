@@ -6,10 +6,10 @@ import { ADMIN_URL } from "../lib/config";
 
 const NAV = [
   { to: "/", label: "خانه", end: true },
-  { to: "/products", label: "فروشگاه‌ها" },
-  { to: "/plans", label: "اشتراک فروشندگان" },
-  { to: "/about", label: "درباره ما" },
-  { to: "/contact", label: "تماس با ما" },
+  { to: "/products/", label: "فروشگاه‌ها" },
+  { to: "/plans/", label: "اشتراک فروشندگان" },
+  { to: "/about/", label: "درباره ما" },
+  { to: "/contact/", label: "تماس با ما" },
 ];
 
 function MenuIcon({ open }: { open: boolean }) {
@@ -205,7 +205,7 @@ export default function Layout() {
               <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.8"/>
               <path d="m16 16 4.5 4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
             </svg>
-            <Link to="/search">جستجوی محصولات و فروشگاه‌ها...</Link>
+            <Link to="/search/">جستجوی محصولات و فروشگاه‌ها...</Link>
           </div>
 
           {/* DESKTOP / MOBILE NAV */}
@@ -377,16 +377,16 @@ function Footer() {
           <div className="footer-column">
             <h4>دسترسی سریع</h4>
 
-            <Link to="/products">
+            <Link to="/products/">
               فروشگاه‌ها
             </Link>
 
 
-            <Link to="/plans">
+            <Link to="/plans/">
               اشتراک فروشندگان
             </Link>
 
-            <Link to="/search">
+            <Link to="/search/">
               جستجوی فروشگاه
             </Link>
           </div>
@@ -395,15 +395,15 @@ function Footer() {
           <div className="footer-column">
             <h4>پلتفرم</h4>
 
-            <Link to="/about">
+            <Link to="/about/">
               درباره ما
             </Link>
 
-            <Link to="/contact">
+            <Link to="/contact/">
               تماس با ما
             </Link>
 
-            <Link to="/plans">
+            <Link to="/plans/">
               پلن‌های فروشندگان
             </Link>
           </div>
