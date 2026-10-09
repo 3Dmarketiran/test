@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "slug": "test-2-vn5xio",
+    "storeName": "test 2",
+    "description": null,
+    "logoUrl": null,
+    "contactEmail": "seller2@gmail.com",
+    "contactPhone": "",
+    "socialLinks": {},
+    "address": null,
+    "category": null,
+    "id": "static-0"
+  },
+  {
+    "slug": "test-qa20kn",
+    "storeName": "test",
+    "description": null,
+    "logoUrl": null,
+    "contactEmail": "seller@gmail.com",
+    "contactPhone": "",
+    "socialLinks": {},
+    "address": null,
+    "category": null,
+    "id": "static-1"
+  }
+]

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import logoSvg from "../assets/3dmarketiran-logo.svg";
 
-const LOGO_SRC = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`;
+const LOGO_SRC = logoSvg;
 
 export default function SitePreloader() {
   const [visible, setVisible] = useState(true);
@@ -61,7 +62,7 @@ export default function SitePreloader() {
             fetchPriority="high"
             onError={(event) => {
               const target = event.currentTarget;
-              if (!target.src.endsWith(".png")) target.src = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`;
+              target.src = logoSvg;
             }}
           />
         </div>

@@ -136,6 +136,9 @@ function normalizeCatalog(catalog: PublicCatalog): PublicCatalog {
  */
 function normalizePublicAssetUrl(value: string): string {
   if (!value) return value;
+  if (value.startsWith("/api/public/assets/") || value.startsWith("/api/public/package/")) {
+    return `${API_URL}${value}`;
+  }
 
   try {
     const url = new URL(value);
@@ -150,12 +153,15 @@ function normalizePublicAssetUrl(value: string): string {
         const slash = remainder.indexOf("/");
         if (slash >= 0) {
           const key = remainder.slice(slash + 1);
-          return `${PUBLIC_ASSET_BASE_URL}/${key.split("/").map((segment) => encodeURIComponent(decodeURIComponent(segment))).join("/")}`;
+          return `${API_URL}/api/public/assets/${key.split("/").filter(Boolean).map((segment) => encodeURIComponent(decodeURIComponent(segment))).join("/")}`;
         }
       }
       if (backendIndex >= 0) {
-        const key = url.pathname.slice(backendIndex + backendMarker.length);
-        return `${PUBLIC_ASSET_BASE_URL}/${key.split("/").filter(Boolean).map((segment) => encodeURIComponent(decodeURIComponent(segment))).join("/")}`;
+        return value;
+      }
+      if (PUBLIC_ASSET_BASE_URL && url.origin === new URL(PUBLIC_ASSET_BASE_URL).origin) {
+        const key = url.pathname.replace(/^\/+/, "");
+        return `${API_URL}/api/public/assets/${key.split("/").filter(Boolean).map((segment) => encodeURIComponent(decodeURIComponent(segment))).join("/")}`;
       }
     }
 

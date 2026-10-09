@@ -1,3 +1,4 @@
+import logoSvg from "../assets/3dmarketiran-logo.svg";
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useData } from "../lib/data";
@@ -170,7 +171,7 @@ export default function Layout() {
               }}
             >
               <img
-                src={`${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`}
+                src={logoSvg}
                 alt=""
                 width={42}
                 height={42}
@@ -180,7 +181,7 @@ export default function Layout() {
                 onError={(event) => {
                   const target = event.currentTarget;
                   if (!target.src.endsWith(".png")) {
-                    target.src = `${import.meta.env.BASE_URL || "/"}assets/3dmarketiran-logo-transparent.png`;
+                    target.src = logoSvg;
                   }
                 }}
               />

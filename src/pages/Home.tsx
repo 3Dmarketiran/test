@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import logo3d from "../assets/3dmarket-logo-3d.png";
+import logo3d from "../assets/3dmarketiran-logo.svg";
 import { Link } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
