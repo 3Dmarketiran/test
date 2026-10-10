@@ -1,17 +1,5 @@
 [
   {
-    "id": "cmv2io3rl001jer2a2ks8zmlc",
-    "slug": "آرتیکا-گالری-oy4xyc",
-    "storeName": "آرتیکا گالری",
-    "description": null,
-    "logoUrl": null,
-    "themeColor": null,
-    "contactEmail": "artica@gmail.com",
-    "contactPhone": "",
-    "address": null,
-    "socialLinks": {}
-  },
-  {
     "id": "cmur9nu1k0013zmxss9ieedbj",
     "slug": "فروشگاه-پیکسل-2zkgny",
     "storeName": "فروشگاه پیکسل",
@@ -21,6 +9,18 @@
     "contactEmail": "3dmobl@gmail.com",
     "contactPhone": "09123456789",
     "address": "تهران ولیعصر",
+    "socialLinks": {}
+  },
+  {
+    "id": "cmv2io3rl001jer2a2ks8zmlc",
+    "slug": "آرتیکا-گالری-oy4xyc",
+    "storeName": "آرتیکا گالری",
+    "description": null,
+    "logoUrl": null,
+    "themeColor": null,
+    "contactEmail": "artica@gmail.com",
+    "contactPhone": "",
+    "address": null,
     "socialLinks": {}
   }
 ]
