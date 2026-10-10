@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-10T18:12:02.074Z",
-  "version": "07ddd617",
+  "generatedAt": "2026-10-10T18:19:45.082Z",
+  "version": "707236dd",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -53,18 +53,6 @@
   ],
   "sellers": [
     {
-      "id": "cmv2io3rl001jer2a2ks8zmlc",
-      "slug": "آرتیکا-گالری-oy4xyc",
-      "storeName": "آرتیکا گالری",
-      "description": null,
-      "logoUrl": null,
-      "themeColor": null,
-      "contactEmail": "artica@gmail.com",
-      "contactPhone": "",
-      "address": null,
-      "socialLinks": {}
-    },
-    {
       "id": "cmur9nu1k0013zmxss9ieedbj",
       "slug": "فروشگاه-پیکسل-2zkgny",
       "storeName": "فروشگاه پیکسل",
@@ -92,6 +80,19 @@
     "contactPhone": null
   },
   "plans": [
+    {
+      "id": "cmuadju210001todkytojgnjv",
+      "name": "Semi-Professional · ۳ ماهه",
+      "durationDays": 90,
+      "price": 7900000,
+      "discountPct": null,
+      "productLimit": 30,
+      "storageLimitMb": 1536,
+      "trafficLimitGb": 150,
+      "categoryId": "plan-cat-semi",
+      "sortOrder": 21,
+      "features": {}
+    },
     {
       "id": "final-semi-professional-180",
       "name": "Semi-Professional · ۶ ماهه",
