@@ -10,5 +10,17 @@
     "contactPhone": "09123456789",
     "address": "تهران ولیعصر",
     "socialLinks": {}
+  },
+  {
+    "id": "cmv2io3rl001jer2a2ks8zmlc",
+    "slug": "آرتیکا-گالری-oy4xyc",
+    "storeName": "آرتیکا گالری",
+    "description": null,
+    "logoUrl": "https://api.3dmarketiran.ir/api/public/assets/sellers/cmv2io3rl001jer2a2ks8zmlc/logo/qcTmGmujk79r7gu5.png",
+    "themeColor": null,
+    "contactEmail": "artica@gmail.com",
+    "contactPhone": "",
+    "address": null,
+    "socialLinks": {}
   }
 ]
