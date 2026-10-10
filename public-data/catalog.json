@@ -1,70 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-10T15:54:48.940Z",
-  "version": "bf2cacae",
-  "products": [
-    {
-      "id": "cmutrd35r003h9bc3g9bakt16",
-      "slug": "sandal-hjrhqi",
-      "name": "sandal",
-      "shortDescription": "test",
-      "fullDescription": "toozih kamel",
-      "price": 125000000,
-      "isPinned": true,
-      "pinOrder": 1,
-      "viewCount": 56,
-      "tags": [],
-      "material": "choob va parche",
-      "colors": [
-        {
-          "name": "toosi",
-          "value": "#808080"
-        },
-        {
-          "name": "zereshki",
-          "value": "#691111"
-        }
-      ],
-      "seller": {
-        "id": "cmur9nu1k0013zmxss9ieedbj",
-        "slug": "فروشگاه-پیکسل-2zkgny",
-        "storeName": "فروشگاه پیکسل"
-      },
-      "images": [
-        {
-          "url": "https://api.3dmarketiran.ir/api/public/assets/products/cmutrd35r003h9bc3g9bakt16/images/GWjptn4XoBOYD5Fq.webp",
-          "isPrimary": true
-        }
-      ],
-      "models": [
-        {
-          "kind": "USDZ",
-          "url": "https://api.3dmarketiran.ir/api/public/assets/products/cmutrd35r003h9bc3g9bakt16/models/7d6NfrrPWJ16-yAR.usdz"
-        }
-      ],
-      "dimensions": {
-        "widthM": 0.4,
-        "heightM": 1.3,
-        "depthM": 0.4,
-        "realWorldScale": true
-      },
-      "publishedAt": "2026-10-09T04:45:55.758Z"
-    }
-  ],
-  "sellers": [
-    {
-      "id": "cmur9nu1k0013zmxss9ieedbj",
-      "slug": "فروشگاه-پیکسل-2zkgny",
-      "storeName": "فروشگاه پیکسل",
-      "description": "تست",
-      "logoUrl": "https://api.3dmarketiran.ir/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/1TVFtINNUP7D0PDb.jpeg",
-      "themeColor": "#12376d",
-      "contactEmail": "3dmobl@gmail.com",
-      "contactPhone": "09123456789",
-      "address": "تهران ولیعصر",
-      "socialLinks": {}
-    }
-  ],
+  "generatedAt": "2026-10-10T15:55:30.225Z",
+  "version": "a4f339e9",
+  "products": [],
+  "sellers": [],
   "settings": {
     "platformName": "3Dmarketiran",
     "logoUrl": null,
