@@ -45,5 +45,42 @@
       "realWorldScale": true
     },
     "publishedAt": "2026-10-09T04:45:55.758Z"
+  },
+  {
+    "id": "cmv2iz7h3002jer2al6e9ot2b",
+    "slug": "کافی-بار-aso4hi",
+    "name": "کافی بار",
+    "shortDescription": null,
+    "fullDescription": null,
+    "price": null,
+    "isPinned": false,
+    "pinOrder": null,
+    "viewCount": 0,
+    "tags": [],
+    "material": null,
+    "colors": [],
+    "seller": {
+      "id": "cmv2io3rl001jer2a2ks8zmlc",
+      "slug": "آرتیکا-گالری-oy4xyc",
+      "storeName": "آرتیکا گالری"
+    },
+    "images": [],
+    "models": [
+      {
+        "kind": "GLB",
+        "url": "https://api.3dmarketiran.ir/api/public/assets/products/cmv2iz7h3002jer2al6e9ot2b/models/_vFoQif2w1NN6GaH.glb"
+      },
+      {
+        "kind": "USDZ",
+        "url": "https://api.3dmarketiran.ir/api/public/assets/products/cmv2iz7h3002jer2al6e9ot2b/models/C_1mvhRVevw8-c5l.usdz"
+      }
+    ],
+    "dimensions": {
+      "widthM": 0.4,
+      "heightM": 0.15,
+      "depthM": 0.15,
+      "realWorldScale": true
+    },
+    "publishedAt": null
   }
 ]
