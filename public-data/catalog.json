@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-10T18:33:32.102Z",
-  "version": "f0fc3422",
+  "generatedAt": "2026-10-10T18:35:50.929Z",
+  "version": "8edc75e9",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -68,11 +68,11 @@
       "id": "cmv2io3rl001jer2a2ks8zmlc",
       "slug": "آرتیکا-گالری-oy4xyc",
       "storeName": "آرتیکا گالری",
-      "description": null,
+      "description": "فروش وسايل سفالى، پلى استر و وسايل چوبى با طرح و رنگ دلخواه",
       "logoUrl": "https://api.3dmarketiran.ir/api/public/assets/sellers/cmv2io3rl001jer2a2ks8zmlc/logo/qcTmGmujk79r7gu5.png",
-      "themeColor": null,
+      "themeColor": "#50010c",
       "contactEmail": "artica@gmail.com",
-      "contactPhone": "",
+      "contactPhone": "09104000735",
       "address": null,
       "socialLinks": {}
     }
