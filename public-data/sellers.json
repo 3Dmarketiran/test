@@ -1,17 +1,5 @@
 [
   {
-    "id": "cmv2io3rl001jer2a2ks8zmlc",
-    "slug": "آرتیکا-گالری-oy4xyc",
-    "storeName": "آرتیکا گالری",
-    "description": "فروش وسايل سفالى، پلى استر و وسايل چوبى با طرح و رنگ دلخواه",
-    "logoUrl": "https://api.3dmarketiran.ir/api/public/assets/sellers/cmv2io3rl001jer2a2ks8zmlc/logo/qcTmGmujk79r7gu5.png",
-    "themeColor": "#50010c",
-    "contactEmail": "artica@gmail.com",
-    "contactPhone": "09104000735",
-    "address": null,
-    "socialLinks": {}
-  },
-  {
     "id": "cmur9nu1k0013zmxss9ieedbj",
     "slug": "فروشگاه-پیکسل-2zkgny",
     "storeName": "فروشگاه پیکسل",
@@ -21,6 +9,18 @@
     "contactEmail": "3dmobl@gmail.com",
     "contactPhone": "09123456789",
     "address": "تهران ولیعصر",
+    "socialLinks": {}
+  },
+  {
+    "id": "cmv2io3rl001jer2a2ks8zmlc",
+    "slug": "آرتیکا-گالری-oy4xyc",
+    "storeName": "آرتیکا گالری",
+    "description": "فروش وسايل سفالى، پلى استر و وسايل چوبى با طرح و رنگ دلخواه",
+    "logoUrl": "https://api.3dmarketiran.ir/api/public/assets/sellers/cmv2io3rl001jer2a2ks8zmlc/logo/qcTmGmujk79r7gu5.png",
+    "themeColor": "#50010c",
+    "contactEmail": "artica@gmail.com",
+    "contactPhone": "09104000735",
+    "address": null,
     "socialLinks": {}
   }
 ]
