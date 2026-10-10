@@ -132,9 +132,10 @@ for (const product of validProducts) {
   const productPath = `/products/${encodeURIComponent(product.slug)}/`;
   const seller = sellers.find((item) => item.slug === product.seller?.slug);
   const placeholder = !isIndexableProduct(product);
+  const productDescription = trimDescription(product.shortDescription || product.fullDescription);
+  const productDescriptionFallback = `${product.name}؛ مدل سه‌بعدی، تصاویر و جزئیات محصول را در ویترین ${product.seller?.storeName || "فروشنده"} در 3DMarketIran بررسی کنید و برای دریافت اطلاعات بیشتر با فروشگاه ارتباط بگیرید.`;
   const description = !placeholder
-    ? trimDescription(product.shortDescription || product.fullDescription)
-      || `${product.name}؛ مشاهده مدل سه‌بعدی و جزئیات محصول از فروشگاه ${product.seller?.storeName || "فروشنده"} در 3DMarketIran.`
+    ? (productDescription.length >= 40 ? productDescription : productDescriptionFallback)
     : "این صفحه محصول در حال آماده‌سازی است و تا زمان تکمیل اطلاعات در نتایج جست‌وجو نمایش داده نمی‌شود.";
   const page = {
     path: productPath,
@@ -158,9 +159,10 @@ for (const seller of validSellers) {
   const sellerProducts = indexableProducts.filter((product) => product.seller?.slug === seller.slug);
   const sellerPath = `/sellers/${encodeURIComponent(seller.slug)}/`;
   const placeholder = !isIndexableSeller(seller, validProducts);
+  const sellerDescription = trimDescription(seller.description);
+  const sellerDescriptionFallback = `مشاهده ویترین ${seller.storeName} و محصولات منتشرشده آن در 3DMarketIran؛ تصاویر و مدل‌های سه‌بعدی محصولات را بررسی کنید و برای دریافت جزئیات بیشتر با فروشگاه ارتباط بگیرید.`;
   const description = !placeholder
-    ? trimDescription(seller.description)
-      || `مشاهده ویترین ${seller.storeName} و محصولات منتشرشده آن در 3DMarketIran؛ محصولات را سه‌بعدی بررسی کنید و برای اطلاعات بیشتر با فروشنده ارتباط بگیرید.`
+    ? (sellerDescription.length >= 40 ? sellerDescription : sellerDescriptionFallback)
     : "این صفحه فروشگاه در حال آماده‌سازی است و تا زمان تکمیل اطلاعات در نتایج جست‌وجو نمایش داده نمی‌شود.";
   const page = {
     path: sellerPath,
