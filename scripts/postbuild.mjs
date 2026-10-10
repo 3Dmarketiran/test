@@ -420,6 +420,25 @@ function writeRoute(relativePath, contents) {
   mkdirSync(path.dirname(output), { recursive: true });
   writeFileSync(output, contents, "utf8");
 }
+function routeToOutputRelative(route) {
+  if (route === "/") return "index.html";
+  if (typeof route !== "string" || !route.startsWith("/")) {
+    throw new Error(`Invalid generated sitemap route: ${route}`);
+  }
+  const segments = route.split("/").filter(Boolean).map((segment) => {
+    let decoded;
+    try {
+      decoded = decodeURIComponent(segment);
+    } catch {
+      throw new Error(`Invalid URL encoding in generated sitemap route: ${route}`);
+    }
+    if (!decoded || decoded === "." || decoded === ".." || /[\\/\0]/.test(decoded)) {
+      throw new Error(`Unsafe generated sitemap route segment in: ${route}`);
+    }
+    return decoded;
+  });
+  return path.join(...segments, "index.html");
+}
 function buildSitemap(urls) {
   const seen = new Set();
   const rows = urls.map(({ path: route, lastmod }) => {
@@ -442,8 +461,12 @@ function validateOutput(urls) {
   const robots = readFileSync(path.join(dist, "robots.txt"), "utf8");
   if (!robots.includes(`${site}/sitemap.xml`)) throw new Error("robots.txt does not reference the generated sitemap.");
   for (const { path: route } of urls) {
-    const relative = route === "/" ? "index.html" : path.join(route.slice(1), "index.html");
-    if (!existsSync(path.join(dist, relative))) throw new Error(`Generated sitemap route is missing on disk: ${route}`);
+    // Sitemap URLs are URL-encoded (as required for non-ASCII slugs), while
+    // the generated files are written using the original, decoded slug.
+    // Decode each path segment before checking the filesystem so Persian
+    // product/store routes resolve to their actual output directory.
+    const relative = routeToOutputRelative(route);
+    if (!existsSync(path.join(dist, relative))) throw new Error(`Generated sitemap route is missing on disk: ${route} (expected file: ${relative})`);
   }
   const productHtmlPaths = validProducts.map((p) => path.join(dist, "products", safeSlug(p.slug), "index.html"));
   for (const [index, file] of productHtmlPaths.entries()) {
