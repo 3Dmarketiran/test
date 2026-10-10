@@ -1,5 +1,18 @@
 [
   {
+    "id": "cmuadju210001todkytojgnjv",
+    "name": "Semi-Professional · ۳ ماهه",
+    "durationDays": 90,
+    "price": 7900000,
+    "discountPct": null,
+    "productLimit": 30,
+    "storageLimitMb": 1536,
+    "trafficLimitGb": 150,
+    "categoryId": "plan-cat-semi",
+    "sortOrder": 21,
+    "features": {}
+  },
+  {
     "id": "final-semi-professional-180",
     "name": "Semi-Professional · ۶ ماهه",
     "durationDays": 180,
