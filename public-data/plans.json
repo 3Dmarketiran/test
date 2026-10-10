@@ -1,31 +1,5 @@
 [
   {
-    "id": "final-starter-365",
-    "name": "Starter · ۱۲ ماهه",
-    "durationDays": 365,
-    "price": 7800000,
-    "discountPct": 0,
-    "productLimit": 10,
-    "storageLimitMb": 500,
-    "trafficLimitGb": 100,
-    "categoryId": "plan-cat-starter",
-    "sortOrder": 2,
-    "features": {}
-  },
-  {
-    "id": "final-semi-professional-90",
-    "name": "Semi-Professional · ۳ ماهه",
-    "durationDays": 90,
-    "price": 7900000,
-    "discountPct": 0,
-    "productLimit": 30,
-    "storageLimitMb": 1536,
-    "trafficLimitGb": 150,
-    "categoryId": "plan-cat-semi",
-    "sortOrder": 21,
-    "features": {}
-  },
-  {
     "id": "final-semi-professional-180",
     "name": "Semi-Professional · ۶ ماهه",
     "durationDays": 180,
