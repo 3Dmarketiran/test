@@ -42,3 +42,15 @@ export function isIndexableSeller(seller: PublicSeller, products: PublicProduct[
   if ((seller.description || "").trim().length >= 40) return true;
   return products.some((product) => product.seller?.slug === seller.slug && isIndexableProduct(product));
 }
+
+/**
+ * A store can be discoverable in the directory before it has enough content
+ * to qualify for search indexing. Keep visibility and indexability separate:
+ * valid active stores should not disappear merely because they have no products
+ * yet or their description is shorter than the SEO quality threshold.
+ */
+export function isDiscoverableSeller(seller: PublicSeller): boolean {
+  const name = (seller.storeName || "").trim();
+  const slug = (seller.slug || "").trim();
+  return name.length >= 2 && Boolean(slug) && !isPlaceholderName(name);
+}

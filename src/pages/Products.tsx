@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { getSellerLogoUrl, sellerInitials, useData } from "../lib/data";
 import { useSeo } from "../lib/seo";
-import { isIndexableSeller } from "../lib/contentQuality";
+import { isDiscoverableSeller, isIndexableSeller } from "../lib/contentQuality";
 import { track } from "../lib/analytics";
 
 function SearchIcon() { return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2"/><path d="M21 21l-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>; }
@@ -14,9 +14,13 @@ export default function Products() {
   const { sellers, products, loading } = useData();
   const [params, setParams] = useSearchParams();
   const [query, setQuery] = useState(params.get("q") ?? "");
+  const discoverableSellers = useMemo(
+    () => sellers.filter(isDiscoverableSeller),
+    [sellers],
+  );
   const indexableSellers = useMemo(
-    () => sellers.filter((seller) => isIndexableSeller(seller, products)),
-    [sellers, products],
+    () => discoverableSellers.filter((seller) => isIndexableSeller(seller, products)),
+    [discoverableSellers, products],
   );
   const sellerDirectoryStructuredData = useMemo(() => ({
       "@context": "https://schema.org",
@@ -66,9 +70,9 @@ export default function Products() {
 
   const filteredSellers = useMemo(() => {
     const q = (params.get("q") ?? "").trim().toLocaleLowerCase("fa");
-    if (!q) return indexableSellers;
-    return indexableSellers.filter((seller) => (seller.storeName ?? "").toLocaleLowerCase("fa").includes(q) || (seller.slug ?? "").toLocaleLowerCase("fa").includes(q));
-  }, [indexableSellers, params]);
+    if (!q) return discoverableSellers;
+    return discoverableSellers.filter((seller) => (seller.storeName ?? "").toLocaleLowerCase("fa").includes(q) || (seller.slug ?? "").toLocaleLowerCase("fa").includes(q));
+  }, [discoverableSellers, params]);
 
   const clearSearch = () => { setQuery(""); const next = new URLSearchParams(params); next.delete("q"); setParams(next, { replace: true }); };
   const hasSearch = Boolean(query.trim());
@@ -92,7 +96,7 @@ export default function Products() {
       </div>
     </div>
 
-    {loading && indexableSellers.length === 0 ? <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 18 }}>{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton" style={{ minHeight: 270, borderRadius: 20 }} />)}</div>
+    {loading && discoverableSellers.length === 0 ? <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 18 }}>{Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton" style={{ minHeight: 270, borderRadius: 20 }} />)}</div>
       : filteredSellers.length === 0 ? <div className="empty-state" style={{ minHeight: 320, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 32 }}><div style={{ width: 64, height: 64, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 18, marginBottom: 16, background: "var(--surface-2, #f4f4f4)", color: "var(--text-muted, #777)" }}><SearchIcon /></div><h2 style={{ margin: "0 0 8px", fontSize: "1.15rem", fontWeight: 850 }}>فروشگاهی پیدا نشد</h2><p style={{ margin: "0 0 20px", maxWidth: 480, color: "var(--text-muted, #777)", fontSize: 14, lineHeight: 1.9 }}>نام فروشگاه را بررسی کنید یا عبارت جستجو را تغییر دهید.</p>{hasSearch && <button type="button" className="btn btn-outline" onClick={clearSearch}>حذف جستجو</button>}</div>
       : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 18 }}>
         {filteredSellers.map((seller, sellerIndex) => {

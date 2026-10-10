@@ -29,6 +29,7 @@ const sellers = Array.isArray(catalog.sellers) ? catalog.sellers : [];
 const validProducts = uniqueBySlug(products, "product");
 const validSellers = uniqueBySlug(sellers, "seller");
 const indexableProducts = validProducts.filter(isIndexableProduct);
+const discoverableSellers = validSellers.filter(isDiscoverableSeller);
 const indexableSellers = validSellers.filter((seller) => isIndexableSeller(seller, validProducts));
 const baseHtml = readFileSync(baseHtmlPath, "utf8");
 
@@ -151,8 +152,9 @@ for (const product of validProducts) {
 }
 
 for (const seller of validSellers) {
-  // Only link to pages that are themselves eligible for indexing. This avoids
-  // making thin/placeholder product URLs look like first-class catalog items.
+  // Generate a route for every valid store so directory links work even for
+  // newer/thin stores. Low-content stores keep noindex metadata, but remain
+  // reachable for real visitors from the public catalog.
   const sellerProducts = indexableProducts.filter((product) => product.seller?.slug === seller.slug);
   const sellerPath = `/sellers/${encodeURIComponent(seller.slug)}/`;
   const placeholder = !isIndexableSeller(seller, validProducts);
@@ -257,11 +259,11 @@ function homeFallback() {
       return `<li><a href="/products/${encodeURIComponent(product.slug)}/">${htmlEscape(product.name)}</a>${seller}</li>`;
     }).join("")}</ul></section>`
     : "";
-  const featuredSellers = indexableSellers.slice(0, 8);
+  const featuredSellers = discoverableSellers.slice(0, 8);
   const sellerLinks = featuredSellers.length
     ? `<section><h2>ویترین فروشگاه‌ها</h2><ul>${featuredSellers.map((seller) => `<li><a href="/sellers/${encodeURIComponent(seller.slug)}/">${htmlEscape(seller.storeName)}</a>${seller.description ? ` — ${htmlEscape(trimDescription(seller.description))}` : ""}</li>`).join("")}</ul></section>`
     : "";
-  return `<main class="seo-fallback"><h1>محصولات را سه‌بعدی ببینید؛ بهتر انتخاب کنید</h1><p>${htmlEscape(brandDescription)}</p>${listLinks([["مشاهده فروشگاه‌ها", "/products/"], ["پلن‌های فروشندگان", "/plans/"], ["درباره ما", "/about/"], ["تماس با ما", "/contact/"]])}<h2>چرا نمایش سه‌بعدی محصول؟</h2><p>نمایش تعاملی به مشتری کمک می‌کند شکل و جزئیات ظاهری محصول را بهتر بررسی کند. در محصولات سازگار، واقعیت افزوده امکان مشاهده مدل در محیط پیرامون را نیز فراهم می‌کند.</p>${productLinks}${sellerLinks}</main>`;
+  return `<main class="seo-fallback"><h1>محصولات را سه‌بعدی ببینید؛ بهتر انتخاب کنید</h1><p>${htmlEscape(brandDescription)}</p>${listLinks([["مشاهده فروشگاه‌ها", "/products/"], ["درباره ما", "/about/"], ["تماس با ما", "/contact/"]])}<h2>چرا نمایش سه‌بعدی محصول؟</h2><p>نمایش تعاملی به مشتری کمک می‌کند شکل و جزئیات ظاهری محصول را بهتر بررسی کند. در محصولات سازگار، واقعیت افزوده امکان مشاهده مدل در محیط پیرامون را نیز فراهم می‌کند.</p>${productLinks}${sellerLinks}</main>`;
 }
 function listingFallback() {
   const visibleSellers = validSellerPreview();
@@ -270,7 +272,7 @@ function listingFallback() {
     : `<p>فروشگاه‌های منتشرشده پس از تکمیل اطلاعات عمومی، در این بخش نمایش داده می‌شوند.</p>`;
   return `<main class="seo-fallback"><h1>فروشگاه‌های سه‌بعدی ایران</h1><p>فروشگاه‌ها را مرور کنید، محصولات منتشرشده را ببینید و برای جزئیات بیشتر وارد ویترین اختصاصی هر فروشنده شوید.</p>${links}</main>`;
 }
-function validSellerPreview() { return indexableSellers.slice(0, 30); }
+function validSellerPreview() { return discoverableSellers.slice(0, 30); }
 function isPlaceholderName(value) { return /^(?:test(?:\s*\d+)?|testing|demo|sample|example|placeholder|تست(?:\s*\d+)?|نمونه\s*آزمایشی)$/iu.test(String(value || "").trim()); }
 function isPlaceholderProduct(product) {
   const description = trimDescription(product.shortDescription || product.fullDescription);
@@ -292,6 +294,11 @@ function isIndexableProduct(product) {
   // Unique text is preferred; a real titled product with media is acceptable
   // because the model/image itself is the core public content of this marketplace.
   return description.length >= 30 || hasImage || hasModel;
+}
+function isDiscoverableSeller(seller) {
+  const name = trimDescription(seller.storeName);
+  const slug = trimDescription(seller.slug);
+  return name.length >= 2 && Boolean(slug) && !isPlaceholderName(name);
 }
 function isIndexableSeller(seller, allProducts) {
   const name = trimDescription(seller.storeName);
