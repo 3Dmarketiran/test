@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-10T18:10:14.636Z",
-  "version": "17abe49b",
+  "generatedAt": "2026-10-10T18:10:50.069Z",
+  "version": "39ff288f",
   "products": [
     {
       "id": "cmutrd35r003h9bc3g9bakt16",
@@ -53,18 +53,6 @@
   ],
   "sellers": [
     {
-      "id": "cmv2io3rl001jer2a2ks8zmlc",
-      "slug": "آرتیکا-گالری-oy4xyc",
-      "storeName": "آرتیکا گالری",
-      "description": null,
-      "logoUrl": null,
-      "themeColor": null,
-      "contactEmail": "artica@gmail.com",
-      "contactPhone": "",
-      "address": null,
-      "socialLinks": {}
-    },
-    {
       "id": "cmur9nu1k0013zmxss9ieedbj",
       "slug": "فروشگاه-پیکسل-2zkgny",
       "storeName": "فروشگاه پیکسل",
@@ -74,6 +62,18 @@
       "contactEmail": "3dmobl@gmail.com",
       "contactPhone": "09123456789",
       "address": "تهران ولیعصر",
+      "socialLinks": {}
+    },
+    {
+      "id": "cmv2io3rl001jer2a2ks8zmlc",
+      "slug": "آرتیکا-گالری-oy4xyc",
+      "storeName": "آرتیکا گالری",
+      "description": null,
+      "logoUrl": null,
+      "themeColor": null,
+      "contactEmail": "artica@gmail.com",
+      "contactPhone": "",
+      "address": null,
       "socialLinks": {}
     }
   ],
@@ -93,32 +93,6 @@
   },
   "plans": [
     {
-      "id": "final-starter-90",
-      "name": "Starter · ۳ ماهه",
-      "durationDays": 90,
-      "price": 1950000,
-      "discountPct": 0,
-      "productLimit": 10,
-      "storageLimitMb": 500,
-      "trafficLimitGb": 100,
-      "categoryId": "plan-cat-starter",
-      "sortOrder": 0,
-      "features": {}
-    },
-    {
-      "id": "final-starter-180",
-      "name": "Starter · ۶ ماهه",
-      "durationDays": 180,
-      "price": 3900000,
-      "discountPct": 0,
-      "productLimit": 10,
-      "storageLimitMb": 500,
-      "trafficLimitGb": 100,
-      "categoryId": "plan-cat-starter",
-      "sortOrder": 1,
-      "features": {}
-    },
-    {
       "id": "final-starter-365",
       "name": "Starter · ۱۲ ماهه",
       "durationDays": 365,
@@ -129,32 +103,6 @@
       "trafficLimitGb": 100,
       "categoryId": "plan-cat-starter",
       "sortOrder": 2,
-      "features": {}
-    },
-    {
-      "id": "final-starter-30",
-      "name": "Starter",
-      "durationDays": 30,
-      "price": 1290000,
-      "discountPct": 0,
-      "productLimit": 10,
-      "storageLimitMb": 500,
-      "trafficLimitGb": 100,
-      "categoryId": "subscription-category-general",
-      "sortOrder": 10,
-      "features": {}
-    },
-    {
-      "id": "final-semi-professional-30",
-      "name": "Semi-Professional",
-      "durationDays": 30,
-      "price": 2490000,
-      "discountPct": 0,
-      "productLimit": 30,
-      "storageLimitMb": 1536,
-      "trafficLimitGb": 150,
-      "categoryId": "subscription-category-general",
-      "sortOrder": 20,
       "features": {}
     },
     {
@@ -194,19 +142,6 @@
       "trafficLimitGb": 150,
       "categoryId": "plan-cat-semi",
       "sortOrder": 23,
-      "features": {}
-    },
-    {
-      "id": "final-professional-30",
-      "name": "Professional",
-      "durationDays": 30,
-      "price": 4490000,
-      "discountPct": 0,
-      "productLimit": 100,
-      "storageLimitMb": 5120,
-      "trafficLimitGb": 300,
-      "categoryId": "subscription-category-general",
-      "sortOrder": 30,
       "features": {}
     },
     {
