@@ -44,8 +44,8 @@ export default function Products() {
     }), [indexableSellers]);
 
   useSeo({
-    title: "فروشگاه‌های سه‌بعدی ایران | 3DMarketIran",
-    description: "فروشگاه‌های فعال 3DMarketIran را پیدا کنید، محصولات آن‌ها را با نمایش سه‌بعدی و واقعیت افزوده بررسی کنید و مستقیم با فروشنده در ارتباط باشید.",
+    title: "فروشگاه‌های سه‌بعدی ایران | مدل 3D و AR — 3DMarketIran",
+    description: "فروشگاه‌ها و محصولات دارای نمایش سه‌بعدی را در مارکت 3DMarketIran پیدا کنید؛ مدل 3D محصول را ببینید، قابلیت واقعیت افزوده (AR) را بررسی کنید و مستقیم با فروشنده تماس بگیرید.",
     canonicalPath: "/products/",
     noIndex: indexableSellers.length === 0,
     structuredData: sellerDirectoryStructuredData,

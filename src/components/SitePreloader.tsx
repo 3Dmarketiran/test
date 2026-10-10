@@ -8,6 +8,9 @@ export default function SitePreloader() {
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
+    // The static HTML loader hides the SEO fallback while the JS bundle boots.
+    // React has now painted its loader, so remove the static layer without a flash.
+    document.querySelector(".site-preloader-static")?.remove();
     let cancelled = false;
     const startedAt = performance.now();
     const minVisibleMs = 420;

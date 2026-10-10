@@ -10,6 +10,7 @@ import Layout from "./components/Layout";
 
 import Home from "./pages/Home";
 import Products from "./pages/Products";
+import SeoLanding from "./pages/SeoLanding";
 import ProductDetail from "./pages/ProductDetail";
 import SellerStore from "./pages/SellerStore";
 import Search from "./pages/Search";
@@ -68,6 +69,11 @@ function BrandedApp() {
             path="products/:slug"
             element={<ProductDetail />}
           />
+
+          {/* Focused, crawlable SEO landing pages for 3D marketplace, viewer and AR intent. */}
+          <Route path="3d-marketplace" element={<SeoLanding />} />
+          <Route path="3d-product-viewer" element={<SeoLanding />} />
+          <Route path="augmented-reality-products" element={<SeoLanding />} />
 
           {/* Sellers */}
           <Route

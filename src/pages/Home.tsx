@@ -150,9 +150,9 @@ export default function Home() {
     settings?.platformName ?? "3Dmarketiran";
 
   useSeo({
-    title: "3DMarketIran | نمایش سه‌بعدی و واقعیت افزوده محصولات",
+    title: "مارکت سه‌بعدی ایران | نمایش محصولات با 3D و AR — 3DMarketIran",
     description:
-      "در 3DMarketIran فروشگاه‌ها و محصولات را به‌صورت سه‌بعدی و واقعیت افزوده ببینید؛ ویترینی آنلاین برای معرفی بهتر محصول و ارتباط مستقیم مشتری با فروشنده.",
+      "3DMarketIran مارکت سه‌بعدی ایران برای معرفی فروشگاه‌ها و محصولات با مدل 3D تعاملی و واقعیت افزوده (AR) است؛ مشتری محصول را بهتر بررسی می‌کند و مستقیم با فروشنده ارتباط می‌گیرد.",
     canonicalPath: "/",
     structuredData: {
       "@context": "https://schema.org",
@@ -163,7 +163,7 @@ export default function Home() {
           name: "3DMarketIran",
           url: "https://3dmarketiran.ir/",
           logo: "https://3dmarketiran.ir/3dmarketiran-logo.svg",
-          description: "بازارگاه آنلاین برای معرفی فروشگاه‌ها و محصولات با نمایش سه‌بعدی و واقعیت افزوده.",
+          description: "مارکت سه‌بعدی ایران برای معرفی محصولات و فروشگاه‌ها با مدل 3D تعاملی و تجربه واقعیت افزوده (AR).",
         },
         {
           "@type": "WebSite",
@@ -176,7 +176,7 @@ export default function Home() {
         {
           "@type": "WebPage",
           "@id": "https://3dmarketiran.ir/#webpage",
-          name: "3DMarketIran | نمایش سه‌بعدی و واقعیت افزوده محصولات",
+          name: "مارکت سه‌بعدی ایران | نمایش محصولات با 3D و AR — 3DMarketIran",
           url: "https://3dmarketiran.ir/",
           inLanguage: "fa-IR",
           isPartOf: { "@id": "https://3dmarketiran.ir/#website" },
@@ -651,6 +651,34 @@ export default function Home() {
                 همان فروشگاه در تماس باشید.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section seo-topic-section">
+        <div className="container">
+          <div className="section-head">
+            <div>
+              <h2>راهنمای نمایش محصول با 3D و AR</h2>
+              <p>با روش‌های معرفی تعاملی محصول و راهکارهای ویترین سه‌بعدی بیشتر آشنا شوید.</p>
+            </div>
+          </div>
+          <div className="seo-topic-link-grid">
+            <Link className="seo-topic-link" to="/3d-marketplace/">
+              <span className="seo-topic-link__tag">3D MARKETPLACE</span>
+              <strong>مارکت سه‌بعدی ایران</strong>
+              <span>آشنایی با ویترین دیجیتال فروشگاه‌ها و محصولات سه‌بعدی</span>
+            </Link>
+            <Link className="seo-topic-link" to="/3d-product-viewer/">
+              <span className="seo-topic-link__tag">3D VIEWER</span>
+              <strong>نمایشگر سه‌بعدی محصول</strong>
+              <span>بررسی مدل تعاملی و گالری تصویر محصول</span>
+            </Link>
+            <Link className="seo-topic-link" to="/augmented-reality-products/">
+              <span className="seo-topic-link__tag">AUGMENTED REALITY</span>
+              <strong>واقعیت افزوده محصولات</strong>
+              <span>آشنایی با مشاهده مدل‌های سازگار در محیط اطراف</span>
+            </Link>
           </div>
         </div>
       </section>

@@ -41,19 +41,19 @@ for (const file of ["CNAME", "3dmarketiran-logo.svg"]) {
   if (existsSync(source)) copyFileSync(source, path.join(dist, file));
 }
 
-const brandDescription = "3DMarketIran بستری برای معرفی فروشگاه‌ها و محصولات با نمایش سه‌بعدی تعاملی و واقعیت افزوده است. مدل محصول را بررسی کنید و برای اطلاعات بیشتر مستقیماً با فروشنده ارتباط بگیرید.";
+const brandDescription = "3DMarketIran مارکت سه‌بعدی ایران برای معرفی فروشگاه‌ها و محصولات با مدل 3D تعاملی و واقعیت افزوده (AR) است؛ مشتری محصول را بهتر بررسی می‌کند و مستقیم با فروشنده ارتباط می‌گیرد.";
 const staticPages = [
   {
     path: "/",
-    title: "3DMarketIran | نمایش سه‌بعدی و واقعیت افزوده محصولات",
-    description: "در 3DMarketIran فروشگاه‌ها و محصولات را به‌صورت سه‌بعدی و واقعیت افزوده ببینید؛ ویترینی آنلاین برای معرفی بهتر محصول و ارتباط مستقیم مشتری با فروشنده.",
+    title: "مارکت سه‌بعدی ایران | نمایش محصولات با 3D و AR — 3DMarketIran",
+    description: "3DMarketIran؛ مارکت سه‌بعدی ایران برای نمایش محصولات با مدل سه‌بعدی، ویترین دیجیتال فروشگاه‌ها و تجربه واقعیت افزوده (AR). محصولات را تعاملی بررسی کنید و مستقیم با فروشنده ارتباط بگیرید.",
     body: homeFallback(),
     schema: websiteSchema(),
   },
   {
     path: "/products/",
-    title: "فروشگاه‌های سه‌بعدی ایران | 3DMarketIran",
-    description: "فروشگاه‌های فعال 3DMarketIran را پیدا کنید، محصولات آن‌ها را با نمایش سه‌بعدی و واقعیت افزوده بررسی کنید و مستقیم با فروشنده در ارتباط باشید.",
+    title: "فروشگاه‌های سه‌بعدی ایران | مدل 3D و AR — 3DMarketIran",
+    description: "فروشگاه‌ها و محصولات دارای نمایش سه‌بعدی را در مارکت 3DMarketIran پیدا کنید؛ مدل 3D محصول را ببینید، قابلیت واقعیت افزوده (AR) را بررسی کنید و مستقیم با فروشنده تماس بگیرید.",
     body: listingFallback(),
     schema: sellerDirectorySchema(),
     noIndex: indexableSellers.length === 0,
@@ -87,6 +87,36 @@ const staticPages = [
     schema: null,
     noIndex: true,
     canonicalPath: "/products/",
+  },
+  {
+    path: "/3d-marketplace/",
+    title: "مارکت سه‌بعدی ایران | ویترین محصولات با 3D و AR",
+    description: "در 3DMarketIran با فروشگاه‌ها و محصولات دارای نمایش سه‌بعدی آشنا شوید؛ ویترینی دیجیتال برای بررسی تعاملی محصول و تجربه واقعیت افزوده (AR).",
+    body: seoLandingFallback("مارکت سه‌بعدی برای معرفی بهتر محصولات", "3DMarketIran فروشگاه‌ها را به مشتریانی وصل می‌کند که می‌خواهند محصولات را با تصاویر، مدل سه‌بعدی و قابلیت‌های AR بررسی کنند.", [
+      ["ویترین دیجیتال فروشگاه‌ها", "فهرست فروشگاه‌ها و صفحات اختصاصی محصولات را مرور کنید و مشخصات ثبت‌شده را پیش از تماس با فروشنده ببینید."],
+      ["تجربه‌ی 3D و AR", "نمای سه‌بعدی و واقعیت افزوده برای محصولاتی قابل استفاده است که فایل مدل و دستگاه کاربر از آن پشتیبانی کنند."],
+    ], [["مشاهده فروشگاه‌ها", "/products/"], ["پلن فروشندگان", "/plans/"]]),
+    schema: webpageSchema("مارکت سه‌بعدی ایران", "/3d-marketplace/", "ویترین دیجیتال برای معرفی محصولات با مدل سه‌بعدی و تجربه واقعیت افزوده."),
+  },
+  {
+    path: "/3d-product-viewer/",
+    title: "نمایشگر سه‌بعدی محصول | مشاهده آنلاین مدل 3D",
+    description: "نمایشگر محصول سه‌بعدی در 3DMarketIran کمک می‌کند مدل‌های سازگار را تعاملی مشاهده کنید، تصاویر محصول را ببینید و جزئیات را از فروشگاه بگیرید.",
+    body: seoLandingFallback("نمایشگر سه‌بعدی محصول برای تجربه‌ای واضح‌تر", "در صفحه‌های دارای مدل سازگار، نمایشگر تعاملی 3D امکان چرخاندن و بررسی محصول از زاویه‌های مختلف را در مرورگرهای پشتیبانی‌شده فراهم می‌کند.", [
+      ["مدل تعاملی در کنار گالری عکس", "عکس‌ها جزئیات ظاهری را نشان می‌دهند و مدل سه‌بعدی مکملی برای بررسی محصول از زوایای مختلف است."],
+      ["اطلاعات فروشنده و محصول", "پس از بررسی رسانه‌ها، مشخصات و راه‌های تماس فروشگاه را در همان صفحه پیدا کنید."],
+    ], [["مرور محصولات", "/products/"], ["درباره پلتفرم", "/about/"]]),
+    schema: webpageSchema("نمایشگر سه‌بعدی محصول", "/3d-product-viewer/", "مشاهده تعاملی مدل‌های سه‌بعدی محصولات در صفحه‌های سازگار."),
+  },
+  {
+    path: "/augmented-reality-products/",
+    title: "واقعیت افزوده محصولات | نمایش AR در 3DMarketIran",
+    description: "با تجربه واقعیت افزوده (AR) محصولات در 3DMarketIran آشنا شوید؛ مدل‌های سازگار را روی دستگاه پشتیبانی‌شده بررسی کنید.",
+    body: seoLandingFallback("واقعیت افزوده برای دیدن محصول در فضای واقعی‌تر", "واقعیت افزوده می‌تواند مدل دیجیتال محصول را با محیط پیرامون کاربر ترکیب کند؛ دسترسی به این تجربه به فایل مدل، مرورگر و دستگاه وابسته است.", [
+      ["AR محصول چیست؟", "در تجربه‌ی AR، مدل سازگار می‌تواند از طریق قابلیت‌های دستگاه در محیط اطراف نمایش داده شود؛ این امکان برای همه‌ی محصولات تضمین‌شده نیست."],
+      ["مدل و مشخصات دقیق", "مدل مناسب، عکس واضح و ابعاد ثبت‌شده کمک می‌کنند مخاطب برداشت دقیق‌تری داشته باشد؛ برای شرایط فروش باید مشخصات محصول و اطلاعات فروشنده را بررسی کرد."],
+    ], [["مشاهده فروشگاه‌ها", "/products/"], ["پلن فروشندگان", "/plans/"]]),
+    schema: webpageSchema("واقعیت افزوده محصولات", "/augmented-reality-products/", "راهنمای مشاهده محصولات با قابلیت واقعیت افزوده در دستگاه‌های پشتیبانی‌شده."),
   },
 ];
 
@@ -270,6 +300,11 @@ function isIndexableSeller(seller, allProducts) {
   if (trimDescription(seller.description).length >= 40) return true;
   return allProducts.some((product) => product.seller?.slug === seller.slug && isIndexableProduct(product));
 }
+function seoLandingFallback(heading, intro, sections, links) {
+  const items = sections.map(([title, body]) => `<section><h2>${htmlEscape(title)}</h2><p>${htmlEscape(body)}</p></section>`).join("");
+  return `<main class="seo-fallback"><h1>${htmlEscape(heading)}</h1><p>${htmlEscape(intro)}</p>${items}${listLinks(links)}</main>`;
+}
+
 function simpleFallback(heading, description, links) { return `<main class="seo-fallback"><h1>${htmlEscape(heading)}</h1><p>${htmlEscape(description)}</p>${listLinks(links)}</main>`; }
 function productFallback(product, seller, description) {
   const image = primaryImage(product);

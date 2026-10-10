@@ -474,3 +474,50 @@ body,button,input,select,textarea{font-family:var(--font-family)}button,input,se
 @media(prefers-reduced-motion:reduce){
   .hero-logo-3d{animation:none!important;transition:none!important}
 }
+
+
+/* V110 — polished micro-interactions; respects reduced-motion preferences. */
+@media (prefers-reduced-motion: no-preference) {
+  .product-page-ref .product-viewer-ref,
+  .product-page-ref .product-info-ref,
+  .product-page-ref .product-description-ref,
+  .product-page-ref .seller-box--detail {
+    animation: v110-detail-enter .48s cubic-bezier(.2,.75,.25,1) both;
+  }
+  .product-page-ref .product-info-ref { animation-delay: .06s; }
+  .product-page-ref .product-description-ref { animation-delay: .1s; }
+  .btn, .product-media-thumb, .product-tabs-ref button, .product-platform-choice .btn {
+    transition: transform .2s ease, box-shadow .22s ease, border-color .22s ease, background-color .22s ease, color .22s ease;
+  }
+  .product-media-thumb:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(23,58,99,.1); }
+  .product-page-ref .product-info-ref { transition: box-shadow .24s ease, border-color .24s ease; }
+  .product-page-ref .product-info-ref:hover { box-shadow: 0 12px 30px rgba(20,45,75,.07)!important; }
+  @keyframes v110-detail-enter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-page-ref .product-viewer-ref, .product-page-ref .product-info-ref, .product-page-ref .product-description-ref, .product-page-ref .seller-box--detail { animation: none!important; }
+}
+
+
+/* V110 — site-wide motion polish. Hover effects are limited to hover-capable pointers. */
+@media (prefers-reduced-motion: no-preference) {
+  .product-card, .premium-product-card, .screenshot-product-card, .seller-directory-card, .featured-store-card, .card {
+    transition: transform .24s cubic-bezier(.2,.7,.2,1), box-shadow .24s ease, border-color .24s ease;
+  }
+  .product-card__media img, .premium-product-card .product-card__media img {
+    transition: transform .38s cubic-bezier(.2,.7,.2,1), filter .38s ease;
+  }
+  .btn, .header-actions a, .nav a {
+    transition: transform .18s ease, box-shadow .22s ease, background-color .22s ease, border-color .22s ease, color .22s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .product-card:hover, .premium-product-card:hover, .screenshot-product-card:hover, .seller-directory-card:hover, .featured-store-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(22,38,62,.09);
+    }
+    .btn:hover { transform: translateY(-1px); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .product-card, .premium-product-card, .screenshot-product-card, .seller-directory-card, .featured-store-card, .card, .product-card__media img, .premium-product-card .product-card__media img, .btn, .header-actions a, .nav a { transition: none!important; animation: none!important; }
+}
