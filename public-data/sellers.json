@@ -1,26 +1,26 @@
 [
   {
-    "id": "cmv2io3rl001jer2a2ks8zmlc",
-    "slug": "آرتیکا-گالری-oy4xyc",
-    "storeName": "آرتیکا گالری",
-    "description": "فروش وسايل سفالى، پلى استر و وسايل چوبى با طرح و رنگ دلخواه",
-    "logoUrl": "https://api.3dmarketiran.ir/api/public/assets/sellers/cmv2io3rl001jer2a2ks8zmlc/logo/qcTmGmujk79r7gu5.png",
-    "themeColor": "#50010c",
-    "contactEmail": "artica@gmail.com",
-    "contactPhone": "09104000735",
+    "slug": "test-2-vn5xio",
+    "storeName": "test 2",
+    "description": null,
+    "logoUrl": null,
+    "contactEmail": "seller2@gmail.com",
+    "contactPhone": "",
+    "socialLinks": {},
     "address": null,
-    "socialLinks": {}
+    "category": null,
+    "id": "static-0"
   },
   {
-    "id": "cmur9nu1k0013zmxss9ieedbj",
-    "slug": "فروشگاه-پیکسل-2zkgny",
-    "storeName": "فروشگاه پیکسل",
-    "description": "تست",
-    "logoUrl": "https://api.3dmarketiran.ir/api/public/assets/sellers/cmur9nu1k0013zmxss9ieedbj/logo/1TVFtINNUP7D0PDb.jpeg",
-    "themeColor": "#12376d",
-    "contactEmail": "3dmobl@gmail.com",
-    "contactPhone": "09123456789",
-    "address": "تهران ولیعصر",
-    "socialLinks": {}
+    "slug": "test-qa20kn",
+    "storeName": "test",
+    "description": null,
+    "logoUrl": null,
+    "contactEmail": "seller@gmail.com",
+    "contactPhone": "",
+    "socialLinks": {},
+    "address": null,
+    "category": null,
+    "id": "static-1"
   }
 ]

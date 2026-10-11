@@ -76,7 +76,17 @@ for (const urlValue of sitemapUrls) {
   const url = new URL(urlValue);
   if (url.origin !== site) fail(`Unexpected sitemap host: ${url.origin}`);
   if (url.hash || url.search) fail(`Sitemap URL includes query/hash: ${urlValue}`);
-  if (!pageByRoute.has(url.pathname)) fail(`Sitemap route has no generated HTML file: ${urlValue}`);
+  // Sitemap URL pathnames are percent-encoded by URL, while generated HTML
+  // routes are keyed by their decoded filesystem paths (including Persian slugs).
+  let decodedRoutePath;
+  try {
+    decodedRoutePath = decodeURIComponent(url.pathname);
+  } catch {
+    fail(`Sitemap route has invalid URL encoding: ${urlValue}`);
+  }
+  if (!pageByRoute.has(decodedRoutePath)) {
+    fail(`Sitemap route has no generated HTML file: ${urlValue} (decoded route: ${decodedRoutePath})`);
+  }
 }
 
 const robotsPath = path.join(dist, "robots.txt");
