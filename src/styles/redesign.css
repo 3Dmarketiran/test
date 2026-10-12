@@ -1120,3 +1120,97 @@
   }
 }
 
+
+
+
+/* V118 — fluid, premium iOS-inspired interaction system (Public) */
+:root {
+  --motion-ease: cubic-bezier(.22, 1, .36, 1);
+  --motion-ease-soft: cubic-bezier(.2, .75, .25, 1);
+  --motion-fast: 160ms;
+  --motion-base: 280ms;
+  --motion-slow: 520ms;
+}
+html { scroll-behavior: smooth; }
+body { -webkit-tap-highlight-color: transparent; }
+#main-content > * {
+  animation: market-page-enter 520ms var(--motion-ease) both;
+}
+@keyframes market-page-enter {
+  from { opacity: 0; transform: translate3d(0, 12px, 0) scale(.996); filter: blur(2px); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+}
+button, .btn, a, input, select, textarea, [role="button"], [role="switch"] {
+  transition:
+    color var(--motion-base) var(--motion-ease),
+    background-color var(--motion-base) var(--motion-ease),
+    border-color var(--motion-base) var(--motion-ease),
+    box-shadow var(--motion-base) var(--motion-ease),
+    transform var(--motion-fast) var(--motion-ease),
+    opacity var(--motion-base) var(--motion-ease),
+    filter var(--motion-base) var(--motion-ease);
+}
+button:active, .btn:active, [role="button"]:active {
+  transform: scale(.975);
+}
+a { text-underline-offset: .2em; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible,
+textarea:focus-visible, [role="button"]:focus-visible, [role="switch"]:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--neo-blue, #3454d1) 35%, transparent);
+  outline-offset: 3px;
+}
+.product-card, .store-card, .plan-card, .seller-profile-card, .product-attributes-card,
+[class*="product-card"], [class*="plan-card"] {
+  transition:
+    transform 420ms var(--motion-ease),
+    box-shadow 420ms var(--motion-ease),
+    border-color 320ms var(--motion-ease),
+    background-color 320ms var(--motion-ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover, .store-card:hover, .plan-card:hover,
+  .seller-profile-card:hover, [class*="product-card"]:hover, [class*="plan-card"]:hover {
+    transform: translateY(-3px);
+  }
+}
+.site-header, .site-header * { transition-timing-function: var(--motion-ease); }
+.site-nav a, .nav-link, .site-header button, .mobile-nav a {
+  transition: background-color 260ms var(--motion-ease), color 260ms var(--motion-ease), transform 260ms var(--motion-ease);
+}
+.site-nav a:active, .mobile-nav a:active { transform: scale(.97); }
+img { transition: opacity 280ms var(--motion-ease); }
+img[loading="lazy"] { animation: market-image-appear 520ms var(--motion-ease) both; }
+@keyframes market-image-appear { from { opacity: .65; } to { opacity: 1; } }
+
+/* Accessible shimmer skeleton primitives, available to all Public pages. */
+.market-skeleton {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #e9edf3;
+  isolation: isolate;
+}
+.market-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(100deg, transparent 20%, rgba(255,255,255,.72) 48%, transparent 76%);
+  animation: market-skeleton-shimmer 1.35s ease-in-out infinite;
+}
+@keyframes market-skeleton-shimmer {
+  100% { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+.public-route-transition { min-width: 0; animation: market-page-enter 520ms var(--motion-ease) both; transform-origin: 50% 0; }

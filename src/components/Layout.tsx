@@ -325,7 +325,7 @@ export default function Layout() {
       </header>
 
       <main id="main-content">
-        <Outlet />
+        <div className="public-route-transition" key={location.pathname}><Outlet /></div>
       </main>
 
       <Footer />
